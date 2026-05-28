@@ -23,24 +23,8 @@
 }
 </style>
 <style>
-/*
- * [중요] API 키 보안 설정 필요
- * 현재 API 키는 모든 웹사이트에서 요청 가능한 상태입니다.
- * 도메인 확정 후 아래 경로에서 웹사이트 제한 추가 필요:
- * Google Cloud Console → API 및 서비스 → 사용자 인증 정보
- * → API 키 수정 → 웹사이트 제한사항 → 도메인 추가
- *
- * [참고] Google Sheets는 "링크가 있는 모든 사용자 - 뷰어" 공개 설정 필요
- */
-
-/* =====================================================
-   모든 선택자는 .archive- 접두사 사용
-   index.html에 합칠 때: body{} 블록만 제거하면 됨
-   ===================================================== */
-
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-/* 독립 실행용 body (index.html 합칠 때 제거) */
 body {
   font-family: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
   background: #0a0a0a;
@@ -48,166 +32,84 @@ body {
   min-height: 100vh;
 }
 
-/* ---- 페이지 ---- */
 .archive-page {
   max-width: 680px;
   margin: 0 auto;
   padding: 20px 16px 60px;
 }
 
-/* ---- 상단 네비 ---- */
-.archive-topnav {
-  display: flex;
-  align-items: center;
-  padding: 8px 0 20px;
-}
+.archive-topnav { display: flex; align-items: center; padding: 8px 0 20px; }
 .archive-topnav__back {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #555;
-  text-decoration: none;
-  transition: color .15s;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #555; text-decoration: none; transition: color .15s;
 }
 .archive-topnav__back:hover { color: #0046FF; }
 .archive-topnav__sep { color: #2a2a2a; margin: 0 8px; font-size: 13px; }
 .archive-topnav__cur {
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #333;
+  font-size: 13px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: #333;
 }
 
-/* ---- 메인 카드 (에디토리얼) ---- */
 .archive-card {
   font-family: 'BookkGothic', 'Pretendard', sans-serif;
-  background: #fff;
-  border: 1.5px solid #0a0a0a;
-  border-radius: 4px;
-  overflow: hidden;
+  background: #fff; border: 1.5px solid #0a0a0a; border-radius: 4px; overflow: hidden;
 }
 .archive-card-inner { padding: 28px 26px 24px; }
 
-/* ---- 헤더 ---- */
 .archive-hd-eyebrow {
-  font-size: 11px;
-  font-weight: 300;
-  letter-spacing: 0.22em;
-  color: #999;
-  text-transform: uppercase;
-  margin-bottom: 8px;
+  font-size: 11px; font-weight: 300; letter-spacing: 0.22em;
+  color: #999; text-transform: uppercase; margin-bottom: 8px;
 }
 .archive-hd-title {
-  font-size: 38px;
-  font-weight: 700;
-  color: #0a0a0a;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  margin-bottom: 6px;
+  font-size: 38px; font-weight: 700; color: #0a0a0a;
+  letter-spacing: -0.03em; line-height: 1.1; margin-bottom: 6px;
 }
 .archive-hd-desc {
-  font-size: 13px;
-  font-weight: 300;
-  color: #888;
-  line-height: 1.6;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #e0e0e0;
+  font-size: 13px; font-weight: 300; color: #888; line-height: 1.6;
+  padding-bottom: 20px; border-bottom: 1px solid #e0e0e0;
 }
 
-/* ---- 탭 ---- */
 .archive-tabs {
-  display: flex;
-  gap: 7px;
-  flex-wrap: wrap;
-  padding: 16px 0 14px;
-  border-bottom: 1px solid #efefef;
+  display: flex; gap: 7px; flex-wrap: wrap;
+  padding: 16px 0 14px; border-bottom: 1px solid #efefef;
 }
 .archive-tab {
-  display: inline-flex;
-  align-items: center;
-  height: 32px;
-  padding: 0 13px;
-  background: #f2f2f2;
-  border: 1px solid #e0e0e0;
-  border-radius: 999px;
-  font-size: 13px;
-  font-weight: 700;
-  color: #666;
-  cursor: pointer;
-  transition: all .15s;
-  white-space: nowrap;
-  font-family: 'Pretendard', sans-serif;
-  letter-spacing: 0.01em;
+  display: inline-flex; align-items: center; height: 32px; padding: 0 13px;
+  background: #f2f2f2; border: 1px solid #e0e0e0; border-radius: 999px;
+  font-size: 13px; font-weight: 700; color: #666; cursor: pointer;
+  transition: all .15s; white-space: nowrap;
+  font-family: 'Pretendard', sans-serif; letter-spacing: 0.01em;
 }
 .archive-tab:hover { background: #0046FF; border-color: #0046FF; color: #fff; }
 .archive-tab--active { background: #0a0a0a !important; border-color: #0a0a0a !important; color: #fff !important; }
-.archive-tab__count {
-  font-size: 11px;
-  font-weight: 700;
-  margin-left: 5px;
-  opacity: 0.5;
-}
+.archive-tab__count { font-size: 11px; font-weight: 700; margin-left: 5px; opacity: 0.5; }
 
-/* ---- 리스트 ---- */
 .archive-list { list-style: none; }
 
-/* ---- 아이템 ---- */
 .archive-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 15px 0;
-  border-bottom: 1px solid #efefef;
-  cursor: pointer;
-  transition: opacity .15s;
-  outline: none;
+  display: flex; align-items: center; gap: 14px;
+  padding: 15px 0; border-bottom: 1px solid #efefef;
+  cursor: pointer; transition: opacity .15s; outline: none;
 }
 .archive-item:last-child { border-bottom: none; }
 .archive-item:hover, .archive-item:focus-visible { opacity: 0.55; }
 
 .archive-item__num {
-  font-size: 12px;
-  font-weight: 300;
-  color: #ccc;
-  letter-spacing: 0.05em;
-  flex-shrink: 0;
-  width: 22px;
-  text-align: right;
+  font-size: 12px; font-weight: 300; color: #ccc;
+  letter-spacing: 0.05em; flex-shrink: 0; width: 22px; text-align: right;
 }
 .archive-item__info { flex: 1; min-width: 0; }
 .archive-item__name {
-  font-size: 15px;
-  font-weight: 700;
-  color: #0a0a0a;
-  line-height: 1.4;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  font-size: 15px; font-weight: 700; color: #0a0a0a; line-height: 1.4;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-.archive-item__meta {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 3px;
-  flex-wrap: wrap;
-}
-.archive-item__date {
-  font-size: 12px;
-  font-weight: 300;
-  color: #aaa;
-}
+.archive-item__meta { display: flex; align-items: center; gap: 6px; margin-top: 3px; flex-wrap: wrap; }
+.archive-item__date { font-size: 12px; font-weight: 300; color: #aaa; }
 
-/* ---- 배지 ---- */
 .archive-badge {
-  display: inline-flex;
-  align-items: center;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: 0.06em;
-  padding: 2px 7px;
-  border-radius: 2px;
+  display: inline-flex; align-items: center;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.06em;
+  padding: 2px 7px; border-radius: 2px;
 }
 .archive-badge--cat  { background: #f2f2f2; color: #0a0a0a; border: 1px solid #ddd; }
 .archive-badge--pdf  { background: #2a0800; color: #ff4422; }
@@ -217,45 +119,24 @@ body {
 .archive-badge--md   { background: #00133a; color: #0046FF; }
 .archive-badge--other { background: #1a1a1a; color: #888; }
 
-/* ---- 아이템 우측 ---- */
-.archive-item__right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-shrink: 0;
-}
+.archive-item__right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
 
-/* 다운로드 버튼 (리스트) */
 .archive-btn-dl {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  background: #f2f2f2;
-  border: 1px solid #e0e0e0;
-  color: #0a0a0a;
-  text-decoration: none;
-  transition: background .15s, border-color .15s, color .15s;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; border-radius: 50%;
+  background: #f2f2f2; border: 1px solid #e0e0e0; color: #0a0a0a;
+  text-decoration: none; transition: background .15s, border-color .15s, color .15s; flex-shrink: 0;
 }
 .archive-btn-dl:hover { background: #0046FF; border-color: #0046FF; color: #fff; }
 .archive-btn-dl svg { width: 13px; height: 13px; }
 .archive-btn-dl--disabled {
-  background: #f8f8f8 !important;
-  border-color: #eee !important;
-  color: #ccc !important;
-  cursor: default;
+  background: #f8f8f8 !important; border-color: #eee !important;
+  color: #ccc !important; cursor: default;
 }
 
-/* ---- 스켈레톤 ---- */
 .archive-skel-item {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 15px 0;
-  border-bottom: 1px solid #efefef;
+  display: flex; align-items: center; gap: 14px;
+  padding: 15px 0; border-bottom: 1px solid #efefef;
 }
 @keyframes archive-shimmer {
   0%   { background-position: -400px 0; }
@@ -274,88 +155,60 @@ body {
 .archive-sk-badge { width: 36px; height: 22px; border-radius: 2px; flex-shrink: 0; }
 .archive-sk-btn   { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; }
 
-/* ---- 빈 상태 / 오류 ---- */
 .archive-empty, .archive-error { text-align: center; padding: 40px 0; }
 .archive-empty__icon  { font-size: 36px; display: block; margin-bottom: 12px; }
 .archive-empty__title { font-size: 15px; font-weight: 700; color: #555; margin-bottom: 5px; font-family: 'Pretendard', sans-serif; }
 .archive-empty__desc  { font-size: 13px; color: #bbb; font-family: 'Pretendard', sans-serif; }
 .archive-error p      { font-size: 13px; color: #c33; line-height: 1.8; font-family: 'Pretendard', sans-serif; }
-.archive-error code   { font-size: 12px; background: #f5f5f5; padding: 1px 4px; border-radius: 2px; color: #c33; }
 
-/* ---- 모달 오버레이 ---- */
 .archive-modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.78);
-  z-index: 9000;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.78); z-index: 9000;
+  align-items: center; justify-content: center; padding: 20px;
 }
 .archive-modal-overlay--open { display: flex; }
 
-/* ---- 모달 박스 ---- */
 .archive-modal {
-  background: #111;
-  border: 1px solid #222;
-  border-radius: 14px;
-  width: 100%;
-  max-width: 480px;
-  max-height: 88vh;
-  overflow-y: auto;
-  padding: 26px;
-  position: relative;
+  background: #111; border: 1px solid #222; border-radius: 14px;
+  width: 100%; max-width: 480px; max-height: 88vh; overflow-y: auto;
+  padding: 26px; position: relative;
   box-shadow: 0 24px 64px rgba(0,0,0,0.7);
   animation: archive-modal-in .18s ease;
   font-family: 'Pretendard', sans-serif;
 }
 @keyframes archive-modal-in {
   from { opacity: 0; transform: scale(0.96) translateY(10px); }
-  to   { opacity: 1; transform: scale(1)    translateY(0); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
 }
 .archive-modal__close {
-  position: absolute;
-  top: 14px; right: 14px;
+  position: absolute; top: 14px; right: 14px;
   width: 28px; height: 28px;
   display: flex; align-items: center; justify-content: center;
-  background: #1e1e1e;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #555;
-  font-size: 14px;
-  transition: background .12s, color .12s;
-  font-family: inherit;
+  background: #1e1e1e; border: none; border-radius: 6px;
+  cursor: pointer; color: #555; font-size: 14px;
+  transition: background .12s, color .12s; font-family: inherit;
 }
 .archive-modal__close:hover { background: #2a2a2a; color: #fff; }
 
-.archive-modal__badges {
-  display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px;
-}
+.archive-modal__badges { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
 .archive-modal__title {
   font-family: 'BookkGothic', 'Pretendard', sans-serif;
   font-size: 20px; font-weight: 700; color: #fff;
   line-height: 1.4; padding-right: 36px; margin-bottom: 6px;
 }
-.archive-modal__date { font-size: 12px; color: #555; margin-bottom: 18px; }
-.archive-modal__hr   { height: 1px; background: #1e1e1e; margin: 16px 0; border: none; }
+.archive-modal__date  { font-size: 12px; color: #555; margin-bottom: 18px; }
+.archive-modal__hr    { height: 1px; background: #1e1e1e; margin: 16px 0; border: none; }
 .archive-modal__label {
   font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
   text-transform: uppercase; color: #444; margin-bottom: 8px;
 }
-.archive-modal__desc {
-  font-size: 14px; color: #aaa; line-height: 1.8; white-space: pre-wrap;
-}
-.archive-modal__prereq-text {
-  font-size: 13.5px; color: #888; line-height: 1.75; white-space: pre-wrap;
-}
+.archive-modal__desc         { font-size: 14px; color: #aaa; line-height: 1.8; white-space: pre-wrap; }
+.archive-modal__prereq-text  { font-size: 13.5px; color: #888; line-height: 1.75; white-space: pre-wrap; }
 .archive-modal__ref-link {
   display: inline-flex; align-items: center; gap: 5px;
   margin-top: 12px; padding: 6px 12px;
   font-size: 13px; font-weight: 700; color: #0046FF;
-  text-decoration: none;
-  background: #000e2a; border: 1px solid #001a4a;
+  text-decoration: none; background: #000e2a; border: 1px solid #001a4a;
   border-radius: 6px; transition: background .12s;
 }
 .archive-modal__ref-link:hover { background: #001040; }
@@ -364,12 +217,10 @@ body {
 .archive-modal__footer { margin-top: 22px; }
 .archive-btn-dl-lg {
   display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: 100%; padding: 13px;
-  background: #0046FF; color: #fff !important;
-  border: none; border-radius: 10px;
-  font-size: 15px; font-weight: 700;
-  cursor: pointer; text-decoration: none !important;
-  transition: background .15s; font-family: inherit;
+  width: 100%; padding: 13px; background: #0046FF;
+  color: #fff !important; border: none; border-radius: 10px;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  text-decoration: none !important; transition: background .15s; font-family: inherit;
 }
 .archive-btn-dl-lg:hover { background: #003dd6; }
 .archive-btn-dl-lg svg { width: 16px; height: 16px; }
@@ -377,7 +228,6 @@ body {
   background: #1a1a1a !important; color: #444 !important; cursor: default;
 }
 
-/* ---- 반응형 ---- */
 @media (max-width: 560px) {
   .archive-page { padding: 16px 12px 48px; }
   .archive-card-inner { padding: 22px 18px 16px; }
@@ -393,60 +243,46 @@ body {
 <body>
 
 <div class="archive-page">
-
-  <!-- 상단 네비 -->
   <nav class="archive-topnav" aria-label="네비게이션">
     <a href="/" class="archive-topnav__back">← 블랙북</a>
     <span class="archive-topnav__sep">/</span>
     <span class="archive-topnav__cur">자료실</span>
   </nav>
 
-  <!-- 메인 에디토리얼 카드 -->
   <div class="archive-card">
     <div class="archive-card-inner">
-
       <p class="archive-hd-eyebrow">Resources</p>
       <h1 class="archive-hd-title">자료실</h1>
       <p class="archive-hd-desc">실무에서 바로 쓸 수 있는 파일만 모았습니다</p>
 
-      <!-- 카테고리 탭 -->
-      <nav class="archive-tabs" id="archiveTabs" role="tablist" aria-label="자료 카테고리">
+      <nav class="archive-tabs" id="archiveTabs" role="tablist">
         <button class="archive-tab archive-tab--active" data-cat="전체"        role="tab" aria-selected="true" >전체           <span class="archive-tab__count" id="cnt0">—</span></button>
         <button class="archive-tab"                      data-cat="자동화·AI활용" role="tab" aria-selected="false">자동화·AI활용 <span class="archive-tab__count" id="cnt1">—</span></button>
         <button class="archive-tab"                      data-cat="실무서식"    role="tab" aria-selected="false">실무서식       <span class="archive-tab__count" id="cnt2">—</span></button>
         <button class="archive-tab"                      data-cat="정책·세무"   role="tab" aria-selected="false">정책·세무      <span class="archive-tab__count" id="cnt3">—</span></button>
       </nav>
 
-      <!-- 자료 리스트 -->
-      <ul class="archive-list" id="archiveList" role="list" aria-label="자료 목록"></ul>
-
+      <ul class="archive-list" id="archiveList" role="list"></ul>
     </div>
   </div>
-
 </div>
 
-<!-- 모달 (body 직속) -->
 <div class="archive-modal-overlay" id="archiveOverlay"
      role="dialog" aria-modal="true" aria-labelledby="archiveModalTitle">
   <div class="archive-modal" id="archiveModal">
     <button class="archive-modal__close" id="archiveModalClose" aria-label="닫기">✕</button>
-
     <div class="archive-modal__badges" id="archiveModalBadges"></div>
     <h2 class="archive-modal__title"   id="archiveModalTitle"></h2>
     <p  class="archive-modal__date"    id="archiveModalDate"></p>
-
     <hr class="archive-modal__hr">
-
     <p class="archive-modal__label">설명</p>
     <p class="archive-modal__desc"  id="archiveModalDesc"></p>
-
     <div id="archiveModalPrereqBlock" style="display:none">
       <hr class="archive-modal__hr">
       <p class="archive-modal__label">사전 준비</p>
       <p class="archive-modal__prereq-text" id="archiveModalPrereq"></p>
       <div id="archiveModalLinkSlot"></div>
     </div>
-
     <div class="archive-modal__footer">
       <a class="archive-btn-dl-lg" id="archiveModalDl"
          href="#" target="_blank" rel="noopener noreferrer">다운로드</a>
@@ -458,17 +294,7 @@ body {
 (function () {
   'use strict';
 
-  /* ======================================================
-     설정값 — 이 두 줄만 수정하면 됩니다
-     ====================================================== */
-  var SHEET_ID   = '1gsjz9DXDHaFgGTOrx42i6_XEgqETq_n1db3zO6ZMH6Y';
-  var API_KEY    = 'YOUR_API_KEY';
-  var SHEET_NAME = 'Sheet1'; // 한글 시트면 '시트1' 등으로 변경
-  /* ====================================================== */
-
-  var RANGE   = encodeURIComponent(SHEET_NAME + '!A2:H');
-  var API_URL = 'https://sheets.googleapis.com/v4/spreadsheets/' + SHEET_ID
-              + '/values/' + RANGE + '?key=' + API_KEY;
+  var API_URL = '/api/archive'; // ← 설정 끝. 나머지는 건드릴 필요 없음
 
   var allItems  = [];
   var activeCat = '전체';
@@ -478,22 +304,15 @@ body {
   var overlay  = document.getElementById('archiveOverlay');
   var closeBtn = document.getElementById('archiveModalClose');
 
-  /* ---- 초기화 ---- */
   function init() {
-    if (API_KEY === 'YOUR_API_KEY') {
-      showError('⚙️ API 키를 설정해주세요.<br>코드 상단의 <code>API_KEY</code>를 실제 Google API 키로 교체하세요.');
-      return;
-    }
     renderSkeleton(6);
     fetchData();
-
     tabsEl.addEventListener('click', onTabClick);
     overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
     closeBtn.addEventListener('click', closeModal);
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
   }
 
-  /* ---- 탭 클릭 ---- */
   function onTabClick(e) {
     var tab = e.target.closest('.archive-tab');
     if (!tab) return;
@@ -508,7 +327,6 @@ body {
     renderList();
   }
 
-  /* ---- API 호출 (페이지 로드 시 1회) ---- */
   function fetchData() {
     fetch(API_URL)
       .then(function (res) {
@@ -536,11 +354,10 @@ body {
       })
       .catch(function (err) {
         console.error('[archive]', err);
-        showError('데이터를 불러오지 못했습니다.<br>API 키와 Google Sheets 공개 설정을 확인해주세요.');
+        listEl.innerHTML = '<li class="archive-error"><p>⚠️ 데이터를 불러오지 못했습니다.<br>api/archive.js 설정을 확인해주세요.</p></li>';
       });
   }
 
-  /* ---- 탭 카운트 업데이트 ---- */
   function updateCounts() {
     var c = { '전체': allItems.length, '자동화·AI활용': 0, '실무서식': 0, '정책·세무': 0 };
     allItems.forEach(function (item) {
@@ -552,7 +369,6 @@ body {
     document.getElementById('cnt3').textContent = c['정책·세무'];
   }
 
-  /* ---- 리스트 렌더 ---- */
   function renderList() {
     var items = activeCat === '전체'
       ? allItems
@@ -574,24 +390,20 @@ body {
     listEl.appendChild(frag);
   }
 
-  /* ---- 아이템 엘리먼트 생성 ---- */
   function makeItemEl(item, idx) {
     var typeKey = getTypeKey(item.filetype);
     var dlUrl   = toDlUrl(item.dlLink);
-
-    var li = document.createElement('li');
+    var li      = document.createElement('li');
     li.className = 'archive-item';
     li.setAttribute('role', 'listitem');
     li.setAttribute('tabindex', '0');
 
     var num       = String(idx + 1).padStart(2, '0');
-    var catBadge  = item.category
-      ? '<span class="archive-badge archive-badge--cat">' + esc(item.category) + '</span>' : '';
-    var typeBadge = item.filetype
-      ? '<span class="archive-badge archive-badge--' + typeKey + '">' + esc(item.filetype) + '</span>' : '';
-    var dlBtn = dlUrl
+    var catBadge  = item.category ? '<span class="archive-badge archive-badge--cat">' + esc(item.category) + '</span>' : '';
+    var typeBadge = item.filetype ? '<span class="archive-badge archive-badge--' + typeKey + '">' + esc(item.filetype) + '</span>' : '';
+    var dlBtn     = dlUrl
       ? '<a class="archive-btn-dl" href="' + esc(dlUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="다운로드">' + icoDownload(13) + '</a>'
-      : '<span class="archive-btn-dl archive-btn-dl--disabled" aria-disabled="true">' + icoDownload(13) + '</span>';
+      : '<span class="archive-btn-dl archive-btn-dl--disabled">' + icoDownload(13) + '</span>';
 
     li.innerHTML =
       '<span class="archive-item__num">' + num + '</span>' +
@@ -604,7 +416,6 @@ body {
       '</div>' +
       '<div class="archive-item__right">' + typeBadge + dlBtn + '</div>';
 
-    /* 다운로드 링크 클릭 시 모달 열리지 않도록 */
     var dlEl = li.querySelector('.archive-btn-dl');
     if (dlEl && dlEl.tagName === 'A') {
       dlEl.addEventListener('click', function (e) { e.stopPropagation(); });
@@ -613,15 +424,13 @@ body {
     li.addEventListener('keydown', function (e) {
       if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(item); }
     });
-
     return li;
   }
 
-  /* ---- 스켈레톤 ---- */
   function renderSkeleton(n) {
     listEl.innerHTML = '';
     for (var i = 0; i < n; i++) {
-      var w = 38 + Math.floor(Math.random() * 38);
+      var w  = 38 + Math.floor(Math.random() * 38);
       var sk = document.createElement('li');
       sk.className = 'archive-skel-item';
       sk.innerHTML =
@@ -636,18 +445,12 @@ body {
     }
   }
 
-  /* ---- 오류 표시 ---- */
-  function showError(html) {
-    listEl.innerHTML = '<li class="archive-error"><p>' + html + '</p></li>';
-  }
-
-  /* ---- 모달 열기 ---- */
   function openModal(item) {
     var typeKey = getTypeKey(item.filetype);
     var dlUrl   = toDlUrl(item.dlLink);
 
     document.getElementById('archiveModalBadges').innerHTML =
-      (item.category ? '<span class="archive-badge archive-badge--cat">' + esc(item.category) + '</span>' : '') +
+      (item.category ? '<span class="archive-badge archive-badge--cat">'   + esc(item.category) + '</span>' : '') +
       (item.filetype ? '<span class="archive-badge archive-badge--' + typeKey + '">' + esc(item.filetype) + '</span>' : '');
 
     document.getElementById('archiveModalTitle').textContent = item.name;
@@ -660,8 +463,7 @@ body {
       document.getElementById('archiveModalPrereq').textContent = item.prereq;
       var slot = document.getElementById('archiveModalLinkSlot');
       slot.innerHTML = item.link
-        ? '<a class="archive-modal__ref-link" href="' + esc(item.link) + '" target="_blank" rel="noopener noreferrer">' +
-            icoExternal() + '관련 자료 보기</a>'
+        ? '<a class="archive-modal__ref-link" href="' + esc(item.link) + '" target="_blank" rel="noopener noreferrer">' + icoExternal() + '관련 자료 보기</a>'
         : '';
     } else {
       prereqBlock.style.display = 'none';
@@ -686,18 +488,15 @@ body {
     closeBtn.focus();
   }
 
-  /* ---- 모달 닫기 ---- */
   function closeModal() {
     overlay.classList.remove('archive-modal-overlay--open');
     document.body.style.overflow = '';
   }
 
-  /* ---- 유틸 ---- */
   function getTypeKey(ft) {
     return ({ PDF:'pdf', XLSX:'xlsx', PPTX:'pptx', DOCX:'docx', MD:'md' })[ft] || 'other';
   }
 
-  /* Google Drive 공유 링크 → 직접 다운로드 URL 변환 */
   function toDlUrl(raw) {
     if (!raw) return '';
     raw = raw.trim();
@@ -710,9 +509,7 @@ body {
   }
 
   function esc(s) {
-    return String(s)
-      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
   }
 
   function icoDownload(sz) {
@@ -731,7 +528,6 @@ body {
       + '<line x1="10" y1="14" x2="21" y2="3"/></svg>';
   }
 
-  /* ---- 실행 ---- */
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
