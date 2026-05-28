@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>블랙북 — 재무 담당자를 위한 지침서</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net">
+<link rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"
+  media="print" onload="this.media='all'">
+<style>
+@font-face {
+  font-family: 'BookkGothic';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkGothic-Lt.woff2') format('woff2');
+  font-weight: 300;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'BookkGothic';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkGothic-Bd.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+</style>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family:'Pretendard',-apple-system,'Apple SD Gothic Neo',sans-serif;
+    background:#0a0a0a;
+    color:#1a1a1a;
+    min-height:100vh;
+  }
+
+  .bb-page {
+    max-width:680px;
+    margin:0 auto;
+    padding:28px 16px 60px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+
+  .bb-card { background:#fff; border-radius:22px; overflow:hidden; }
+  .bb-card-inner { padding:28px 24px; }
+  .bb-card-dark { background:#111; border:1px solid #1e1e1e; border-radius:22px; overflow:hidden; }
+
+  /* 섹션 공통 */
+  .bb-sec-label  { font-size:14px; font-weight:700; letter-spacing:0.12em; color:#aaa; text-transform:uppercase; margin-bottom:6px; }
+  .bb-sec-title  { font-size:26px; font-weight:800; color:#0a0a0a; margin-bottom:6px; letter-spacing:-0.02em; }
+  .bb-sec-desc   { font-size:18px; color:#888; line-height:1.7; margin-bottom:20px; }
+
+  /* HERO */
+  .bb-hero-banner {
+    width:100%; border-radius:16px; overflow:hidden; margin-bottom:22px;
+    background:#0a0a0a; aspect-ratio:1440/810; position:relative;
+  }
+  .bb-hero-banner img {
+    position:absolute; inset:0; width:100%; height:100%;
+    object-fit:cover; display:block;
+  }
+  .bb-hero-overlay {
+    position:absolute; inset:0;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:space-between;
+    padding:28px 28px 24px;
+    background:linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 50%, transparent 100%);
+  }
+  .bb-hero-center {
+    flex:1; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+  }
+  .bb-hero-overlay-title {
+    font-size:44px; font-weight:900; letter-spacing:-0.04em;
+    color:#fff; line-height:1.1;
+    text-shadow:0 2px 20px rgba(0,0,0,0.6);
+  }
+  .bb-hero-overlay-sub {
+    font-size:15px; font-weight:600; color:rgba(255,255,255,0.8);
+    letter-spacing:0.06em; margin-top:8px;
+    text-shadow:0 1px 8px rgba(0,0,0,0.5);
+  }
+  .bb-hero-pills {
+    display:flex; flex-wrap:nowrap; gap:7px; justify-content:center;
+  }
+  .bb-pill {
+    display:inline-flex; align-items:center; gap:5px; height:36px; padding:0 14px;
+    background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35);
+    border-radius:999px; backdrop-filter:blur(6px);
+    font-size:14px; font-weight:600; color:#fff; cursor:pointer;
+    text-decoration:none; transition:background .15s,border-color .15s;
+    font-family:'Pretendard',sans-serif; white-space:nowrap;
+  }
+  .bb-pill:hover { background:#0046FF; border-color:#0046FF; color:#fff; }
+
+  /* ── D-day 배너 ── */
+  .bb-dday {
+    display:flex; flex-direction:column; gap:10px;
+    background:#eef2ff; border:1.5px solid #d0d9ff;
+    border-radius:14px; padding:14px 18px; margin-bottom:18px;
+  }
+  .bb-dday-row { display:flex; align-items:center; gap:14px; }
+  .bb-dday-row + .bb-dday-row {
+    padding-top:10px; border-top:1px solid #dce5ff;
+  }
+  .bb-dday-badge {
+    font-size:22px; font-weight:900; color:#0046FF;
+    flex-shrink:0; letter-spacing:-0.03em; min-width:54px;
+  }
+  .bb-dday-badge.today { color:#e03030; }
+  .bb-dday-row.dim .bb-dday-badge { font-size:18px; color:#7a9de0; }
+  .bb-dday-divider { width:1px; height:36px; background:#c8d3ff; flex-shrink:0; }
+  .bb-dday-info { flex:1; min-width:0; }
+  .bb-dday-title { font-size:15px; font-weight:700; color:#1a1a1a; line-height:1.4; }
+  .bb-dday-date  { font-size:13px; color:#888; margin-top:3px; }
+  .bb-dday-row.dim .bb-dday-title { color:#666; font-weight:600; }
+  .bb-dday-row.dim .bb-dday-date  { color:#aaa; }
+
+  /* ── 01 캘린더 ── */
+  .bb-cal-mock { background:#f5f7ff; border-radius:16px; padding:18px; }
+  .bb-cal-top  { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
+  .bb-cal-month { font-size:18px; font-weight:700; color:#1a1a1a; }
+  .bb-cal-arrows { display:flex; gap:4px; }
+  .bb-cal-arrows button {
+    background:#fff; border:1px solid #e0e4ff; border-radius:8px;
+    width:32px; height:32px; cursor:pointer; font-size:18px; color:#555;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Pretendard',sans-serif;
+  }
+  .bb-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center; }
+  .bb-dow { font-size:13px; font-weight:700; color:#ccc; padding:3px 0 7px; letter-spacing:0.05em; }
+  .bb-day {
+    aspect-ratio:1; border-radius:8px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    font-size:14px; color:#444; cursor:pointer; transition:background .12s; font-weight:500;
+  }
+  .bb-day:hover { background:#e0e8ff; }
+  .bb-day.ev    { background:#eaedff; }
+  .bb-day.td    { border:2px solid #0046FF; }
+  .bb-day.sel   { background:#0046FF; color:#fff; font-weight:700; }
+  .bb-day.sel .bb-dot { background:rgba(255,255,255,.6); }
+  .bb-dot { width:4px; height:4px; border-radius:50%; background:#0046FF; margin-top:2px; }
+
+  .bb-date-panel { margin-top:12px; background:#fff; border:1px solid #d8e0ff; border-radius:12px; padding:12px 14px; }
+  .bb-date-panel-hd { font-size:15px; font-weight:700; color:#0046FF; margin-bottom:8px; }
+  .bb-date-panel-list { list-style:none; display:flex; flex-direction:column; gap:6px; }
+  .bb-date-panel-item {
+    font-size:15px; color:#333; padding:6px 8px; background:#f5f7ff;
+    border-radius:8px; line-height:1.5; display:flex; align-items:baseline; gap:6px;
+  }
+  .bb-date-panel-item a { color:#0046FF; text-decoration:none; font-weight:600; }
+  .bb-date-panel-item a:hover { text-decoration:underline; }
+  .bb-ev-tag { font-size:12px; font-weight:700; flex-shrink:0; padding:1px 6px; border-radius:4px; }
+  .bb-ev-end   { background:#ffecec; color:#e03030; }
+  .bb-ev-start { background:#e8f5e9; color:#2e7d32; }
+
+  .bb-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
+  .bb-chip  { font-size:14px; background:#fff; border:1px solid #d8e0ff; border-radius:999px; padding:4px 12px; color:#0046FF; font-weight:600; }
+
+  /* ── 02 계산기 ── */
+  .bb-calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
+  .bb-field label { font-size:14px; color:#aaa; font-weight:600; display:block; margin-bottom:5px; letter-spacing:0.03em; }
+  .bb-field input,.bb-field select {
+    width:100%; padding:9px 12px; border:1.5px solid #ebebeb; border-radius:10px;
+    font-size:18px; color:#222; background:#fafafa;
+    font-family:'Pretendard',sans-serif; outline:none; transition:border-color .15s;
+  }
+  .bb-field input:focus,.bb-field select:focus { border-color:#0046FF; }
+  .bb-calc-output { background:#0a0a0a; border-radius:14px; padding:20px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
+  .bb-calc-label { font-size:14px; color:#666; margin-bottom:5px; }
+  .bb-calc-val   { font-size:51px; font-weight:900; color:#0046FF; line-height:1; }
+  .bb-calc-sub   { font-size:14px; color:#444; margin-top:7px; }
+  .bb-meter { width:86px; height:86px; position:relative; flex-shrink:0; }
+  .bb-meter svg { transform:rotate(-90deg); display:block; }
+  .bb-meter-num { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:20px; font-weight:800; color:#0046FF; }
+  .bb-cta-btn {
+    display:block; width:100%; margin-top:12px; padding:14px;
+    background:#0a0a0a; color:#fff; border:none; border-radius:12px;
+    font-size:19px; font-weight:700; cursor:pointer;
+    font-family:'Pretendard',sans-serif; transition:background .2s;
+  }
+  .bb-cta-btn:hover { background:#0046FF; }
+
+  /* ── 자료실 (에디토리얼 리디자인) ── */
+  .bb-res-ed {
+    font-family:'BookkGothic','Pretendard',sans-serif;
+    background:#fff; border:1.5px solid #0a0a0a; border-radius:4px; overflow:hidden;
+  }
+  .bb-res-ed-inner { padding:28px 26px 20px; }
+  .bb-res-ed-eyebrow {
+    font-size:11px; font-weight:300; letter-spacing:0.22em;
+    color:#999; text-transform:uppercase; margin-bottom:10px;
+  }
+  .bb-res-ed-title {
+    font-size:38px; font-weight:700; color:#0a0a0a;
+    letter-spacing:-0.03em; line-height:1.1; margin-bottom:6px;
+  }
+  .bb-res-ed-sub {
+    font-size:13px; font-weight:300; color:#888; line-height:1.6;
+    padding-bottom:20px; border-bottom:1px solid #e0e0e0; margin-bottom:4px;
+  }
+  .bb-res-ed-list { list-style:none; }
+  .bb-res-ed-item {
+    display:flex; align-items:center; gap:14px;
+    padding:15px 0; border-bottom:1px solid #efefef;
+    cursor:pointer; transition:opacity .15s;
+  }
+  .bb-res-ed-item:last-child { border-bottom:none; }
+  .bb-res-ed-item:hover { opacity:.65; }
+  .bb-res-ed-num {
+    font-size:12px; font-weight:300; color:#ccc;
+    letter-spacing:0.05em; flex-shrink:0; width:22px; text-align:right;
+  }
+  .bb-res-ed-info { flex:1; min-width:0; }
+  .bb-res-ed-name {
+    font-size:15px; font-weight:700; color:#0a0a0a;
+    line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .bb-res-ed-meta { font-size:12px; font-weight:300; color:#aaa; margin-top:3px; }
+  .bb-res-ed-badge {
+    font-size:11px; font-weight:700; letter-spacing:0.08em;
+    color:#0a0a0a; background:#f2f2f2; border:1px solid #ddd;
+    padding:3px 8px; border-radius:2px; flex-shrink:0;
+  }
+  /* 기존 .bb-badge 유지 */
+  .bb-badge { font-size:13px; font-weight:700; padding:3px 9px; border-radius:6px; letter-spacing:0.04em; flex-shrink:0; }
+  .bb-badge-md  { background:#00133a; color:#0046FF; }
+  .bb-badge-xl  { background:#002a10; color:#00cc55; }
+  .bb-badge-pdf { background:#2a0800; color:#ff4422; }
+  .bb-badge-ppt { background:#2a1400; color:#ff9922; }
+
+  /* ── 03 인블로그 포스트 ── */
+  .bb-posts { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .bb-post  { background:#f5f5f5; border-radius:14px; overflow:hidden; cursor:pointer; transition:transform .15s; text-decoration:none; display:block; }
+  .bb-post:hover { transform:translateY(-2px); }
+  .bb-post-thumb { width:100%; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; font-size:30px; overflow:hidden; }
+  .bb-post-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
+  .bb-post-body  { padding:12px 14px 16px; }
+  .bb-post-cat   { font-size:13px; font-weight:700; color:#0046FF; letter-spacing:0.08em; margin-bottom:4px; }
+  .bb-post-title { font-size:15px; font-weight:700; line-height:1.5; color:#1a1a1a; margin-bottom:5px; }
+  .bb-post-date  { font-size:13px; color:#bbb; }
+  .bb-more { display:none; width:fit-content; margin:16px auto 0; padding:10px 24px; background:#f2f2f2; border:none; border-radius:999px; font-size:15px; font-weight:700; color:#333; cursor:pointer; font-family:'Pretendard',sans-serif; transition:background .15s,color .15s; }
+  .bb-more:hover { background:#0046FF; color:#fff; }
+
+  /* ── 04 기고 콘텐츠 텍스트 카드 ── */
+  .bb-contrib-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+  .bb-contrib-card {
+    background:#f8f8f8; border:1px solid #ebebeb; border-radius:14px; padding:18px;
+    display:flex; flex-direction:column; gap:8px;
+    cursor:pointer; transition:border-color .15s,transform .15s; text-decoration:none;
+  }
+  .bb-contrib-card:hover { border-color:#0046FF; transform:translateY(-2px); }
+  .bb-contrib-source { font-size:14px; font-weight:700; color:#0046FF; letter-spacing:0.06em; }
+  .bb-contrib-title  { font-size:18px; font-weight:700; color:#1a1a1a; line-height:1.45; }
+  .bb-contrib-desc   { font-size:14px; color:#888; line-height:1.65; flex:1; }
+  .bb-contrib-footer { display:flex; justify-content:space-between; align-items:center; margin-top:4px; }
+  .bb-contrib-date   { font-size:13px; color:#bbb; }
+  .bb-contrib-link   { font-size:14px; font-weight:700; color:#0046FF; text-decoration:none; }
+  .bb-contrib-link:hover { text-decoration:underline; }
+
+  /* ── Footer ── */
+  .bb-footer { background:#111; border:1px solid #1e1e1e; border-radius:22px; padding:22px 24px; text-align:center; font-size:15px; color:#444; line-height:1.8; }
+  .bb-footer a { color:#555; text-decoration:none; }
+  .bb-footer a:hover { color:#0046FF; }
+
+  /* ── 반응형 ── */
+  @media (max-width:560px) {
+    .bb-posts        { grid-template-columns:1fr; }
+    .bb-contrib-grid { grid-template-columns:1fr; }
+    .bb-calc-grid    { grid-template-columns:1fr; }
+    .bb-page         { padding:16px 12px 48px; gap:10px; }
+    .bb-card-inner   { padding:22px 18px; }
+  }
+</style>
+</head>
+<body>
+<div class="bb-page">
+
+  <!-- HERO -->
+  <div class="bb-card">
+    <div class="bb-card-inner">
+      <div class="bb-hero-banner">
+        <img src="/assets/hero.png" alt="블랙북" loading="eager">
+        <div class="bb-hero-overlay">
+          <div class="bb-hero-center">
+            <div class="bb-hero-overlay-title">BLACK BOOK</div>
+            <div class="bb-hero-overlay-sub">재무 담당자를 위한 지침서</div>
+          </div>
+          <div class="bb-hero-pills">
+            <a href="#bb-sec02" class="bb-pill">🏦 대출 계산기</a>
+            <a href="#bb-sec-res" class="bb-pill">📂 자료실</a>
+            <a href="#bb-sec03" class="bb-pill">✍️ 재무 콘텐츠</a>
+            <a href="#bb-sec04" class="bb-pill">📝 기고 콘텐츠</a>
+          </div>
+        </div>
+    </div>
+  </div>
+
+  <!-- 01 재무 캘린더 -->
+  <div class="bb-card" id="bb-sec01">
+    <div class="bb-card-inner">
+      <p class="bb-sec-label">01 — 재무 캘린더</p>
+      <h2 class="bb-sec-title">재무 캘린더</h2>
+      <div class="bb-dday" id="cal-dday" style="display:none"></div>
+      <div class="bb-cal-mock">
+        <div class="bb-cal-top">
+          <span class="bb-cal-month" id="cal-month-label">2026년 5월</span>
+          <div class="bb-cal-arrows">
+            <button id="cal-prev">‹</button>
+            <button id="cal-next">›</button>
+          </div>
+        </div>
+        <div class="bb-cal-grid" id="cal-grid">
+          <div class="bb-dow">일</div>
+          <div class="bb-dow">월</div>
+          <div class="bb-dow">화</div>
+          <div class="bb-dow">수</div>
+          <div class="bb-dow">목</div>
+          <div class="bb-dow">금</div>
+          <div class="bb-dow">토</div>
+        </div>
+        <div class="bb-date-panel" id="cal-date-panel" style="display:none"></div>
+        <div class="bb-chips" id="cal-chips">
+          <span class="bb-chip" style="color:#aaa;border-color:#dde">불러오는 중…</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 02 기업대출 확률 계산기 -->
+  <div class="bb-card" id="bb-sec02">
+    <div class="bb-card-inner">
+      <p class="bb-sec-label">02 — 기업대출 확률 계산기</p>
+      <h2 class="bb-sec-title">우리 회사, 대출 될까요?</h2>
+      <p class="bb-sec-desc">AI 경영진단 기반 · 디테일한 부분은 기획 필요</p>
+      <div class="bb-calc-grid">
+        <div class="bb-field"><label>업종</label><select><option>제조업</option><option>도소매업</option><option>서비스업</option></select></div>
+        <div class="bb-field"><label>업력</label><select><option>3년 미만</option><option>3~5년</option><option>5년 이상</option></select></div>
+        <div class="bb-field"><label>연매출 (억원)</label><input type="number" placeholder="예: 15"></div>
+        <div class="bb-field"><label>부채비율 (%)</label><input type="number" placeholder="예: 120"></div>
+        <div class="bb-field"><label>신용등급</label><select><option>1~3등급</option><option>4~6등급</option><option>7등급 이하</option></select></div>
+        <div class="bb-field"><label>희망 금액 (억원)</label><input type="number" placeholder="예: 5"></div>
+      </div>
+      <div class="bb-calc-output">
+        <div>
+          <div class="bb-calc-label">AI 대출 승인 추정 확률</div>
+          <div class="bb-calc-val">74%</div>
+          <div class="bb-calc-sub">적합 상품 3건 탐지 · 기준일 2026.05</div>
+        </div>
+        <div class="bb-meter">
+          <svg width="86" height="86" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#1e1e1e" stroke-width="10"/>
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#0046FF" stroke-width="10"
+              stroke-dasharray="251" stroke-dashoffset="65" stroke-linecap="round"/>
+          </svg>
+          <div class="bb-meter-num">74%</div>
+        </div>
+      </div>
+      <button class="bb-cta-btn">AI 경영진단 시작하기 →</button>
+    </div>
+  </div>
+
+  <!-- 자료실 -->
+  <div class="bb-res-ed" id="bb-sec-res">
+    <div class="bb-res-ed-inner">
+      <div class="bb-res-ed-eyebrow">Resources</div>
+      <div class="bb-res-ed-title">자료실</div>
+      <div class="bb-res-ed-sub">실무에서 바로 쓸 수 있는 파일만 모았습니다</div>
+      <ul class="bb-res-ed-list">
+        <li class="bb-res-ed-item">
+          <span class="bb-res-ed-num">01</span>
+          <div class="bb-res-ed-info">
+            <div class="bb-res-ed-name">재무/회계 자동화를 위한 md파일</div>
+            <div class="bb-res-ed-meta">Claude AI 연동용 · 2026.05</div>
+          </div>
+          <span class="bb-res-ed-badge">.md</span>
+        </li>
+        <li class="bb-res-ed-item">
+          <span class="bb-res-ed-num">02</span>
+          <div class="bb-res-ed-info">
+            <div class="bb-res-ed-name">일반 업무 자동화를 위한 md파일</div>
+            <div class="bb-res-ed-meta">범용 자동화 템플릿 · 2026.04</div>
+          </div>
+          <span class="bb-res-ed-badge">.md</span>
+        </li>
+        <li class="bb-res-ed-item">
+          <span class="bb-res-ed-num">03</span>
+          <div class="bb-res-ed-info">
+            <div class="bb-res-ed-name">실무자용 엑셀 파일</div>
+            <div class="bb-res-ed-meta">수식 포함 · 즉시 사용 가능</div>
+          </div>
+          <span class="bb-res-ed-badge">.xlsx</span>
+        </li>
+        <li class="bb-res-ed-item">
+          <span class="bb-res-ed-num">04</span>
+          <div class="bb-res-ed-info">
+            <div class="bb-res-ed-name">중소기업/스타트업 연간·월간 자금흐름 자동화 엑셀</div>
+            <div class="bb-res-ed-meta">회계 자동 계산 · 중소기업 기준</div>
+          </div>
+          <span class="bb-res-ed-badge">.xlsx</span>
+        </li>
+        <li class="bb-res-ed-item">
+          <span class="bb-res-ed-num">05</span>
+          <div class="bb-res-ed-info">
+            <div class="bb-res-ed-name">터미널 못 쓰는 환경의 업무 (반)자동화 가이드</div>
+            <div class="bb-res-ed-meta">No-Terminal 자동화 · 실무 적용형</div>
+          </div>
+          <span class="bb-res-ed-badge">.pdf</span>
+        </li>
+        <li class="bb-res-ed-item">
+          <span class="bb-res-ed-num">06</span>
+          <div class="bb-res-ed-info">
+            <div class="bb-res-ed-name">대표님 자금보고 · 오차 고쳐 쓰는 PPT</div>
+            <div class="bb-res-ed-meta">보고 자료 템플릿 · 수정 최소화 설계</div>
+          </div>
+          <span class="bb-res-ed-badge">.pptx</span>
+        </li>
+        <li class="bb-res-ed-item">
+          <span class="bb-res-ed-num">07</span>
+          <div class="bb-res-ed-info">
+            <div class="bb-res-ed-name">회의자료 골팅 · AI 이용 순서 가이드</div>
+            <div class="bb-res-ed-meta">AI 활용 실무 매뉴얼 · 단계별 정리</div>
+          </div>
+          <span class="bb-res-ed-badge">.md</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 03 인블로그 콘텐츠 -->
+  <div class="bb-card" id="bb-sec03">
+    <div class="bb-card-inner">
+      <p class="bb-sec-label">03 — 재무 콘텐츠</p>
+      <h2 class="bb-sec-title">재무 인사이트</h2>
+      <p class="bb-sec-desc">크레디뷰 블로그 최신 글</p>
+      <div class="bb-posts" id="posts-grid">
+        <div style="grid-column:1/-1;text-align:center;padding:24px;color:#aaa;font-size:14px">불러오는 중…</div>
+      </div>
+      <a href="https://crediview.co.kr/blog" target="_blank" rel="noopener noreferrer"
+         class="bb-more" id="posts-more" style="display:block;text-align:center;">더 보기 ›</a>
+    </div>
+  </div>
+
+  <!-- 04 기고 콘텐츠 -->
+  <div class="bb-card" id="bb-sec04">
+    <div class="bb-card-inner">
+      <p class="bb-sec-label">04 — 기고 콘텐츠 영역</p>
+      <h2 class="bb-sec-title">재무 인플루언서 큐레이션</h2>
+      <p class="bb-sec-desc">재무 관련 인플루언서 콘텐츠 수급 영역</p>
+      <div class="bb-contrib-grid">
+        <a href="#" class="bb-contrib-card">
+          <div class="bb-contrib-source">재무선배 · 브런치</div>
+          <div class="bb-contrib-title">재무선배가 떠먹여주는 실무자를 위한 재무꿀팁</div>
+          <div class="bb-contrib-desc">부채비율 분석부터 현금흐름표 읽는 법까지, 현직 재무팀장이 정리한 실전 노하우.</div>
+          <div class="bb-contrib-footer">
+            <span class="bb-contrib-date">May 20, 2026</span>
+            <span class="bb-contrib-link">읽기 →</span>
+          </div>
+        </a>
+        <a href="#" class="bb-contrib-card">
+          <div class="bb-contrib-source">CFO 레터 · 뉴스레터</div>
+          <div class="bb-contrib-title">현직 CFO가 알려주는 월말결산 체크리스트</div>
+          <div class="bb-contrib-desc">결산 오류의 80%는 이 5가지에서 발생합니다. 담당자라면 반드시 확인해야 할 항목 정리.</div>
+          <div class="bb-contrib-footer">
+            <span class="bb-contrib-date">May 17, 2026</span>
+            <span class="bb-contrib-link">읽기 →</span>
+          </div>
+        </a>
+        <a href="#" class="bb-contrib-card">
+          <div class="bb-contrib-source">스타트업 회계 · 팟캐스트</div>
+          <div class="bb-contrib-title">시리즈A 투자 전 반드시 정리해야 할 재무 서류</div>
+          <div class="bb-contrib-desc">투자자가 가장 먼저 보는 서류 7종 — 준비 순서와 실수 포인트까지 구체적으로 안내합니다.</div>
+          <div class="bb-contrib-footer">
+            <span class="bb-contrib-date">May 12, 2026</span>
+            <span class="bb-contrib-link">읽기 →</span>
+          </div>
+        </a>
+        <a href="#" class="bb-contrib-card">
+          <div class="bb-contrib-source">중기부 공식 · 정책 가이드</div>
+          <div class="bb-contrib-title">2026 정책자금 한 번에 정리하는 법</div>
+          <div class="bb-contrib-desc">소진공·기보·신보·지역신보 4대 기관 공고 일정 비교와 신청 전략을 정리했습니다.</div>
+          <div class="bb-contrib-footer">
+            <span class="bb-contrib-date">May 8, 2026</span>
+            <span class="bb-contrib-link">읽기 →</span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div class="bb-footer">
+    <p>© 2026 크레디뷰 · 블랙북 — 재무 담당자를 위한 지침서</p>
+    <p style="margin-top:4px"><a href="#">이용약관</a> · <a href="#">개인정보처리방침</a> · <a href="#">고객센터</a></p>
+  </div>
+
+</div>
+
+<script>
+/* ═══════════════════════════════════════
+   01 캘린더 — 기업마당 API 연동
+═══════════════════════════════════════ */
+let calDate     = new Date(2026, 4); // 2026-05
+let calEvents   = [];
+let calSelected = null;
+let calLoading  = false;
+let calError    = false;
+
+const DOW_HEADERS = ['일','월','화','수','목','금','토'];
+
+function getField(item, ...names) {
+  for (const n of names) {
+    const el = item.querySelector(n);
+    if (el && el.textContent.trim()) return el.textContent.trim();
+  }
+  return '';
+}
+
+// ── 재무 법정기한 (12월 결산법인 기준 · 세법·상법 명시 기한) ──────────────
+const CAL_SCHEDULE = {
+  1:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+        { day: 25, title: '부가세 2기 확정신고·납부', type: 'end' },
+      ],
+  2:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+      ],
+  3:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+        { day: 31, title: '법인세 확정신고·납부 (12월 결산법인)', type: 'end' },
+        { day: 31, title: '정기주주총회 기한 (12월 결산법인)', type: 'end' },
+      ],
+  4:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+        { day: 25, title: '부가세 1기 예정신고·납부', type: 'end' },
+      ],
+  5:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+        { day: 31, title: '종합소득세 확정신고·납부', type: 'end' },
+      ],
+  6:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+      ],
+  7:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '원천세 반기납부 (1~6월분, 해당 사업자)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+        { day: 25, title: '부가세 1기 확정신고·납부', type: 'end' },
+        { day: 31, title: '재산세 1기 납부 (건물·주택)', type: 'end' },
+      ],
+  8:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+        { day: 31, title: '법인세 중간예납 신고·납부 (12월 결산법인)', type: 'end' },
+      ],
+  9:  [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+        { day: 30, title: '재산세 2기 납부 (토지)', type: 'end' },
+      ],
+  10: [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+        { day: 25, title: '부가세 2기 예정신고·납부', type: 'end' },
+      ],
+  11: [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+      ],
+  12: [
+        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
+        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
+        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
+      ],
+};
+
+function getNextDeadlines(count) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const results = [];
+  let skipFrom = 0;
+
+  for (let offset = 0; offset <= 90 && results.length < count; offset++) {
+    if (offset < skipFrom) continue;
+    const d = new Date(today);
+    d.setDate(today.getDate() + offset);
+    const mo = d.getMonth() + 1;
+    const dy = d.getDate();
+    const hits = (CAL_SCHEDULE[mo] || []).filter(ev => ev.day === dy);
+    if (hits.length > 0) {
+      results.push({ title: hits[0].title, days: offset, month: mo, day: dy, count: hits.length });
+      skipFrom = offset + 1; // 같은 날 중복 방지, 다음 날부터 탐색
+    }
+  }
+  return results;
+}
+
+function renderDday() {
+  const el = document.getElementById('cal-dday');
+  if (!el) return;
+  const list = getNextDeadlines(2);
+  if (list.length === 0) { el.style.display = 'flex'; return; }
+
+  el.style.display = 'flex';
+  el.innerHTML = list.map((next, i) => {
+    const badge    = next.days === 0 ? 'D-Day' : `D-${next.days}`;
+    const badgeCls = next.days === 0 ? 'bb-dday-badge today' : 'bb-dday-badge';
+    const extra    = next.count > 1 ? ` 외 ${next.count - 1}건` : '';
+    const rowCls   = i === 1 ? 'bb-dday-row dim' : 'bb-dday-row';
+    return `
+      <div class="${rowCls}">
+        <div class="${badgeCls}">${badge}</div>
+        <div class="bb-dday-divider"></div>
+        <div class="bb-dday-info">
+          <div class="bb-dday-title">${next.title}${extra}</div>
+          <div class="bb-dday-date">${next.month}월 ${next.day}일 마감</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function fetchCalEvents() {
+  const m = calDate.getMonth() + 1; // 1-based
+
+  calLoading  = false;
+  calError    = false;
+  calSelected = null;
+  calEvents   = (CAL_SCHEDULE[m] || []).map(ev => ({ ...ev, link: '' }));
+  renderDday();
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const y    = calDate.getFullYear();
+  const m    = calDate.getMonth();
+  const now  = new Date();
+  const todayMark = (now.getFullYear() === y && now.getMonth() === m) ? now.getDate() : -1;
+  const firstDow  = new Date(y, m, 1).getDay();
+  const daysInMonth = new Date(y, m + 1, 0).getDate();
+
+  document.getElementById('cal-month-label').textContent = `${y}년 ${m+1}월`;
+
+  // 그리드 재구성 (요일 헤더 유지)
+  const grid = document.getElementById('cal-grid');
+  grid.innerHTML = DOW_HEADERS.map(d => `<div class="bb-dow">${d}</div>`).join('');
+
+  // 빈 셀
+  for (let i = 0; i < firstDow; i++) {
+    const el = document.createElement('div');
+    el.className = 'bb-day';
+    grid.appendChild(el);
+  }
+
+  // 날짜 셀
+  for (let d = 1; d <= daysInMonth; d++) {
+    const hasEv = calEvents.some(e => e.day === d);
+    const isTd  = d === todayMark;
+    const isSel = d === calSelected;
+    const cls   = ['bb-day', hasEv && 'ev', isTd && 'td', isSel && 'sel'].filter(Boolean).join(' ');
+    const cell  = document.createElement('div');
+    cell.className = cls;
+    cell.textContent = d;
+    if (hasEv) {
+      const dot = document.createElement('div');
+      dot.className = 'bb-dot';
+      cell.appendChild(dot);
+    }
+    const day = d;
+    cell.addEventListener('click', () => {
+      calSelected = (calSelected === day) ? null : day;
+      renderCalendar();
+    });
+    grid.appendChild(cell);
+  }
+
+  renderDatePanel();
+  renderChips();
+}
+
+function renderDatePanel() {
+  const panel = document.getElementById('cal-date-panel');
+  if (!calSelected) { panel.style.display = 'none'; return; }
+
+  const m = calDate.getMonth();
+  const events = calEvents.filter(e => e.day === calSelected);
+  panel.style.display = 'block';
+
+  let html = `<div class="bb-date-panel-hd">${m+1}월 ${calSelected}일 공고</div>`;
+  if (calLoading) {
+    html += '<p style="font-size:14px;color:#aaa">불러오는 중…</p>';
+  } else if (events.length === 0) {
+    html += '<p style="font-size:14px;color:#aaa">해당 날짜 공고 없음</p>';
+  } else {
+    html += '<ul class="bb-date-panel-list">';
+    events.forEach(ev => {
+      const tagCls  = ev.type === 'end' ? 'bb-ev-end' : 'bb-ev-start';
+      const tagText = ev.type === 'end' ? '마감' : '시작';
+      const title   = ev.link
+        ? `<a href="${ev.link}" target="_blank" rel="noopener noreferrer">${ev.title}</a>`
+        : ev.title;
+      html += `<li class="bb-date-panel-item"><span class="bb-ev-tag ${tagCls}">${tagText}</span>${title}</li>`;
+    });
+    html += '</ul>';
+  }
+  panel.innerHTML = html;
+}
+
+function renderChips() {
+  const el = document.getElementById('cal-chips');
+  if (calLoading) {
+    el.innerHTML = '<span class="bb-chip" style="color:#aaa;border-color:#dde">불러오는 중…</span>';
+    return;
+  }
+  if (calError) {
+    el.innerHTML = '<span class="bb-chip" style="color:#c33;border-color:#fcc">API 연결 오류</span>';
+    return;
+  }
+  if (calEvents.length === 0) {
+    el.innerHTML = '<span class="bb-chip" style="color:#aaa">이번 달 공고 없음</span>';
+    return;
+  }
+  const seen = new Map();
+  calEvents.forEach(e => { if (!seen.has(e.title)) seen.set(e.title, e); });
+  el.innerHTML = Array.from(seen.values()).slice(0, 5).map(e => {
+    const t = e.title.length > 16 ? e.title.slice(0, 16) + '…' : e.title;
+    return `<span class="bb-chip">${t}</span>`;
+  }).join('');
+}
+
+document.getElementById('cal-prev').addEventListener('click', () => {
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth() - 1);
+  fetchCalEvents();
+});
+document.getElementById('cal-next').addEventListener('click', () => {
+  calDate = new Date(calDate.getFullYear(), calDate.getMonth() + 1);
+  fetchCalEvents();
+});
+
+// 최초 로드
+fetchCalEvents();
+
+/* ═══════════════════════════════════════
+   03 인블로그 포스트
+═══════════════════════════════════════ */
+const GRADS = [
+  'linear-gradient(135deg,#00103d,#002066)',
+  'linear-gradient(135deg,#1a0a00,#3d1f00)',
+  'linear-gradient(135deg,#001a0a,#003322)',
+  'linear-gradient(135deg,#1a001a,#3d003d)',
+  'linear-gradient(135deg,#001a1a,#003333)',
+  'linear-gradient(135deg,#0d0d00,#2a2a00)',
+  'linear-gradient(135deg,#001020,#002040)',
+  'linear-gradient(135deg,#100010,#300030)',
+  'linear-gradient(135deg,#001010,#003030)',
+];
+const EMOJIS = ['🏢','📈','💡','🏦','⚖️','📊','💰','🔍','📋'];
+
+let allPosts = [];
+
+function postCardHTML(p, i) {
+  const grad  = GRADS[i % GRADS.length];
+  const emoji = EMOJIS[i % EMOJIS.length];
+  const url   = `https://inblog.ai/crediview/${p.slug}`;
+  const date  = p.date
+    ? new Date(p.date).toLocaleDateString('ko-KR', { year:'numeric', month:'short', day:'numeric' })
+    : '';
+  const thumbHtml = p.image
+    ? `<img src="${p.image}" alt="${p.title}" loading="lazy">`
+    : emoji;
+  const thumbStyle = p.image ? '' : `style="background:${grad}"`;
+  return `
+    <a href="${url}" target="_blank" rel="noopener noreferrer" class="bb-post">
+      <div class="bb-post-thumb" ${thumbStyle}>${thumbHtml}</div>
+      <div class="bb-post-body">
+        <div class="bb-post-cat">크레디뷰</div>
+        <div class="bb-post-title">${p.title}</div>
+        <div class="bb-post-date">${date}</div>
+      </div>
+    </a>`;
+}
+
+async function loadPosts() {
+  const grid = document.getElementById('posts-grid');
+  const more = document.getElementById('posts-more');
+
+  try {
+    const r    = await fetch('/api/posts');
+    const data = await r.json();
+    allPosts   = data.posts || [];
+
+    if (allPosts.length === 0) {
+      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#aaa;font-size:14px">콘텐츠가 없습니다.</div>';
+      return;
+    }
+
+    grid.innerHTML = allPosts.slice(0, 3).map(postCardHTML).join('');
+    more.style.display = 'block'; // 항상 노출 (크레디뷰 블로그 링크)
+  } catch {
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#c33;font-size:14px">콘텐츠를 불러오지 못했습니다.</div>';
+  }
+}
+
+loadPosts();
+</script>
+</body>
+</html>
