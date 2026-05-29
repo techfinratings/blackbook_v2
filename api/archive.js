@@ -1,6 +1,6 @@
 const SHEET_ID = '1gsjz9DXDHaFgGTOrx42i6_XEgqETq_n1db3zO6ZMH6Y';
 const API_KEY  = 'AIzaSyBpaRMklAo95BOau2BcebuZv5kMsWV6zik';
-const RANGE    = 'Sheet1!A2:H';
+const RANGE    = '시트1!A2:H';
 
 module.exports = async function (req, res) {
   const url = 'https://sheets.googleapis.com/v4/spreadsheets/'
