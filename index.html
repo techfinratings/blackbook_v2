@@ -157,83 +157,144 @@
   .bb-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
   .bb-chip  { font-size:14px; background:#fff; border:1px solid #d8e0ff; border-radius:999px; padding:4px 12px; color:#0046FF; font-weight:600; }
 
-  /* ── 02 계산기 위자드 ── */
-  .bb-wiz-dots { display:flex; gap:6px; justify-content:center; margin-bottom:24px; }
-  .bb-wiz-dot { width:8px; height:8px; border-radius:50%; background:#e0e0e0; transition:background .2s; }
-  .bb-wiz-dot.done { background:#0046FF; }
-  .bb-wiz-dot.active { background:#0046FF; transform:scale(1.3); }
-  .bb-wiz-stepnum { font-size:12px; color:#999; text-align:center; margin-bottom:18px; letter-spacing:0.08em; font-weight:600; }
+  /* ── 02 계산기 (에디토리얼 위자드) ── */
+  #bb-sec02 {
+    font-family:'BookkGothic','Pretendard',sans-serif;
+    background:#fff; border:1.5px solid #0a0a0a;
+    border-radius:4px; overflow:hidden;
+  }
+  #bb-sec02 .bb-card-inner { padding:32px 28px 28px; }
+  #bb-sec02 .bb-sec-label {
+    font-size:11px; font-weight:300; letter-spacing:0.22em;
+    color:#999; text-transform:uppercase; margin-bottom:0;
+  }
+  .bb-wiz-divider { height:1px; background:#0a0a0a; margin:18px 0 22px; }
 
-  .bb-wiz-q { font-size:18px; font-weight:700; color:#1a1a1a; margin:20px 0 10px; line-height:1.4; }
+  /* 인디케이터 */
+  .bb-wiz-stepnum {
+    font-size:11px; font-weight:300; letter-spacing:0.25em;
+    color:#0a0a0a; text-transform:uppercase; margin-bottom:18px;
+  }
+  .bb-wiz-dots { display:flex; gap:0; margin-bottom:32px; }
+  .bb-wiz-dot {
+    flex:1; height:2px; background:#e8e8e8; transition:background .2s;
+  }
+  .bb-wiz-dot.done, .bb-wiz-dot.active { background:#0a0a0a; }
+  .bb-wiz-dot + .bb-wiz-dot { margin-left:4px; }
+
+  /* 입력 */
+  .bb-wiz-q {
+    font-size:14px; font-weight:700; color:#0a0a0a;
+    margin:24px 0 10px; line-height:1.4;
+  }
   .bb-wiz-q:first-child { margin-top:0; }
   .bb-wiz-input, .bb-wiz-select {
-    width:100%; padding:14px 16px; border:1.5px solid #e8e8e8; border-radius:12px;
-    font-size:17px; color:#222; background:#fafafa;
-    font-family:'Pretendard',sans-serif; outline:none; transition:border-color .15s;
+    width:100%; padding:14px 16px; border:1px solid #0a0a0a; border-radius:2px;
+    font-size:15px; font-weight:700; color:#0a0a0a; background:#fff;
+    font-family:'BookkGothic','Pretendard',sans-serif; outline:none;
+    transition:background .15s;
   }
-  .bb-wiz-input:focus, .bb-wiz-select:focus { border-color:#0046FF; background:#fff; }
-  .bb-wiz-hint { font-size:12px; color:#aaa; margin-top:6px; line-height:1.5; }
+  .bb-wiz-input:focus, .bb-wiz-select:focus { background:#f8f8f8; }
+  .bb-wiz-input::placeholder { color:#bbb; font-weight:300; }
+  .bb-wiz-hint {
+    font-size:11px; font-weight:300; color:#999;
+    margin-top:6px; line-height:1.5; letter-spacing:0.02em;
+  }
 
+  /* 버튼 */
   .bb-wiz-nav { display:flex; gap:8px; margin-top:32px; }
   .bb-wiz-btn {
-    flex:1; padding:14px 18px; border-radius:12px;
-    font-size:16px; font-weight:700; cursor:pointer;
-    font-family:'Pretendard',sans-serif; border:none; transition:background .15s;
+    flex:1; padding:16px 18px; border-radius:2px;
+    font-size:13px; font-weight:700; cursor:pointer; letter-spacing:0.08em;
+    font-family:'BookkGothic','Pretendard',sans-serif;
+    border:1.5px solid #0a0a0a; transition:background .15s, color .15s;
   }
   .bb-wiz-btn.primary { background:#0a0a0a; color:#fff; }
-  .bb-wiz-btn.primary:hover { background:#0046FF; }
-  .bb-wiz-btn.ghost { background:#f2f2f2; color:#555; flex:0 0 100px; }
-  .bb-wiz-btn.ghost:hover { background:#e6e6e6; }
+  .bb-wiz-btn.primary:hover { background:#fff; color:#0a0a0a; }
+  .bb-wiz-btn.ghost { background:#fff; color:#0a0a0a; flex:0 0 100px; }
+  .bb-wiz-btn.ghost:hover { background:#0a0a0a; color:#fff; }
 
+  /* 인트로 */
   .bb-wiz-intro-top {
     display:flex; align-items:flex-start; justify-content:space-between;
     gap:16px; margin-bottom:14px;
   }
   .bb-wiz-intro-deco { flex:0 0 38%; max-width:200px; align-self:center; }
   .bb-wiz-intro-deco img { width:100%; height:auto; display:block; }
-  .bb-wiz-intro-hd { font-size:32px; font-weight:900; color:#0a0a0a; letter-spacing:-0.03em; line-height:1.2; margin-bottom:0; flex:1; }
-  .bb-wiz-intro-sub { font-size:15px; color:#666; line-height:1.6; margin-bottom:20px; }
-  .bb-wiz-intro-list {
-    list-style:none; padding:18px 20px; background:#f8f8f8;
-    border-radius:12px; margin-bottom:18px;
+  .bb-wiz-intro-hd {
+    font-size:38px; font-weight:700; color:#0a0a0a;
+    letter-spacing:-0.04em; line-height:1.1; margin-bottom:0; flex:1;
   }
+  .bb-wiz-intro-sub {
+    font-size:13px; font-weight:300; color:#888; line-height:1.6;
+    padding-bottom:20px; border-bottom:1px solid #0a0a0a; margin-bottom:0;
+  }
+  .bb-wiz-intro-list { list-style:none; margin-bottom:22px; }
   .bb-wiz-intro-list li {
-    font-size:14px; color:#555; padding:5px 0; display:flex; align-items:center; gap:10px;
+    display:flex; align-items:center; gap:16px;
+    padding:15px 0; border-bottom:1px solid #efefef;
+    font-size:14px; font-weight:700; color:#0a0a0a;
   }
+  .bb-wiz-intro-list li:last-child { border-bottom:none; }
   .bb-wiz-intro-list li::before {
-    content:''; width:6px; height:6px; border-radius:50%; background:#ccc; flex-shrink:0;
+    content:attr(data-num);
+    font-size:11px; font-weight:300; color:#ccc;
+    letter-spacing:0.05em; width:22px; text-align:right;
   }
   .bb-wiz-disclaimer {
-    font-size:12px; color:#888; padding:12px 14px;
-    background:#fffaf0; border-left:3px solid #f0b020;
-    border-radius:6px; margin-bottom:18px; line-height:1.6;
+    font-size:11px; font-weight:300; color:#888;
+    padding:14px 16px; background:#f8f8f8;
+    border-left:2px solid #0a0a0a; margin-bottom:22px; line-height:1.6;
   }
+  .bb-wiz-disclaimer strong { font-weight:700; color:#0a0a0a; }
 
   /* 결과 */
-  .bb-result-hero { text-align:center; padding:14px 0 24px; }
-  .bb-result-label { font-size:13px; color:#888; margin-bottom:6px; letter-spacing:0.06em; }
-  .bb-result-val { font-size:72px; font-weight:900; color:#0046FF; line-height:1; letter-spacing:-0.03em; }
-  .bb-result-sub { font-size:13px; color:#888; margin-top:8px; }
+  .bb-result-hero {
+    text-align:center; padding:24px 0 32px;
+    border-bottom:1px solid #0a0a0a; margin-bottom:26px;
+  }
+  .bb-result-label {
+    font-size:11px; font-weight:300; color:#999;
+    letter-spacing:0.22em; text-transform:uppercase; margin-bottom:10px;
+  }
+  .bb-result-val {
+    font-size:84px; font-weight:700; color:#0a0a0a;
+    line-height:1; letter-spacing:-0.05em;
+  }
+  .bb-result-sub {
+    font-size:12px; font-weight:300; color:#666; margin-top:12px;
+  }
 
-  .bb-scorecard { display:flex; flex-direction:column; gap:16px; margin-bottom:18px; }
-  .bb-score { display:flex; flex-direction:column; gap:6px; }
+  .bb-scorecard { display:flex; flex-direction:column; gap:22px; margin-bottom:24px; }
+  .bb-score { display:flex; flex-direction:column; gap:8px; }
   .bb-score-head { display:flex; justify-content:space-between; align-items:baseline; }
-  .bb-score-name { font-size:14px; font-weight:700; color:#1a1a1a; }
-  .bb-score-val  { font-size:14px; font-weight:800; color:#0046FF; }
-  .bb-score-bar  { width:100%; height:8px; background:#f0f0f0; border-radius:4px; overflow:hidden; }
-  .bb-score-fill { height:100%; background:#0046FF; border-radius:4px; transition:width .6s ease; }
-  .bb-score-fill.warn { background:#f0a020; }
-  .bb-score-fill.bad  { background:#e03030; }
-  .bb-score-comment { font-size:12px; color:#777; line-height:1.5; }
+  .bb-score-name {
+    font-size:13px; font-weight:700; color:#0a0a0a;
+    letter-spacing:-0.01em;
+  }
+  .bb-score-val {
+    font-size:13px; font-weight:700; color:#0a0a0a;
+    font-variant-numeric:tabular-nums;
+  }
+  .bb-score-bar { width:100%; height:3px; background:#f0f0f0; overflow:hidden; }
+  .bb-score-fill {
+    height:100%; background:#0a0a0a; transition:width .6s ease;
+  }
+  .bb-score-fill.warn { background:#0a0a0a; opacity:.55; }
+  .bb-score-fill.bad  { background:#0a0a0a; opacity:.25; }
+  .bb-score-comment {
+    font-size:11px; font-weight:300; color:#888; line-height:1.5;
+  }
 
   .bb-cta-btn {
-    display:block; width:100%; margin-top:10px; padding:14px;
-    background:#0a0a0a; color:#fff; border:none; border-radius:12px;
-    font-size:17px; font-weight:700; cursor:pointer;
-    font-family:'Pretendard',sans-serif; transition:background .2s;
+    display:block; width:100%; margin-top:8px; padding:16px;
+    background:#0a0a0a; color:#fff; border:1.5px solid #0a0a0a; border-radius:2px;
+    font-size:13px; font-weight:700; cursor:pointer; letter-spacing:0.1em;
+    text-transform:uppercase; text-align:center; text-decoration:none;
+    font-family:'BookkGothic','Pretendard',sans-serif; transition:background .15s, color .15s;
   }
-  .bb-cta-btn:hover { background:#0046FF; }
-  .bb-cta-btn.outline { background:#fff; color:#0a0a0a; border:1.5px solid #0a0a0a; }
+  .bb-cta-btn:hover { background:#fff; color:#0a0a0a; }
+  .bb-cta-btn.outline { background:#fff; color:#0a0a0a; }
   .bb-cta-btn.outline:hover { background:#0a0a0a; color:#fff; }
 
   /* ── 자료실 (에디토리얼 리디자인) ── */
@@ -429,9 +490,9 @@
   </div>
 
   <!-- 02 기업대출 확률 계산기 (위자드) -->
-  <div class="bb-card" id="bb-sec02">
+  <div id="bb-sec02">
     <div class="bb-card-inner">
-      <p class="bb-sec-label">02 — 기업대출 확률 계산기</p>
+      <p class="bb-sec-label">02 / Loan Probability</p>
 
       <div id="wiz-indicator" style="display:none">
         <div class="bb-wiz-stepnum" id="wiz-stepnum"></div>
@@ -448,15 +509,15 @@
         </div>
         <p class="bb-wiz-intro-sub">실제 금융기관 심사 기준 기반 · 4단계 1분 진단</p>
         <ul class="bb-wiz-intro-list">
-          <li>업종 · 업력</li>
-          <li>연매출 · 부채비율</li>
-          <li>신용등급 · 희망 금액</li>
-          <li>진단 결과 확인</li>
+          <li data-num="01">업종 · 업력</li>
+          <li data-num="02">연매출 · 부채비율</li>
+          <li data-num="03">신용등급 · 희망 금액</li>
+          <li data-num="04">진단 결과 확인</li>
         </ul>
         <div class="bb-wiz-disclaimer">
           본 결과는 <strong>참고용 추정치</strong>입니다. 실제 금융기관의 심사 결과와 다를 수 있습니다.
         </div>
-        <button class="bb-wiz-btn primary" onclick="wizGo(2)">시작하기 →</button>
+        <button class="bb-wiz-btn primary" onclick="wizGo(2)" style="width:100%;">시작하기 →</button>
       </div>
 
       <!-- STEP 2: 업종 + 업력 -->
@@ -1003,10 +1064,10 @@ function wizGo(n) {
   if (n >= 2 && n <= 4) {
     ind.style.display = 'block';
     const idx = n - 1;
-    document.getElementById('wiz-stepnum').textContent = `STEP ${idx} / 3`;
+    document.getElementById('wiz-stepnum').textContent = `STEP ${String(idx).padStart(2,'0')} / 03`;
     document.getElementById('wiz-dots').innerHTML =
       [1,2,3].map(i => {
-        const cls = i < idx ? 'done' : (i === idx ? 'active' : '');
+        const cls = i <= idx ? 'done' : '';
         return `<div class="bb-wiz-dot ${cls}"></div>`;
       }).join('');
   } else {
