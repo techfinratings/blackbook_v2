@@ -125,14 +125,16 @@ body {
   display: flex; align-items: center; justify-content: center;
   width: 30px; height: 30px; border-radius: 50%;
   background: #f2f2f2; border: 1px solid #e0e0e0; color: #0a0a0a;
-  text-decoration: none; transition: background .15s, border-color .15s, color .15s; flex-shrink: 0;
+  text-decoration: none; cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s; flex-shrink: 0;
+  padding: 0;
 }
 .archive-btn-dl:hover { background: #0046FF; border-color: #0046FF; color: #fff; }
-.archive-btn-dl svg { width: 13px; height: 13px; }
 .archive-btn-dl--disabled {
   background: #f8f8f8 !important; border-color: #eee !important;
   color: #ccc !important; cursor: default;
 }
+.archive-btn-dl svg { width: 13px; height: 13px; }
 
 .archive-skel-item {
   display: flex; align-items: center; gap: 14px;
@@ -284,8 +286,7 @@ body {
       <div id="archiveModalLinkSlot"></div>
     </div>
     <div class="archive-modal__footer">
-      <a class="archive-btn-dl-lg" id="archiveModalDl"
-         href="#" target="_blank" rel="noopener noreferrer">다운로드</a>
+      <button class="archive-btn-dl-lg" id="archiveModalDl">다운로드</button>
     </div>
   </div>
 </div>
@@ -294,7 +295,7 @@ body {
 (function () {
   'use strict';
 
-  var API_URL = '/api/archive'; // ← 설정 끝. 나머지는 건드릴 필요 없음
+  var API_URL = '/api/archive';
 
   var allItems  = [];
   var activeCat = '전체';
@@ -337,8 +338,9 @@ body {
         var rows = (json.values || []).filter(function (r) {
           return r && r[0] && r[0].trim();
         });
-        allItems = rows.map(function (r) {
+        allItems = rows.map(function (r, idx) {
           return {
+            sheetRow: idx + 2, // 시트 2행부터 데이터 시작 → 실제 행 번호
             name:     (r[0] || '').trim(),
             desc:     (r[1] || '').trim(),
             category: (r[2] || '').trim(),
@@ -356,6 +358,20 @@ body {
         console.error('[archive]', err);
         listEl.innerHTML = '<li class="archive-error"><p>⚠️ 데이터를 불러오지 못했습니다.<br>api/archive.js 설정을 확인해주세요.</p></li>';
       });
+  }
+
+  // 다운로드 카운트 +1 후 파일 열기
+  async function handleDownload(sheetRow, dlUrl) {
+    try {
+      await fetch('/api/download', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ row: sheetRow }),
+      });
+    } catch (e) {
+      // 카운팅 실패해도 다운로드는 진행
+    }
+    window.open(dlUrl, '_blank', 'noopener,noreferrer');
   }
 
   function updateCounts() {
@@ -402,7 +418,7 @@ body {
     var catBadge  = item.category ? '<span class="archive-badge archive-badge--cat">' + esc(item.category) + '</span>' : '';
     var typeBadge = item.filetype ? '<span class="archive-badge archive-badge--' + typeKey + '">' + esc(item.filetype) + '</span>' : '';
     var dlBtn     = dlUrl
-      ? '<a class="archive-btn-dl" href="' + esc(dlUrl) + '" target="_blank" rel="noopener noreferrer" aria-label="다운로드">' + icoDownload(13) + '</a>'
+      ? '<button class="archive-btn-dl" aria-label="다운로드">' + icoDownload(13) + '</button>'
       : '<span class="archive-btn-dl archive-btn-dl--disabled">' + icoDownload(13) + '</span>';
 
     li.innerHTML =
@@ -417,8 +433,11 @@ body {
       '<div class="archive-item__right">' + typeBadge + dlBtn + '</div>';
 
     var dlEl = li.querySelector('.archive-btn-dl');
-    if (dlEl && dlEl.tagName === 'A') {
-      dlEl.addEventListener('click', function (e) { e.stopPropagation(); });
+    if (dlEl && dlEl.tagName === 'BUTTON') {
+      dlEl.addEventListener('click', function (e) {
+        e.stopPropagation();
+        handleDownload(item.sheetRow, dlUrl);
+      });
     }
     li.addEventListener('click', function () { openModal(item); });
     li.addEventListener('keydown', function (e) {
@@ -472,14 +491,12 @@ body {
     var dlBtn = document.getElementById('archiveModalDl');
     dlBtn.innerHTML = icoDownload(16) + '다운로드';
     if (dlUrl) {
-      dlBtn.href = dlUrl;
       dlBtn.classList.remove('archive-btn-dl-lg--disabled');
-      dlBtn.onclick = null;
+      dlBtn.onclick = function () { handleDownload(item.sheetRow, dlUrl); };
     } else {
-      dlBtn.href = '#';
       dlBtn.classList.add('archive-btn-dl-lg--disabled');
       dlBtn.innerHTML = icoDownload(16) + '다운로드 링크 준비 중';
-      dlBtn.onclick = function (e) { e.preventDefault(); };
+      dlBtn.onclick = null;
     }
 
     overlay.classList.add('archive-modal-overlay--open');
