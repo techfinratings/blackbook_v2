@@ -157,29 +157,84 @@
   .bb-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
   .bb-chip  { font-size:14px; background:#fff; border:1px solid #d8e0ff; border-radius:999px; padding:4px 12px; color:#0046FF; font-weight:600; }
 
-  /* ── 02 계산기 ── */
-  .bb-calc-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px; }
-  .bb-field label { font-size:14px; color:#aaa; font-weight:600; display:block; margin-bottom:5px; letter-spacing:0.03em; }
-  .bb-field input,.bb-field select {
-    width:100%; padding:9px 12px; border:1.5px solid #ebebeb; border-radius:10px;
-    font-size:18px; color:#222; background:#fafafa;
+  /* ── 02 계산기 위자드 ── */
+  .bb-wiz-dots { display:flex; gap:6px; justify-content:center; margin-bottom:24px; }
+  .bb-wiz-dot { width:8px; height:8px; border-radius:50%; background:#e0e0e0; transition:background .2s; }
+  .bb-wiz-dot.done { background:#0046FF; }
+  .bb-wiz-dot.active { background:#0046FF; transform:scale(1.3); }
+  .bb-wiz-stepnum { font-size:12px; color:#999; text-align:center; margin-bottom:18px; letter-spacing:0.08em; font-weight:600; }
+
+  .bb-wiz-q { font-size:18px; font-weight:700; color:#1a1a1a; margin:20px 0 10px; line-height:1.4; }
+  .bb-wiz-q:first-child { margin-top:0; }
+  .bb-wiz-input, .bb-wiz-select {
+    width:100%; padding:14px 16px; border:1.5px solid #e8e8e8; border-radius:12px;
+    font-size:17px; color:#222; background:#fafafa;
     font-family:'Pretendard',sans-serif; outline:none; transition:border-color .15s;
   }
-  .bb-field input:focus,.bb-field select:focus { border-color:#0046FF; }
-  .bb-calc-output { background:#0a0a0a; border-radius:14px; padding:20px 22px; display:flex; align-items:center; justify-content:space-between; gap:16px; }
-  .bb-calc-label { font-size:14px; color:#666; margin-bottom:5px; }
-  .bb-calc-val   { font-size:51px; font-weight:900; color:#0046FF; line-height:1; }
-  .bb-calc-sub   { font-size:14px; color:#444; margin-top:7px; }
-  .bb-meter { width:86px; height:86px; position:relative; flex-shrink:0; }
-  .bb-meter svg { transform:rotate(-90deg); display:block; }
-  .bb-meter-num { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:20px; font-weight:800; color:#0046FF; }
+  .bb-wiz-input:focus, .bb-wiz-select:focus { border-color:#0046FF; background:#fff; }
+  .bb-wiz-hint { font-size:12px; color:#aaa; margin-top:6px; line-height:1.5; }
+
+  .bb-wiz-nav { display:flex; gap:8px; margin-top:32px; }
+  .bb-wiz-btn {
+    flex:1; padding:14px 18px; border-radius:12px;
+    font-size:16px; font-weight:700; cursor:pointer;
+    font-family:'Pretendard',sans-serif; border:none; transition:background .15s;
+  }
+  .bb-wiz-btn.primary { background:#0a0a0a; color:#fff; }
+  .bb-wiz-btn.primary:hover { background:#0046FF; }
+  .bb-wiz-btn.ghost { background:#f2f2f2; color:#555; flex:0 0 100px; }
+  .bb-wiz-btn.ghost:hover { background:#e6e6e6; }
+
+  .bb-wiz-intro-top {
+    display:flex; align-items:flex-start; justify-content:space-between;
+    gap:16px; margin-bottom:14px;
+  }
+  .bb-wiz-intro-deco { flex:0 0 38%; max-width:200px; align-self:center; }
+  .bb-wiz-intro-deco img { width:100%; height:auto; display:block; }
+  .bb-wiz-intro-hd { font-size:32px; font-weight:900; color:#0a0a0a; letter-spacing:-0.03em; line-height:1.2; margin-bottom:0; flex:1; }
+  .bb-wiz-intro-sub { font-size:15px; color:#666; line-height:1.6; margin-bottom:20px; }
+  .bb-wiz-intro-list {
+    list-style:none; padding:18px 20px; background:#f8f8f8;
+    border-radius:12px; margin-bottom:18px;
+  }
+  .bb-wiz-intro-list li {
+    font-size:14px; color:#555; padding:5px 0; display:flex; align-items:center; gap:10px;
+  }
+  .bb-wiz-intro-list li::before {
+    content:''; width:6px; height:6px; border-radius:50%; background:#ccc; flex-shrink:0;
+  }
+  .bb-wiz-disclaimer {
+    font-size:12px; color:#888; padding:12px 14px;
+    background:#fffaf0; border-left:3px solid #f0b020;
+    border-radius:6px; margin-bottom:18px; line-height:1.6;
+  }
+
+  /* 결과 */
+  .bb-result-hero { text-align:center; padding:14px 0 24px; }
+  .bb-result-label { font-size:13px; color:#888; margin-bottom:6px; letter-spacing:0.06em; }
+  .bb-result-val { font-size:72px; font-weight:900; color:#0046FF; line-height:1; letter-spacing:-0.03em; }
+  .bb-result-sub { font-size:13px; color:#888; margin-top:8px; }
+
+  .bb-scorecard { display:flex; flex-direction:column; gap:16px; margin-bottom:18px; }
+  .bb-score { display:flex; flex-direction:column; gap:6px; }
+  .bb-score-head { display:flex; justify-content:space-between; align-items:baseline; }
+  .bb-score-name { font-size:14px; font-weight:700; color:#1a1a1a; }
+  .bb-score-val  { font-size:14px; font-weight:800; color:#0046FF; }
+  .bb-score-bar  { width:100%; height:8px; background:#f0f0f0; border-radius:4px; overflow:hidden; }
+  .bb-score-fill { height:100%; background:#0046FF; border-radius:4px; transition:width .6s ease; }
+  .bb-score-fill.warn { background:#f0a020; }
+  .bb-score-fill.bad  { background:#e03030; }
+  .bb-score-comment { font-size:12px; color:#777; line-height:1.5; }
+
   .bb-cta-btn {
-    display:block; width:100%; margin-top:12px; padding:14px;
+    display:block; width:100%; margin-top:10px; padding:14px;
     background:#0a0a0a; color:#fff; border:none; border-radius:12px;
-    font-size:19px; font-weight:700; cursor:pointer;
+    font-size:17px; font-weight:700; cursor:pointer;
     font-family:'Pretendard',sans-serif; transition:background .2s;
   }
   .bb-cta-btn:hover { background:#0046FF; }
+  .bb-cta-btn.outline { background:#fff; color:#0a0a0a; border:1.5px solid #0a0a0a; }
+  .bb-cta-btn.outline:hover { background:#0a0a0a; color:#fff; }
 
   /* ── 자료실 (에디토리얼 리디자인) ── */
   .bb-res-ed {
@@ -229,18 +284,64 @@
   .bb-badge-pdf { background:#2a0800; color:#ff4422; }
   .bb-badge-ppt { background:#2a1400; color:#ff9922; }
 
-  /* ── 03 인블로그 포스트 ── */
-  .bb-posts { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
-  .bb-post  { background:#f5f5f5; border-radius:14px; overflow:hidden; cursor:pointer; transition:transform .15s; text-decoration:none; display:block; }
-  .bb-post:hover { transform:translateY(-2px); }
-  .bb-post-thumb { width:100%; aspect-ratio:16/9; display:flex; align-items:center; justify-content:center; font-size:30px; overflow:hidden; }
+  /* ── 03 재무 인사이트 (에디토리얼) ── */
+  #bb-sec03 {
+    font-family:'BookkGothic','Pretendard',sans-serif;
+    background:#fff; border:1.5px solid #0a0a0a;
+    border-radius:4px; overflow:hidden;
+  }
+  #bb-sec03 .bb-card-inner { padding:32px 28px 28px; }
+  #bb-sec03 .bb-sec-label {
+    font-size:11px; font-weight:300; letter-spacing:0.22em;
+    color:#999; text-transform:uppercase; margin-bottom:0;
+  }
+  #bb-sec03 .bb-sec-title {
+    font-size:38px; font-weight:700; color:#0a0a0a;
+    letter-spacing:-0.03em; line-height:1.1; margin-bottom:6px;
+    font-family:'BookkGothic','Pretendard',sans-serif;
+  }
+  #bb-sec03 .bb-sec-desc {
+    font-size:13px; font-weight:300; color:#888; line-height:1.6;
+    padding-bottom:24px; border-bottom:1px solid #0a0a0a; margin-bottom:24px;
+  }
+
+  .bb-posts { display:grid; grid-template-columns:1fr; gap:32px; margin-bottom:8px; }
+  .bb-post  {
+    background:transparent; border-radius:0; overflow:hidden;
+    cursor:pointer; transition:opacity .15s; text-decoration:none; display:block;
+  }
+  .bb-post:hover { opacity:.75; }
+  .bb-post-thumb {
+    width:100%; aspect-ratio:16/9; background:#f0f0f0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:40px; overflow:hidden; border-radius:2px;
+  }
   .bb-post-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-  .bb-post-body  { padding:12px 14px 16px; }
-  .bb-post-cat   { font-size:13px; font-weight:700; color:#0046FF; letter-spacing:0.08em; margin-bottom:4px; }
-  .bb-post-title { font-size:15px; font-weight:700; line-height:1.5; color:#1a1a1a; margin-bottom:5px; }
-  .bb-post-date  { font-size:13px; color:#bbb; }
-  .bb-more { display:none; width:fit-content; margin:16px auto 0; padding:10px 24px; background:#f2f2f2; border:none; border-radius:999px; font-size:15px; font-weight:700; color:#333; cursor:pointer; font-family:'Pretendard',sans-serif; transition:background .15s,color .15s; }
-  .bb-more:hover { background:#0046FF; color:#fff; }
+  .bb-post-body  { padding:18px 0 4px; }
+  .bb-post-cat   {
+    font-size:11px; font-weight:300; color:#999;
+    letter-spacing:0.2em; text-transform:uppercase; margin-bottom:10px;
+  }
+  .bb-post-title {
+    font-size:20px; font-weight:700; line-height:1.35;
+    color:#0a0a0a; margin-bottom:10px; letter-spacing:-0.02em;
+    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .bb-post-date {
+    font-size:12px; font-weight:300; color:#aaa;
+    letter-spacing:0.04em;
+  }
+  .bb-more {
+    display:none; width:100%; margin:20px 0 0; padding:18px;
+    background:transparent; color:#0a0a0a;
+    border:1.5px solid #0a0a0a; border-radius:2px;
+    font-size:13px; font-weight:700; cursor:pointer; letter-spacing:0.1em;
+    text-transform:uppercase; text-align:center; text-decoration:none;
+    font-family:'BookkGothic','Pretendard',sans-serif;
+    transition:background .15s,color .15s;
+  }
+  .bb-more:hover { background:#0a0a0a; color:#fff; }
 
   /* ── 04 기고 콘텐츠 텍스트 카드 ── */
   .bb-contrib-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
@@ -327,36 +428,115 @@
     </div>
   </div>
 
-  <!-- 02 기업대출 확률 계산기 -->
+  <!-- 02 기업대출 확률 계산기 (위자드) -->
   <div class="bb-card" id="bb-sec02">
     <div class="bb-card-inner">
       <p class="bb-sec-label">02 — 기업대출 확률 계산기</p>
-      <h2 class="bb-sec-title">우리 회사, 대출 될까요?</h2>
-      <p class="bb-sec-desc">AI 경영진단 기반 · 디테일한 부분은 기획 필요</p>
-      <div class="bb-calc-grid">
-        <div class="bb-field"><label>업종</label><select><option>제조업</option><option>도소매업</option><option>서비스업</option></select></div>
-        <div class="bb-field"><label>업력</label><select><option>3년 미만</option><option>3~5년</option><option>5년 이상</option></select></div>
-        <div class="bb-field"><label>연매출 (억원)</label><input type="number" placeholder="예: 15"></div>
-        <div class="bb-field"><label>부채비율 (%)</label><input type="number" placeholder="예: 120"></div>
-        <div class="bb-field"><label>신용등급</label><select><option>1~3등급</option><option>4~6등급</option><option>7등급 이하</option></select></div>
-        <div class="bb-field"><label>희망 금액 (억원)</label><input type="number" placeholder="예: 5"></div>
+
+      <div id="wiz-indicator" style="display:none">
+        <div class="bb-wiz-stepnum" id="wiz-stepnum"></div>
+        <div class="bb-wiz-dots" id="wiz-dots"></div>
       </div>
-      <div class="bb-calc-output">
-        <div>
-          <div class="bb-calc-label">AI 대출 승인 추정 확률</div>
-          <div class="bb-calc-val">74%</div>
-          <div class="bb-calc-sub">적합 상품 3건 탐지 · 기준일 2026.05</div>
+
+      <!-- STEP 1: 인트로 -->
+      <div class="bb-wiz-step" data-step="1">
+        <div class="bb-wiz-intro-top">
+          <h2 class="bb-wiz-intro-hd">우리 회사,<br>대출 될까요?</h2>
+          <div class="bb-wiz-intro-deco">
+            <img src="/assets/calc-deco.png" alt="" loading="lazy">
+          </div>
         </div>
-        <div class="bb-meter">
-          <svg width="86" height="86" viewBox="0 0 100 100">
-            <circle cx="50" cy="50" r="40" fill="none" stroke="#1e1e1e" stroke-width="10"/>
-            <circle cx="50" cy="50" r="40" fill="none" stroke="#0046FF" stroke-width="10"
-              stroke-dasharray="251" stroke-dashoffset="65" stroke-linecap="round"/>
-          </svg>
-          <div class="bb-meter-num">74%</div>
+        <p class="bb-wiz-intro-sub">실제 금융기관 심사 기준 기반 · 4단계 1분 진단</p>
+        <ul class="bb-wiz-intro-list">
+          <li>업종 · 업력</li>
+          <li>연매출 · 부채비율</li>
+          <li>신용등급 · 희망 금액</li>
+          <li>진단 결과 확인</li>
+        </ul>
+        <div class="bb-wiz-disclaimer">
+          본 결과는 <strong>참고용 추정치</strong>입니다. 실제 금융기관의 심사 결과와 다를 수 있습니다.
+        </div>
+        <button class="bb-wiz-btn primary" onclick="wizGo(2)">시작하기 →</button>
+      </div>
+
+      <!-- STEP 2: 업종 + 업력 -->
+      <div class="bb-wiz-step" data-step="2" hidden>
+        <div class="bb-wiz-q">어떤 업종이세요?</div>
+        <select class="bb-wiz-select" id="wiz-industry">
+          <option>제조업</option>
+          <option>도소매업</option>
+          <option>서비스업</option>
+          <option>IT·정보통신</option>
+          <option>건설업</option>
+        </select>
+
+        <div class="bb-wiz-q">업력이 어떻게 되시나요?</div>
+        <select class="bb-wiz-select" id="wiz-age">
+          <option>1년 미만</option>
+          <option>1~3년</option>
+          <option>3~5년</option>
+          <option>5~7년</option>
+          <option>7년 이상</option>
+        </select>
+
+        <div class="bb-wiz-nav">
+          <button class="bb-wiz-btn ghost" onclick="wizGo(1)">← 이전</button>
+          <button class="bb-wiz-btn primary" onclick="wizGo(3)">다음 →</button>
         </div>
       </div>
-      <button class="bb-cta-btn">AI 경영진단 시작하기 →</button>
+
+      <!-- STEP 3: 재무 정보 -->
+      <div class="bb-wiz-step" data-step="3" hidden>
+        <div class="bb-wiz-q">최근 1년 매출은 얼마인가요?</div>
+        <input type="number" class="bb-wiz-input" id="wiz-revenue" placeholder="억원 단위 (예: 15)">
+        <div class="bb-wiz-hint" id="wiz-revenue-hint">미입력 시 업종 평균값으로 계산됩니다</div>
+
+        <div class="bb-wiz-q">부채비율은 얼마인가요?</div>
+        <input type="number" class="bb-wiz-input" id="wiz-debt" placeholder="% (예: 120)">
+        <div class="bb-wiz-hint" id="wiz-debt-hint">미입력 시 업종 평균값으로 계산됩니다</div>
+
+        <div class="bb-wiz-nav">
+          <button class="bb-wiz-btn ghost" onclick="wizGo(2)">← 이전</button>
+          <button class="bb-wiz-btn primary" onclick="wizGo(4)">다음 →</button>
+        </div>
+      </div>
+
+      <!-- STEP 4: 신용 + 희망금액 -->
+      <div class="bb-wiz-step" data-step="4" hidden>
+        <div class="bb-wiz-q">대표자 신용등급은?</div>
+        <select class="bb-wiz-select" id="wiz-credit">
+          <option>1~3등급 (우수)</option>
+          <option>4~6등급 (보통)</option>
+          <option>7등급 이하 (낮음)</option>
+        </select>
+
+        <div class="bb-wiz-q">희망 대출 금액은?</div>
+        <input type="number" class="bb-wiz-input" id="wiz-amount" placeholder="억원 단위 (예: 5)">
+        <div class="bb-wiz-hint" id="wiz-amount-hint">미입력 시 업종 통상값으로 계산됩니다</div>
+
+        <div class="bb-wiz-nav">
+          <button class="bb-wiz-btn ghost" onclick="wizGo(3)">← 이전</button>
+          <button class="bb-wiz-btn primary" onclick="wizCalculate()">진단하기 →</button>
+        </div>
+      </div>
+
+      <!-- STEP 5: 결과 -->
+      <div class="bb-wiz-step" data-step="5" hidden>
+        <div class="bb-result-hero">
+          <div class="bb-result-label">대출 승인 추정 확률</div>
+          <div class="bb-result-val" id="wiz-result-pct">—</div>
+          <div class="bb-result-sub" id="wiz-result-sub"></div>
+        </div>
+
+        <div class="bb-scorecard" id="wiz-scorecard"></div>
+
+        <div class="bb-wiz-disclaimer">
+          본 결과는 입력값 기반의 <strong>참고용 추정치</strong>입니다. 실제 금융기관 심사 결과와 다를 수 있으며, 정확한 대출 가능 여부는 전문가 상담을 통해 확인하시기 바랍니다.
+        </div>
+
+        <button class="bb-cta-btn">AI 경영진단으로 정밀 분석 →</button>
+        <button class="bb-cta-btn outline" onclick="wizReset()" style="margin-top:8px">다시 진단하기</button>
+      </div>
     </div>
   </div>
 
@@ -373,17 +553,17 @@
     </div>
   </div>
 
-  <!-- 03 인블로그 콘텐츠 -->
-  <div class="bb-card" id="bb-sec03">
+  <!-- 03 재무 인사이트 -->
+  <div id="bb-sec03">
     <div class="bb-card-inner">
-      <p class="bb-sec-label">03 — 재무 콘텐츠</p>
+      <p class="bb-sec-label">03 / Insights</p>
       <h2 class="bb-sec-title">재무 인사이트</h2>
       <p class="bb-sec-desc">크레디뷰 블로그 최신 글</p>
       <div class="bb-posts" id="posts-grid">
-        <div style="grid-column:1/-1;text-align:center;padding:24px;color:#aaa;font-size:14px">불러오는 중…</div>
+        <div style="grid-column:1/-1;text-align:center;padding:24px;color:#aaa;font-size:12px;font-weight:300;">불러오는 중…</div>
       </div>
       <a href="https://crediview.co.kr/blog" target="_blank" rel="noopener noreferrer"
-         class="bb-more" id="posts-more" style="display:block;text-align:center;">더 보기 ›</a>
+         class="bb-more" id="posts-more" style="display:block;">View All Posts</a>
     </div>
   </div>
 
@@ -732,7 +912,7 @@ function postCardHTML(p, i) {
     <a href="${url}" target="_blank" rel="noopener noreferrer" class="bb-post">
       <div class="bb-post-thumb" ${thumbStyle}>${thumbHtml}</div>
       <div class="bb-post-body">
-        <div class="bb-post-cat">크레디뷰</div>
+        <div class="bb-post-cat">Crediview</div>
         <div class="bb-post-title">${p.title}</div>
         <div class="bb-post-date">${date}</div>
       </div>
@@ -753,7 +933,7 @@ async function loadPosts() {
       return;
     }
 
-    grid.innerHTML = allPosts.slice(0, 3).map(postCardHTML).join('');
+    grid.innerHTML = allPosts.slice(0, 2).map(postCardHTML).join('');
     more.style.display = 'block';
   } catch {
     grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#c33;font-size:14px">콘텐츠를 불러오지 못했습니다.</div>';
@@ -800,6 +980,153 @@ async function loadArchivePreview() {
   }
 }
 loadArchivePreview();
+
+/* ═══════════════════════════════════════
+   02 대출 확률 계산기 — 위자드
+═══════════════════════════════════════ */
+const INDUSTRY_AVG = {
+  '제조업':     { revenue: 18, debt: 180, amount: 5 },
+  '도소매업':   { revenue: 22, debt: 220, amount: 3 },
+  '서비스업':   { revenue: 8,  debt: 130, amount: 2 },
+  'IT·정보통신':{ revenue: 12, debt: 90,  amount: 4 },
+  '건설업':     { revenue: 30, debt: 280, amount: 8 },
+};
+
+let wizStep = 1;
+
+function wizGo(n) {
+  wizStep = n;
+  document.querySelectorAll('.bb-wiz-step').forEach(el => {
+    el.hidden = parseInt(el.dataset.step) !== n;
+  });
+  const ind = document.getElementById('wiz-indicator');
+  if (n >= 2 && n <= 4) {
+    ind.style.display = 'block';
+    const idx = n - 1;
+    document.getElementById('wiz-stepnum').textContent = `STEP ${idx} / 3`;
+    document.getElementById('wiz-dots').innerHTML =
+      [1,2,3].map(i => {
+        const cls = i < idx ? 'done' : (i === idx ? 'active' : '');
+        return `<div class="bb-wiz-dot ${cls}"></div>`;
+      }).join('');
+  } else {
+    ind.style.display = 'none';
+  }
+  updateHints();
+  document.getElementById('bb-sec02').scrollIntoView({ behavior:'smooth', block:'start' });
+}
+
+function updateHints() {
+  const industrySel = document.getElementById('wiz-industry');
+  if (!industrySel) return;
+  const industry = industrySel.value;
+  const avg = INDUSTRY_AVG[industry] || INDUSTRY_AVG['제조업'];
+  const rh = document.getElementById('wiz-revenue-hint');
+  const dh = document.getElementById('wiz-debt-hint');
+  const ah = document.getElementById('wiz-amount-hint');
+  if (rh) rh.textContent = `미입력 시 ${industry} 평균 ${avg.revenue}억 적용`;
+  if (dh) dh.textContent = `미입력 시 ${industry} 평균 ${avg.debt}% 적용`;
+  if (ah) ah.textContent = `미입력 시 ${industry} 통상 ${avg.amount}억 적용`;
+}
+document.getElementById('wiz-industry').addEventListener('change', updateHints);
+
+function wizCalculate() {
+  const industry = document.getElementById('wiz-industry').value;
+  const age      = document.getElementById('wiz-age').value;
+  const credit   = document.getElementById('wiz-credit').value;
+  const avg      = INDUSTRY_AVG[industry] || INDUSTRY_AVG['제조업'];
+
+  const revRaw    = parseFloat(document.getElementById('wiz-revenue').value);
+  const debtRaw   = parseFloat(document.getElementById('wiz-debt').value);
+  const amountRaw = parseFloat(document.getElementById('wiz-amount').value);
+
+  const revenue = isFinite(revRaw)    && revRaw    > 0 ? revRaw    : avg.revenue;
+  const debt    = isFinite(debtRaw)   && debtRaw   > 0 ? debtRaw   : avg.debt;
+  const amount  = isFinite(amountRaw) && amountRaw > 0 ? amountRaw : avg.amount;
+
+  let fin = 70;
+  if (debt <= avg.debt * 0.7)     fin += 20;
+  else if (debt <= avg.debt)      fin += 10;
+  else if (debt > avg.debt * 1.5) fin -= 15;
+  if (debt > 300) fin -= 25;
+  fin = Math.max(5, Math.min(100, fin));
+
+  let rep = 70;
+  const ratio = amount / revenue;
+  if (ratio <= 0.2)      rep += 22;
+  else if (ratio <= 0.3) rep += 10;
+  else if (ratio <= 0.5) rep -= 5;
+  else if (ratio <= 0.8) rep -= 22;
+  else                   rep -= 40;
+  rep = Math.max(5, Math.min(100, rep));
+
+  let cre = 70;
+  if (credit.startsWith('1~3')) cre += 20;
+  else if (credit.startsWith('4~6')) cre += 0;
+  else cre -= 22;
+
+  if (age === '7년 이상')   cre += 12;
+  else if (age === '5~7년') cre += 6;
+  else if (age === '3~5년') cre += 2;
+  else if (age === '1~3년') cre -= 5;
+  else                       cre -= 12;
+  cre = Math.max(5, Math.min(100, cre));
+
+  const overall = Math.round((fin * 0.35) + (rep * 0.35) + (cre * 0.30));
+
+  const finCmt = fin >= 85 ? `부채비율 ${debt}%, 업종 평균 대비 매우 안정`
+              : fin >= 65 ? `부채비율 ${debt}%, 업종 평균 수준`
+              : fin >= 45 ? `부채비율 ${debt}%, 업종 평균 대비 다소 높음`
+              : `부채비율 ${debt}% — 은행 부결 기준선 근접`;
+
+  const ratioPct = Math.round(ratio * 100);
+  const repCmt = rep >= 85 ? `희망 ${amount}억은 매출 대비 ${ratioPct}%, 안정권`
+              : rep >= 65 ? `희망금액이 매출 대비 ${ratioPct}%, 적정 수준`
+              : rep >= 45 ? `희망금액이 매출 대비 ${ratioPct}%, 다소 부담`
+              : `희망금액이 매출 대비 ${ratioPct}% — 상환 능력 검토 필요`;
+
+  const creCmt = cre >= 85 ? '신용·업력 모두 우수'
+              : cre >= 65 ? '신용 양호, 업력 가점 가능'
+              : cre >= 45 ? '신용 또는 업력 한쪽 보강 필요'
+              : '신용·업력 모두 보강 필요';
+
+  document.getElementById('wiz-result-pct').textContent = overall + '%';
+  const subText = overall >= 75 ? '시중은행 일반 대출 가능 구간'
+               : overall >= 55 ? '조건부 승인 가능 · 보증부 대출 권장'
+               : overall >= 35 ? '정책자금·보증부 대출 우선 검토'
+               : '일반 대출 어려움 · 정책 지원 또는 재무 개선 필요';
+  document.getElementById('wiz-result-sub').textContent = subText;
+
+  const colorOf = s => s >= 70 ? '' : (s >= 45 ? 'warn' : 'bad');
+  const scorecard = [
+    { name:'재무 안정성', val:fin, cmt:finCmt },
+    { name:'상환 능력',   val:rep, cmt:repCmt },
+    { name:'신용·업력',   val:cre, cmt:creCmt },
+  ];
+  document.getElementById('wiz-scorecard').innerHTML = scorecard.map(s => `
+    <div class="bb-score">
+      <div class="bb-score-head">
+        <span class="bb-score-name">${s.name}</span>
+        <span class="bb-score-val">${s.val}점</span>
+      </div>
+      <div class="bb-score-bar">
+        <div class="bb-score-fill ${colorOf(s.val)}" style="width:${s.val}%"></div>
+      </div>
+      <div class="bb-score-comment">${s.cmt}</div>
+    </div>`).join('');
+
+  wizGo(5);
+}
+
+function wizReset() {
+  document.getElementById('wiz-revenue').value = '';
+  document.getElementById('wiz-debt').value    = '';
+  document.getElementById('wiz-amount').value  = '';
+  document.getElementById('wiz-industry').selectedIndex = 0;
+  document.getElementById('wiz-age').selectedIndex      = 0;
+  document.getElementById('wiz-credit').selectedIndex   = 0;
+  wizGo(1);
+}
 </script>
 </body>
 </html>
