@@ -775,7 +775,10 @@ async function loadArchivePreview() {
       list.innerHTML = '<li style="padding:20px 0;text-align:center;color:#aaa;font-size:14px">등록된 자료가 없습니다.</li>';
       return;
     }
-    list.innerHTML = rows.slice(0, 5).map((r, i) => {
+    const sorted = rows
+      .sort((a, b) => parseInt(b[8] || '0', 10) - parseInt(a[8] || '0', 10))
+      .slice(0, 5);
+    list.innerHTML = sorted.map((r, i) => {
       const name = r[0] || '';
       const cat  = r[2] || '';
       const type = (r[3] || '').toLowerCase();
@@ -796,7 +799,6 @@ async function loadArchivePreview() {
     list.innerHTML = '<li style="padding:20px 0;text-align:center;color:#aaa;font-size:14px">자료를 불러오지 못했습니다.</li>';
   }
 }
-
 loadArchivePreview();
 </script>
 </body>
