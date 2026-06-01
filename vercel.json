@@ -1,5 +1,10 @@
 {
   "version": 2,
+  "functions": {
+    "api/calendar.js": {
+      "regions": ["icn1"]
+    }
+  },
   "routes": [
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
     { "src": "/archive", "dest": "/archive.html" },
