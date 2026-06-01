@@ -1,0 +1,349 @@
+<script>
+(function () {
+  'use strict';
+
+  const TYPE_COLOR = { tax: '#0046FF', policy: '#00B050', update: '#FF8C00' };
+  const TYPE_LABEL = { tax: '세무일정', policy: '주요일정', update: '업데이트' };
+  const DOW        = ['일','월','화','수','목','금','토'];
+
+  var calDate       = new Date();
+  calDate.setDate(1);
+  var calSelected   = null;
+  var activeFilters = new Set(['tax', 'policy', 'update']);
+  var monthEvents   = [];
+
+  var TAX = {
+    1:  [
+      { day:10, title:'원천세 납부 (전월분)',                  tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+      { day:25, title:'부가세 2기 확정신고·납부',               tag:'end' },
+    ],
+    2:  [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+    ],
+    3:  [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+      { day:31, title:'법인세 확정신고·납부 (12월 결산법인)',    tag:'end' },
+      { day:31, title:'정기주주총회 기한 (12월 결산법인)',       tag:'end' },
+    ],
+    4:  [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+      { day:25, title:'부가세 1기 예정신고·납부',               tag:'end' },
+    ],
+    5:  [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+      { day:31, title:'종합소득세 확정신고·납부',               tag:'end' },
+    ],
+    6:  [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+    ],
+    7:  [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'원천세 반기납부 (1~6월분, 해당 사업자)', tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+      { day:25, title:'부가세 1기 확정신고·납부',               tag:'end' },
+      { day:31, title:'재산세 1기 납부 (건물·주택)',            tag:'end' },
+    ],
+    8:  [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+      { day:31, title:'법인세 중간예납 신고·납부',              tag:'end' },
+    ],
+    9:  [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+      { day:30, title:'재산세 2기 납부 (토지)',                 tag:'end' },
+    ],
+    10: [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+      { day:25, title:'부가세 2기 예정신고·납부',               tag:'end' },
+    ],
+    11: [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+    ],
+    12: [
+      { day:10, title:'원천세 납부 (전월분)',                   tag:'end' },
+      { day:10, title:'국민연금·건강보험료 납부',               tag:'end' },
+      { day:15, title:'고용·산재보험료 납부',                   tag:'end' },
+    ],
+  };
+
+  /* ── 이벤트 빌드 (API 포함) ── */
+  async function buildMonthEvents() {
+    var m = calDate.getMonth() + 1;
+    var y = calDate.getFullYear();
+
+    // 세무일정 (하드코딩)
+    var taxEvs = (TAX[m] || []).map(function (e) {
+      return { day: e.day, title: e.title, type: 'tax', link: '', tag: e.tag };
+    });
+
+    // 주요일정 (기업마당 API)
+    var policyEvs = [];
+    try {
+      var r    = await fetch('/api/calendar?year=' + y + '&month=' + m);
+      var data = await r.json();
+      policyEvs = (data.events || []);
+    } catch (e) {
+      // API 실패 시 세무일정만 표시
+    }
+
+    monthEvents = taxEvs.concat(policyEvs);
+  }
+
+  /* ── 초기화 ── */
+  async function init() {
+    renderCalendarSkeleton();
+    await buildMonthEvents();
+    renderDday();
+    renderCalendar();
+
+    document.getElementById('calFilters').addEventListener('click', function (e) {
+      var btn = e.target.closest('.cal-filter-btn');
+      if (!btn) return;
+      var type = btn.dataset.type;
+      if (activeFilters.has(type)) {
+        if (activeFilters.size === 1) return;
+        activeFilters.delete(type);
+        btn.classList.remove('cal-filter-btn--active');
+      } else {
+        activeFilters.add(type);
+        btn.classList.add('cal-filter-btn--active');
+      }
+      calSelected = null;
+      renderDday();
+      renderCalendar();
+    });
+
+    document.getElementById('calPrev').addEventListener('click', async function () {
+      calDate = new Date(calDate.getFullYear(), calDate.getMonth() - 1, 1);
+      calSelected = null;
+      renderCalendarSkeleton();
+      await buildMonthEvents();
+      renderDday();
+      renderCalendar();
+    });
+
+    document.getElementById('calNext').addEventListener('click', async function () {
+      calDate = new Date(calDate.getFullYear(), calDate.getMonth() + 1, 1);
+      calSelected = null;
+      renderCalendarSkeleton();
+      await buildMonthEvents();
+      renderDday();
+      renderCalendar();
+    });
+  }
+
+  /* ── 로딩 스켈레톤 ── */
+  function renderCalendarSkeleton() {
+    var chips = document.getElementById('calChips');
+    chips.innerHTML = '<span class="cal-chip cal-chip--empty">불러오는 중…</span>';
+    document.getElementById('calPanel').style.display = 'none';
+  }
+
+  function filteredEvents() {
+    return monthEvents.filter(function (e) { return activeFilters.has(e.type); });
+  }
+
+  /* ── D-day ── */
+  function renderDday() {
+    var el    = document.getElementById('calDday');
+    var today = new Date();
+    today.setHours(0, 0, 0, 0);
+    var results = [];
+
+    for (var offset = 0; offset <= 90 && results.length < 3; offset++) {
+      var d  = new Date(today);
+      d.setDate(today.getDate() + offset);
+      var mo = d.getMonth() + 1;
+      var dy = d.getDate();
+
+      // 세무일정 D-day
+      if (activeFilters.has('tax')) {
+        var taxHits = (TAX[mo] || []).filter(function (e) { return e.day === dy; });
+        if (taxHits.length > 0) {
+          var key = 'tax-' + mo + '-' + dy;
+          if (!results.find(function (r) { return r.key === key; })) {
+            results.push({ key: key, title: taxHits[0].title, extra: taxHits.length - 1, days: offset, month: mo, day: dy, type: 'tax' });
+          }
+        }
+      }
+
+      // 주요일정 D-day (마감일 기준)
+      if (activeFilters.has('policy')) {
+        var policyHits = monthEvents.filter(function (e) {
+          return e.type === 'policy' && e.tag === 'end'
+            && new Date(today.getFullYear(), mo - 1, dy).getMonth() + 1 === mo
+            && e.day === dy;
+        });
+        if (policyHits.length > 0) {
+          var pkey = 'policy-' + mo + '-' + dy;
+          if (!results.find(function (r) { return r.key === pkey; })) {
+            results.push({ key: pkey, title: policyHits[0].title, extra: 0, days: offset, month: mo, day: dy, type: 'policy' });
+          }
+        }
+      }
+
+      if (results.length >= 3) break;
+    }
+
+    if (results.length === 0) { el.style.display = 'none'; return; }
+    el.style.display = 'flex';
+    el.innerHTML = results.map(function (r) {
+      var color = TYPE_COLOR[r.type];
+      var badge = r.days === 0 ? 'D-Day' : 'D-' + r.days;
+      var extra = r.extra > 0 ? ' 외 ' + r.extra + '건' : '';
+      return '<div class="cal-dday-row">'
+        + '<div class="cal-dday-badge" style="color:' + color + '">' + badge + '</div>'
+        + '<div class="cal-dday-divider" style="background:' + color + '"></div>'
+        + '<div class="cal-dday-info">'
+        +   '<div class="cal-dday-type" style="color:' + color + '">' + TYPE_LABEL[r.type] + '</div>'
+        +   '<div class="cal-dday-title">' + esc(r.title) + extra + '</div>'
+        +   '<div class="cal-dday-date">' + r.month + '월 ' + r.day + '일 마감</div>'
+        + '</div></div>';
+    }).join('');
+  }
+
+  /* ── 캘린더 렌더링 ── */
+  function renderCalendar() {
+    var y         = calDate.getFullYear();
+    var m         = calDate.getMonth();
+    var now       = new Date();
+    var todayMark = (now.getFullYear() === y && now.getMonth() === m) ? now.getDate() : -1;
+    var firstDow  = new Date(y, m, 1).getDay();
+    var daysInMon = new Date(y, m + 1, 0).getDate();
+    var evs       = filteredEvents();
+
+    document.getElementById('calMonthLabel').textContent = y + '년 ' + (m + 1) + '월';
+
+    var grid = document.getElementById('calGrid');
+    grid.innerHTML = DOW.map(function (d) {
+      return '<div class="cal-dow">' + d + '</div>';
+    }).join('');
+
+    for (var i = 0; i < firstDow; i++) {
+      var blank = document.createElement('div');
+      blank.className = 'cal-day';
+      grid.appendChild(blank);
+    }
+
+    for (var d = 1; d <= daysInMon; d++) {
+      var dayEvs = evs.filter(function (e) { return e.day === d; });
+      var cell   = document.createElement('div');
+      var cls    = 'cal-day';
+      if (dayEvs.length > 0) cls += ' has-ev';
+      if (d === todayMark)   cls += ' today';
+      if (d === calSelected) cls += ' sel';
+      cell.className = cls;
+
+      var numEl = document.createElement('span');
+      numEl.className = 'cal-day-num';
+      numEl.textContent = d;
+      cell.appendChild(numEl);
+
+      if (dayEvs.length > 0) {
+        var types  = [];
+        dayEvs.forEach(function (e) { if (types.indexOf(e.type) === -1) types.push(e.type); });
+        var dotsEl = document.createElement('div');
+        dotsEl.className = 'cal-dots';
+        types.slice(0, 3).forEach(function (t) {
+          var dot = document.createElement('span');
+          dot.style.background = TYPE_COLOR[t];
+          dotsEl.appendChild(dot);
+        });
+        cell.appendChild(dotsEl);
+      }
+
+      (function (day) {
+        cell.addEventListener('click', function () {
+          calSelected = calSelected === day ? null : day;
+          renderCalendar();
+        });
+      })(d);
+
+      grid.appendChild(cell);
+    }
+
+    renderPanel();
+    renderChips();
+  }
+
+  /* ── 날짜 패널 ── */
+  function renderPanel() {
+    var panel = document.getElementById('calPanel');
+    if (!calSelected) { panel.style.display = 'none'; return; }
+
+    var m   = calDate.getMonth();
+    var evs = filteredEvents().filter(function (e) { return e.day === calSelected; });
+    panel.style.display = 'block';
+    panel.className = 'cal-panel';
+
+    var html = '<div class="cal-panel-hd">' + (m + 1) + '월 ' + calSelected + '일 일정</div>';
+    if (evs.length === 0) {
+      html += '<p style="font-size:14px;color:#aaa;padding:4px 0">선택한 카테고리에 해당 일정 없음</p>';
+    } else {
+      html += '<ul class="cal-panel-list">';
+      evs.forEach(function (ev) {
+        var color   = TYPE_COLOR[ev.type];
+        var tagCls  = ev.tag === 'end' ? 'cal-panel-tag--end' : 'cal-panel-tag--start';
+        var tagText = ev.tag === 'end' ? '마감' : '시작';
+        var title   = ev.link
+          ? '<a href="' + esc(ev.link) + '" target="_blank" rel="noopener noreferrer">' + esc(ev.title) + '</a>'
+          : esc(ev.title);
+        html += '<li class="cal-panel-item" style="border-left-color:' + color + '">'
+          + '<span class="cal-panel-tag ' + tagCls + '">' + tagText + '</span>'
+          + '<span>' + title + '</span></li>';
+      });
+      html += '</ul>';
+    }
+    panel.innerHTML = html;
+  }
+
+  /* ── 칩 ── */
+  function renderChips() {
+    var el  = document.getElementById('calChips');
+    var evs = filteredEvents();
+    if (evs.length === 0) {
+      el.innerHTML = '<span class="cal-chip cal-chip--empty">이번 달 해당 일정 없음</span>';
+      return;
+    }
+    var seen = new Map();
+    evs.forEach(function (e) {
+      var key = e.type + '|' + e.title;
+      if (!seen.has(key)) seen.set(key, e);
+    });
+    el.innerHTML = Array.from(seen.values()).slice(0, 6).map(function (e) {
+      var t = e.title.length > 16 ? e.title.slice(0, 16) + '…' : e.title;
+      return '<span class="cal-chip cal-chip--' + e.type + '">' + t + '</span>';
+    }).join('');
+  }
+
+  function esc(s) {
+    return String(s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+      .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  document.readyState === 'loading'
+    ? document.addEventListener('DOMContentLoaded', init)
+    : init();
+})();
+</script>
