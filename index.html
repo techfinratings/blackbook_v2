@@ -4,6 +4,31 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>블랙북 — 재무 담당자를 위한 지침서</title>
+<meta name="description" content="재무·회계 실무자를 위한 지침서. 기업대출 확률 계산기, 실무 자료실, 재무 캘린더, 재무 인사이트를 한곳에서 제공합니다.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://blackbook-red.vercel.app/">
+<meta property="og:type"        content="website">
+<meta property="og:url"         content="https://blackbook-red.vercel.app/">
+<meta property="og:title"       content="블랙북 — 재무 담당자를 위한 지침서">
+<meta property="og:description" content="기업대출 확률 계산기, 실무 자료실, 재무 캘린더까지. 재무·회계 실무자를 위한 커뮤니티 허브.">
+<meta property="og:image"       content="https://blackbook-red.vercel.app/assets/hero.png">
+<meta property="og:locale"      content="ko_KR">
+<meta property="og:site_name"   content="블랙북">
+<meta name="twitter:card"        content="summary_large_image">
+<meta name="twitter:title"       content="블랙북 — 재무 담당자를 위한 지침서">
+<meta name="twitter:description" content="기업대출 확률 계산기, 실무 자료실, 재무 캘린더까지.">
+<meta name="twitter:image"       content="https://blackbook-red.vercel.app/assets/hero.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "블랙북",
+  "url": "https://blackbook-red.vercel.app/",
+  "description": "재무·회계 실무자를 위한 지침서",
+  "inLanguage": "ko",
+  "publisher": { "@type": "Organization", "name": "크레디뷰", "url": "https://crediview.co.kr" }
+}
+</script>
 <link rel="preconnect" href="https://cdn.jsdelivr.net">
 <link rel="stylesheet"
   href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css"
@@ -12,1182 +37,635 @@
 @font-face {
   font-family: 'BookkGothic';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkGothic-Lt.woff2') format('woff2');
-  font-weight: 300;
-  font-display: swap;
+  font-weight: 300; font-display: swap;
 }
 @font-face {
   font-family: 'BookkGothic';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302@1.0/BookkGothic-Bd.woff2') format('woff2');
-  font-weight: 700;
-  font-display: swap;
+  font-weight: 700; font-display: swap;
 }
-</style>
-<style>
-  * { margin:0; padding:0; box-sizing:border-box; }
 
-  body {
-    font-family:'Pretendard',-apple-system,'Apple SD Gothic Neo',sans-serif;
-    background:#0a0a0a;
-    color:#1a1a1a;
-    min-height:100vh;
-  }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-  .bb-page {
-    max-width:680px;
-    margin:0 auto;
-    padding:28px 16px 60px;
-    display:flex;
-    flex-direction:column;
-    gap:14px;
-  }
+body {
+  font-family: 'Pretendard', -apple-system, 'Apple SD Gothic Neo', sans-serif;
+  background: #0a0a0a;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
 
-  .bb-card { background:#fff; border-radius:22px; overflow:hidden; }
-  .bb-card-inner { padding:28px 24px; }
-  .bb-card-dark { background:#111; border:1px solid #1e1e1e; border-radius:22px; overflow:hidden; }
+/* ── 레이아웃 ── */
+.bb-wrap {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+}
+.bb-layout {
+  display: grid;
+  grid-template-columns: 210px minmax(0,1fr) 260px;
+  gap: 14px;
+  align-items: start;
+}
 
-  /* 섹션 공통 */
-  .bb-sec-label  { font-size:14px; font-weight:700; letter-spacing:0.12em; color:#aaa; text-transform:uppercase; margin-bottom:6px; }
-  .bb-sec-title  { font-size:26px; font-weight:800; color:#0a0a0a; margin-bottom:6px; letter-spacing:-0.02em; }
-  .bb-sec-desc   { font-size:18px; color:#888; line-height:1.7; margin-bottom:20px; }
+/* ── 공통 카드 ── */
+.bb-card {
+  background: #fff;
+  border: 1.5px solid #0a0a0a;
+  border-radius: 4px;
+  overflow: hidden;
+}
 
-  /* HERO */
-  .bb-hero-banner {
-    width:100%; border-radius:16px; overflow:hidden; margin-bottom:22px;
-    background:#0a0a0a; aspect-ratio:1440/810; position:relative;
-  }
-  .bb-hero-banner img {
-    position:absolute; inset:0; width:100%; height:100%;
-    object-fit:cover; display:block;
-  }
-  .bb-hero-overlay {
-    position:absolute; inset:0;
-    display:flex; flex-direction:column;
-    align-items:center; justify-content:space-between;
-    padding:28px 28px 24px;
-    background:linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.25) 50%, transparent 100%);
-  }
-  .bb-hero-center {
-    flex:1; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; text-align:center;
-  }
-  .bb-hero-overlay-title {
-    font-size:44px; font-weight:900; letter-spacing:-0.04em;
-    color:#fff; line-height:1.1;
-    text-shadow:0 2px 20px rgba(0,0,0,0.6);
-  }
-  .bb-hero-overlay-sub {
-    font-size:15px; font-weight:600; color:rgba(255,255,255,0.8);
-    letter-spacing:0.06em; margin-top:8px;
-    text-shadow:0 1px 8px rgba(0,0,0,0.5);
-  }
-  .bb-hero-pills {
-    display:flex; flex-wrap:nowrap; gap:7px; justify-content:center;
-  }
-  .bb-pill {
-    display:inline-flex; align-items:center; gap:5px; height:36px; padding:0 14px;
-    background:rgba(255,255,255,0.15); border:1px solid rgba(255,255,255,0.35);
-    border-radius:999px; backdrop-filter:blur(6px);
-    font-size:14px; font-weight:600; color:#fff; cursor:pointer;
-    text-decoration:none; transition:background .15s,border-color .15s;
-    font-family:'Pretendard',sans-serif; white-space:nowrap;
-  }
-  .bb-pill:hover { background:#0046FF; border-color:#0046FF; color:#fff; }
+/* ── 좌측 네비 ── */
+.bb-left { position: sticky; top: 24px; display: flex; flex-direction: column; gap: 10px; }
 
-  /* ── D-day 배너 ── */
-  .bb-dday {
-    display:flex; flex-direction:column; gap:10px;
-    background:#eef2ff; border:1.5px solid #d0d9ff;
-    border-radius:14px; padding:14px 18px; margin-bottom:18px;
-  }
-  .bb-dday-row { display:flex; align-items:center; gap:14px; }
-  .bb-dday-row + .bb-dday-row {
-    padding-top:10px; border-top:1px solid #dce5ff;
-  }
-  .bb-dday-badge {
-    font-size:22px; font-weight:900; color:#0046FF;
-    flex-shrink:0; letter-spacing:-0.03em; min-width:54px;
-  }
-  .bb-dday-badge.today { color:#e03030; }
-  .bb-dday-row.dim .bb-dday-badge { font-size:18px; color:#7a9de0; }
-  .bb-dday-divider { width:1px; height:36px; background:#c8d3ff; flex-shrink:0; }
-  .bb-dday-info { flex:1; min-width:0; }
-  .bb-dday-title { font-size:15px; font-weight:700; color:#1a1a1a; line-height:1.4; }
-  .bb-dday-date  { font-size:13px; color:#888; margin-top:3px; }
-  .bb-dday-row.dim .bb-dday-title { color:#666; font-weight:600; }
-  .bb-dday-row.dim .bb-dday-date  { color:#aaa; }
+.bb-brand { padding: 22px 18px 16px; border-bottom: 1px solid #efefef; }
+.bb-brand-logo {
+  font-family: 'BookkGothic', 'Pretendard', sans-serif;
+  font-size: 22px; font-weight: 700; color: #0a0a0a;
+  letter-spacing: -0.03em; margin-bottom: 4px;
+}
+.bb-brand-sub { font-size: 11px; color: #aaa; font-weight: 300; letter-spacing: 0.04em; line-height: 1.5; }
 
-  /* ── 01 캘린더 ── */
-  .bb-cal-mock { background:#f5f7ff; border-radius:16px; padding:18px; }
-  .bb-cal-top  { display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; }
-  .bb-cal-month { font-size:18px; font-weight:700; color:#1a1a1a; }
-  .bb-cal-arrows { display:flex; gap:4px; }
-  .bb-cal-arrows button {
-    background:#fff; border:1px solid #e0e4ff; border-radius:8px;
-    width:32px; height:32px; cursor:pointer; font-size:18px; color:#555;
-    display:flex; align-items:center; justify-content:center;
-    font-family:'Pretendard',sans-serif;
-  }
-  .bb-cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; text-align:center; }
-  .bb-dow { font-size:13px; font-weight:700; color:#ccc; padding:3px 0 7px; letter-spacing:0.05em; }
-  .bb-day {
-    aspect-ratio:1; border-radius:8px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    font-size:14px; color:#444; cursor:pointer; transition:background .12s; font-weight:500;
-  }
-  .bb-day:hover { background:#e0e8ff; }
-  .bb-day.ev    { background:#eaedff; }
-  .bb-day.td    { border:2px solid #0046FF; }
-  .bb-day.sel   { background:#0046FF; color:#fff; font-weight:700; }
-  .bb-day.sel .bb-dot { background:rgba(255,255,255,.6); }
-  .bb-dot { width:4px; height:4px; border-radius:50%; background:#0046FF; margin-top:2px; }
+.bb-nav-inner { padding: 10px 10px 14px; }
 
-  .bb-date-panel { margin-top:12px; background:#fff; border:1px solid #d8e0ff; border-radius:12px; padding:12px 14px; }
-  .bb-date-panel-hd { font-size:15px; font-weight:700; color:#0046FF; margin-bottom:8px; }
-  .bb-date-panel-list { list-style:none; display:flex; flex-direction:column; gap:6px; }
-  .bb-date-panel-item {
-    font-size:15px; color:#333; padding:6px 8px; background:#f5f7ff;
-    border-radius:8px; line-height:1.5; display:flex; align-items:baseline; gap:6px;
-  }
-  .bb-date-panel-item a { color:#0046FF; text-decoration:none; font-weight:600; }
-  .bb-date-panel-item a:hover { text-decoration:underline; }
-  .bb-ev-tag { font-size:12px; font-weight:700; flex-shrink:0; padding:1px 6px; border-radius:4px; }
-  .bb-ev-end   { background:#ffecec; color:#e03030; }
-  .bb-ev-start { background:#e8f5e9; color:#2e7d32; }
+.bb-nav-item {
+  display: flex; align-items: center; gap: 7px;
+  padding: 7px 10px; border-radius: 6px;
+  font-size: 14px; font-weight: 700; color: #1a1a1a;
+  text-decoration: none; transition: background .12s, color .12s;
+}
+.bb-nav-item:hover { background: #f5f5f5; }
+.bb-nav-item.active { background: #0a0a0a; color: #fff; }
+.bb-nav-item.coming { color: #bbb; cursor: default; }
+.bb-nav-item.coming:hover { background: transparent; }
+.bb-nav-item span:first-child { font-size: 15px; }
 
-  .bb-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:14px; }
-  .bb-chip  { font-size:14px; background:#fff; border:1px solid #d8e0ff; border-radius:999px; padding:4px 12px; color:#0046FF; font-weight:600; }
+.bb-nav-badge {
+  font-size: 10px; font-weight: 700; padding: 1px 6px;
+  border-radius: 4px; background: #f2f2f2; color: #aaa;
+  letter-spacing: 0.04em; margin-left: auto;
+}
 
-  /* ── 02 계산기 (에디토리얼 위자드) ── */
-  #bb-sec02 {
-    font-family:'BookkGothic','Pretendard',sans-serif;
-    background:#fff; border:1.5px solid #0a0a0a;
-    border-radius:4px; overflow:hidden;
-  }
-  #bb-sec02 .bb-card-inner { padding:32px 28px 28px; }
-  #bb-sec02 .bb-sec-label {
-    font-size:11px; font-weight:300; letter-spacing:0.22em;
-    color:#999; text-transform:uppercase; margin-bottom:0;
-  }
-  .bb-wiz-divider { height:1px; background:#0a0a0a; margin:18px 0 22px; }
+.bb-nav-sub { padding-left: 14px; margin-bottom: 2px; }
+.bb-nav-sub-item {
+  display: flex; align-items: center; gap: 5px;
+  padding: 4px 10px; border-radius: 5px;
+  font-size: 12px; color: #999; font-weight: 500;
+  text-decoration: none; transition: background .12s, color .12s;
+}
+.bb-nav-sub-item::before { content: '—'; font-size: 10px; color: #ddd; }
+.bb-nav-sub-item:hover { background: #f8f8f8; color: #0046FF; }
 
-  /* 인디케이터 */
-  .bb-wiz-stepnum {
-    font-size:11px; font-weight:300; letter-spacing:0.25em;
-    color:#0a0a0a; text-transform:uppercase; margin-bottom:18px;
-  }
-  .bb-wiz-dots { display:flex; gap:0; margin-bottom:32px; }
-  .bb-wiz-dot {
-    flex:1; height:2px; background:#e8e8e8; transition:background .2s;
-  }
-  .bb-wiz-dot.done, .bb-wiz-dot.active { background:#0a0a0a; }
-  .bb-wiz-dot + .bb-wiz-dot { margin-left:4px; }
+.bb-nav-divider { height: 1px; background: #f2f2f2; margin: 5px 10px; }
 
-  /* 입력 */
-  .bb-wiz-q {
-    font-size:14px; font-weight:700; color:#0a0a0a;
-    margin:24px 0 10px; line-height:1.4;
-  }
-  .bb-wiz-q:first-child { margin-top:0; }
-  .bb-wiz-input, .bb-wiz-select {
-    width:100%; padding:14px 16px; border:1px solid #0a0a0a; border-radius:2px;
-    font-size:15px; font-weight:700; color:#0a0a0a; background:#fff;
-    font-family:'BookkGothic','Pretendard',sans-serif; outline:none;
-    transition:background .15s;
-  }
-  .bb-wiz-input:focus, .bb-wiz-select:focus { background:#f8f8f8; }
-  .bb-wiz-input::placeholder { color:#bbb; font-weight:300; }
-  .bb-wiz-hint {
-    font-size:11px; font-weight:300; color:#999;
-    margin-top:6px; line-height:1.5; letter-spacing:0.02em;
-  }
+.bb-sub-btn {
+  margin: 0 10px 10px;
+  padding: 10px;
+  width: calc(100% - 20px);
+  background: #0046FF; color: #fff;
+  border: none; border-radius: 8px;
+  font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'Pretendard', sans-serif;
+  transition: background .15s;
+}
+.bb-sub-btn:hover { background: #003dd6; }
 
-  /* 버튼 */
-  .bb-wiz-nav { display:flex; gap:8px; margin-top:32px; }
-  .bb-wiz-btn {
-    flex:1; padding:16px 18px; border-radius:2px;
-    font-size:13px; font-weight:700; cursor:pointer; letter-spacing:0.08em;
-    font-family:'BookkGothic','Pretendard',sans-serif;
-    border:1.5px solid #0a0a0a; transition:background .15s, color .15s;
-  }
-  .bb-wiz-btn.primary { background:#0a0a0a; color:#fff; }
-  .bb-wiz-btn.primary:hover { background:#fff; color:#0a0a0a; }
-  .bb-wiz-btn.ghost { background:#fff; color:#0a0a0a; flex:0 0 100px; }
-  .bb-wiz-btn.ghost:hover { background:#0a0a0a; color:#fff; }
+/* ── 중앙 메인 ── */
+.bb-main { display: flex; flex-direction: column; gap: 12px; }
 
-  /* 인트로 */
-  .bb-wiz-intro-top {
-    display:flex; align-items:flex-start; justify-content:space-between;
-    gap:16px; margin-bottom:14px;
-  }
-  .bb-wiz-intro-deco { flex:0 0 38%; max-width:200px; align-self:center; }
-  .bb-wiz-intro-deco img { width:100%; height:auto; display:block; }
-  .bb-wiz-intro-hd {
-    font-size:38px; font-weight:700; color:#0a0a0a;
-    letter-spacing:-0.04em; line-height:1.1; margin-bottom:0; flex:1;
-  }
-  .bb-wiz-intro-sub {
-    font-size:13px; font-weight:300; color:#888; line-height:1.6;
-    padding-bottom:20px; border-bottom:1px solid #0a0a0a; margin-bottom:0;
-  }
-  .bb-wiz-intro-list { list-style:none; margin-bottom:22px; }
-  .bb-wiz-intro-list li {
-    display:flex; align-items:center; gap:16px;
-    padding:15px 0; border-bottom:1px solid #efefef;
-    font-size:14px; font-weight:700; color:#0a0a0a;
-  }
-  .bb-wiz-intro-list li:last-child { border-bottom:none; }
-  .bb-wiz-intro-list li::before {
-    content:attr(data-num);
-    font-size:11px; font-weight:300; color:#ccc;
-    letter-spacing:0.05em; width:22px; text-align:right;
-  }
-  .bb-wiz-disclaimer {
-    font-size:11px; font-weight:300; color:#888;
-    padding:14px 16px; background:#f8f8f8;
-    border-left:2px solid #0a0a0a; margin-bottom:22px; line-height:1.6;
-  }
-  .bb-wiz-disclaimer strong { font-weight:700; color:#0a0a0a; }
+.bb-home-sec { overflow: hidden; }
 
-  /* 결과 */
-  .bb-result-hero {
-    text-align:center; padding:24px 0 32px;
-    border-bottom:1px solid #0a0a0a; margin-bottom:26px;
-  }
-  .bb-result-label {
-    font-size:11px; font-weight:300; color:#999;
-    letter-spacing:0.22em; text-transform:uppercase; margin-bottom:10px;
-  }
-  .bb-result-val {
-    font-size:84px; font-weight:700; color:#0a0a0a;
-    line-height:1; letter-spacing:-0.05em;
-  }
-  .bb-result-sub {
-    font-size:12px; font-weight:300; color:#666; margin-top:12px;
-  }
+.bb-home-sec-hd {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  padding: 20px 22px 14px; border-bottom: 1px solid #efefef;
+}
+.bb-home-sec-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  color: #bbb; text-transform: uppercase; margin-bottom: 3px;
+}
+.bb-home-sec-title {
+  font-family: 'BookkGothic', 'Pretendard', sans-serif;
+  font-size: 22px; font-weight: 700; color: #0a0a0a; letter-spacing: -0.02em;
+}
+.bb-home-sec-more {
+  font-size: 13px; font-weight: 700; color: #0046FF;
+  text-decoration: none; white-space: nowrap; padding-bottom: 2px;
+}
+.bb-home-sec-more:hover { text-decoration: underline; }
+.bb-home-sec-body { padding: 16px 22px 20px; }
 
-  .bb-scorecard { display:flex; flex-direction:column; gap:22px; margin-bottom:24px; }
-  .bb-score { display:flex; flex-direction:column; gap:8px; }
-  .bb-score-head { display:flex; justify-content:space-between; align-items:baseline; }
-  .bb-score-name {
-    font-size:13px; font-weight:700; color:#0a0a0a;
-    letter-spacing:-0.01em;
-  }
-  .bb-score-val {
-    font-size:13px; font-weight:700; color:#0a0a0a;
-    font-variant-numeric:tabular-nums;
-  }
-  .bb-score-bar { width:100%; height:3px; background:#f0f0f0; overflow:hidden; }
-  .bb-score-fill {
-    height:100%; background:#0a0a0a; transition:width .6s ease;
-  }
-  .bb-score-fill.warn { background:#0a0a0a; opacity:.55; }
-  .bb-score-fill.bad  { background:#0a0a0a; opacity:.25; }
-  .bb-score-comment {
-    font-size:11px; font-weight:300; color:#888; line-height:1.5;
-  }
+/* ── 캘린더 D-day ── */
+.bb-home-dday {
+  display: flex; flex-direction: column;
+  background: #fafbff; border: 1.5px solid #e8edff;
+  border-radius: 10px; overflow: hidden;
+}
+.bb-home-dday-row {
+  display: flex; align-items: center; gap: 12px; padding: 12px 14px;
+}
+.bb-home-dday-row + .bb-home-dday-row { border-top: 1px solid #eef0f8; }
+.bb-home-dday-badge  { font-size: 18px; font-weight: 900; flex-shrink: 0; min-width: 48px; letter-spacing: -0.03em; }
+.bb-home-dday-divider{ width: 1px; height: 32px; flex-shrink: 0; opacity: 0.2; }
+.bb-home-dday-info   { flex: 1; min-width: 0; }
+.bb-home-dday-type   { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 2px; }
+.bb-home-dday-title  { font-size: 13px; font-weight: 700; color: #1a1a1a; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bb-home-dday-date   { font-size: 11px; color: #aaa; margin-top: 1px; }
 
-  .bb-cta-btn {
-    display:block; width:100%; margin-top:8px; padding:16px;
-    background:#0a0a0a; color:#fff; border:1.5px solid #0a0a0a; border-radius:2px;
-    font-size:13px; font-weight:700; cursor:pointer; letter-spacing:0.1em;
-    text-transform:uppercase; text-align:center; text-decoration:none;
-    font-family:'BookkGothic','Pretendard',sans-serif; transition:background .15s, color .15s;
-  }
-  .bb-cta-btn:hover { background:#fff; color:#0a0a0a; }
-  .bb-cta-btn.outline { background:#fff; color:#0a0a0a; }
-  .bb-cta-btn.outline:hover { background:#0a0a0a; color:#fff; }
+/* ── 탭 ── */
+.bb-home-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+.bb-home-tab {
+  display: inline-flex; align-items: center;
+  height: 28px; padding: 0 12px;
+  border: 1px solid #e0e0e0; border-radius: 999px;
+  font-size: 12px; font-weight: 700; color: #999;
+  background: #f5f5f5; cursor: pointer; transition: all .12s;
+  font-family: 'Pretendard', sans-serif;
+}
+.bb-home-tab:hover  { background: #0046FF; border-color: #0046FF; color: #fff; }
+.bb-home-tab.active { background: #0a0a0a; border-color: #0a0a0a; color: #fff; }
 
-  /* ── 자료실 (에디토리얼 리디자인) ── */
-  .bb-res-ed {
-    font-family:'BookkGothic','Pretendard',sans-serif;
-    background:#fff; border:1.5px solid #0a0a0a; border-radius:4px; overflow:hidden;
-  }
-  .bb-res-ed-inner { padding:28px 26px 20px; }
-  .bb-res-ed-eyebrow {
-    font-size:11px; font-weight:300; letter-spacing:0.22em;
-    color:#999; text-transform:uppercase; margin-bottom:10px;
-  }
-  .bb-res-ed-title {
-    font-size:38px; font-weight:700; color:#0a0a0a;
-    letter-spacing:-0.03em; line-height:1.1; margin-bottom:6px;
-  }
-  .bb-res-ed-sub {
-    font-size:13px; font-weight:300; color:#888; line-height:1.6;
-    padding-bottom:20px; border-bottom:1px solid #e0e0e0; margin-bottom:4px;
-  }
-  .bb-res-ed-list { list-style:none; }
-  .bb-res-ed-item {
-    display:flex; align-items:center; gap:14px;
-    padding:15px 0; border-bottom:1px solid #efefef;
-    cursor:pointer; transition:opacity .15s;
-  }
-  .bb-res-ed-item:last-child { border-bottom:none; }
-  .bb-res-ed-item:hover { opacity:.65; }
-  .bb-res-ed-num {
-    font-size:12px; font-weight:300; color:#ccc;
-    letter-spacing:0.05em; flex-shrink:0; width:22px; text-align:right;
-  }
-  .bb-res-ed-info { flex:1; min-width:0; }
-  .bb-res-ed-name {
-    font-size:15px; font-weight:700; color:#0a0a0a;
-    line-height:1.4; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-  }
-  .bb-res-ed-meta { font-size:12px; font-weight:300; color:#aaa; margin-top:3px; }
-  .bb-res-ed-badge {
-    font-size:11px; font-weight:700; letter-spacing:0.08em;
-    color:#0a0a0a; background:#f2f2f2; border:1px solid #ddd;
-    padding:3px 8px; border-radius:2px; flex-shrink:0;
-  }
-  /* 기존 .bb-badge 유지 */
-  .bb-badge { font-size:13px; font-weight:700; padding:3px 9px; border-radius:6px; letter-spacing:0.04em; flex-shrink:0; }
-  .bb-badge-md  { background:#00133a; color:#0046FF; }
-  .bb-badge-xl  { background:#002a10; color:#00cc55; }
-  .bb-badge-pdf { background:#2a0800; color:#ff4422; }
-  .bb-badge-ppt { background:#2a1400; color:#ff9922; }
+/* ── 자료실 리스트 ── */
+.bb-res-list { list-style: none; }
+.bb-res-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid #f5f5f5;
+  cursor: pointer; transition: opacity .12s;
+}
+.bb-res-item:last-child { border-bottom: none; }
+.bb-res-item:hover { opacity: .6; }
+.bb-res-num   { font-size: 11px; color: #ccc; font-weight: 300; width: 20px; text-align: right; flex-shrink: 0; }
+.bb-res-info  { flex: 1; min-width: 0; }
+.bb-res-name  { font-size: 14px; font-weight: 700; color: #0a0a0a; line-height: 1.4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.bb-res-meta  { font-size: 11px; color: #bbb; margin-top: 2px; }
+.bb-res-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 7px;
+  border-radius: 2px; background: #f2f2f2; border: 1px solid #e0e0e0;
+  color: #0a0a0a; flex-shrink: 0; letter-spacing: 0.05em;
+}
 
-  /* ── 03 재무 인사이트 (에디토리얼) ── */
-  #bb-sec03 {
-    font-family:'BookkGothic','Pretendard',sans-serif;
-    background:#fff; border:1.5px solid #0a0a0a;
-    border-radius:4px; overflow:hidden;
-  }
-  #bb-sec03 .bb-card-inner { padding:32px 28px 28px; }
-  #bb-sec03 .bb-sec-label {
-    font-size:11px; font-weight:300; letter-spacing:0.22em;
-    color:#999; text-transform:uppercase; margin-bottom:0;
-  }
-  #bb-sec03 .bb-sec-title {
-    font-size:38px; font-weight:700; color:#0a0a0a;
-    letter-spacing:-0.03em; line-height:1.1; margin-bottom:6px;
-    font-family:'BookkGothic','Pretendard',sans-serif;
-  }
-  #bb-sec03 .bb-sec-desc {
-    font-size:13px; font-weight:300; color:#888; line-height:1.6;
-    padding-bottom:24px; border-bottom:1px solid #0a0a0a; margin-bottom:24px;
-  }
+.bb-viewall {
+  display: block; text-align: center;
+  padding: 12px 0 0; border-top: 1px solid #f2f2f2; margin-top: 6px;
+  font-size: 13px; font-weight: 700; color: #0a0a0a; text-decoration: none;
+  transition: color .12s;
+}
+.bb-viewall:hover { color: #0046FF; }
 
-  .bb-posts { display:grid; grid-template-columns:1fr; gap:32px; margin-bottom:8px; }
-  .bb-post  {
-    background:transparent; border-radius:0; overflow:hidden;
-    cursor:pointer; transition:opacity .15s; text-decoration:none; display:block;
-  }
-  .bb-post:hover { opacity:.75; }
-  .bb-post-thumb {
-    width:100%; aspect-ratio:16/9; background:#f0f0f0;
-    display:flex; align-items:center; justify-content:center;
-    font-size:40px; overflow:hidden; border-radius:2px;
-  }
-  .bb-post-thumb img { width:100%; height:100%; object-fit:cover; display:block; }
-  .bb-post-body  { padding:18px 0 4px; }
-  .bb-post-cat   {
-    font-size:11px; font-weight:300; color:#999;
-    letter-spacing:0.2em; text-transform:uppercase; margin-bottom:10px;
-  }
-  .bb-post-title {
-    font-size:20px; font-weight:700; line-height:1.35;
-    color:#0a0a0a; margin-bottom:10px; letter-spacing:-0.02em;
-    display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical;
-    overflow:hidden;
-  }
-  .bb-post-date {
-    font-size:12px; font-weight:300; color:#aaa;
-    letter-spacing:0.04em;
-  }
-  .bb-more {
-    display:none; width:100%; margin:20px 0 0; padding:18px;
-    background:transparent; color:#0a0a0a;
-    border:1.5px solid #0a0a0a; border-radius:2px;
-    font-size:13px; font-weight:700; cursor:pointer; letter-spacing:0.1em;
-    text-transform:uppercase; text-align:center; text-decoration:none;
-    font-family:'BookkGothic','Pretendard',sans-serif;
-    transition:background .15s,color .15s;
-  }
-  .bb-more:hover { background:#0a0a0a; color:#fff; }
+/* ── 콘텐츠 포스트 ── */
+.bb-posts-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.bb-post-card {
+  background: #f8f8f8; border-radius: 10px; overflow: hidden;
+  cursor: pointer; transition: transform .15s; text-decoration: none; display: block;
+}
+.bb-post-card:hover { transform: translateY(-2px); }
+.bb-post-thumb {
+  width: 100%; aspect-ratio: 16/9;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; overflow: hidden;
+}
+.bb-post-thumb img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.bb-post-body { padding: 10px 12px 12px; }
+.bb-post-cat  { font-size: 11px; font-weight: 700; color: #0046FF; letter-spacing: 0.08em; margin-bottom: 3px; }
+.bb-post-ttl  { font-size: 13px; font-weight: 700; line-height: 1.5; color: #1a1a1a; margin-bottom: 3px; }
+.bb-post-date { font-size: 11px; color: #bbb; }
 
-  /* ── 04 기고 콘텐츠 텍스트 카드 ── */
-  .bb-contrib-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
-  .bb-contrib-card {
-    background:#f8f8f8; border:1px solid #ebebeb; border-radius:14px; padding:18px;
-    display:flex; flex-direction:column; gap:8px;
-    cursor:pointer; transition:border-color .15s,transform .15s; text-decoration:none;
-  }
-  .bb-contrib-card:hover { border-color:#0046FF; transform:translateY(-2px); }
-  .bb-contrib-source { font-size:14px; font-weight:700; color:#0046FF; letter-spacing:0.06em; }
-  .bb-contrib-title  { font-size:18px; font-weight:700; color:#1a1a1a; line-height:1.45; }
-  .bb-contrib-desc   { font-size:14px; color:#888; line-height:1.65; flex:1; }
-  .bb-contrib-footer { display:flex; justify-content:space-between; align-items:center; margin-top:4px; }
-  .bb-contrib-date   { font-size:13px; color:#bbb; }
-  .bb-contrib-link   { font-size:14px; font-weight:700; color:#0046FF; text-decoration:none; }
-  .bb-contrib-link:hover { text-decoration:underline; }
+/* ── 커뮤니티 CTA ── */
+.bb-comm-cta {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 22px;
+  background: #f8f9ff; border: 1.5px solid #dde4ff; border-radius: 4px;
+}
+.bb-comm-cta-icon  { font-size: 32px; flex-shrink: 0; }
+.bb-comm-cta-info  { flex: 1; }
+.bb-comm-cta-title { font-size: 16px; font-weight: 700; color: #0a0a0a; margin-bottom: 4px; }
+.bb-comm-cta-desc  { font-size: 13px; color: #888; line-height: 1.6; }
+.bb-comm-cta-btns  { display: flex; gap: 8px; flex-shrink: 0; }
+.bb-cta-sm {
+  display: inline-block; padding: 8px 16px; border-radius: 8px;
+  font-size: 12px; font-weight: 700; cursor: pointer;
+  font-family: 'Pretendard', sans-serif; text-decoration: none; white-space: nowrap; transition: all .15s;
+}
+.bb-cta-sm-blue { background: #0046FF; color: #fff; border: none; }
+.bb-cta-sm-blue:hover { background: #003dd6; }
+.bb-cta-sm-out  { background: #fff; color: #0046FF; border: 1.5px solid #0046FF; }
+.bb-cta-sm-out:hover  { background: #eef2ff; }
 
-  /* ── Footer ── */
-  .bb-footer { background:#111; border:1px solid #1e1e1e; border-radius:22px; padding:22px 24px; text-align:center; font-size:15px; color:#444; line-height:1.8; }
-  .bb-footer a { color:#555; text-decoration:none; }
-  .bb-footer a:hover { color:#0046FF; }
+/* ── 파인더 CTA ── */
+.bb-finder-cta { padding: 24px; background: #0a0a0a; border-radius: 4px; }
+.bb-finder-eyebrow {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.16em;
+  color: #444; text-transform: uppercase; margin-bottom: 8px;
+}
+.bb-finder-title {
+  font-family: 'BookkGothic', 'Pretendard', sans-serif;
+  font-size: 26px; font-weight: 700; color: #fff;
+  letter-spacing: -0.03em; margin-bottom: 6px; line-height: 1.2;
+}
+.bb-finder-desc { font-size: 13px; color: #555; line-height: 1.7; margin-bottom: 16px; }
+.bb-finder-email { display: flex; gap: 8px; }
+.bb-finder-email input {
+  flex: 1; padding: 9px 12px;
+  background: #1a1a1a; border: 1px solid #2a2a2a; border-radius: 8px;
+  font-size: 13px; color: #fff; font-family: 'Pretendard', sans-serif; outline: none;
+  transition: border-color .15s;
+}
+.bb-finder-email input::placeholder { color: #555; }
+.bb-finder-email input:focus { border-color: #0046FF; }
+.bb-finder-email button {
+  padding: 9px 16px; background: #0046FF; color: #fff;
+  border: none; border-radius: 8px; font-size: 13px; font-weight: 700;
+  cursor: pointer; font-family: 'Pretendard', sans-serif; white-space: nowrap;
+  transition: background .15s;
+}
+.bb-finder-email button:hover { background: #003dd6; }
 
-  /* ── 반응형 ── */
-  @media (max-width:560px) {
-    .bb-posts        { grid-template-columns:1fr; }
-    .bb-contrib-grid { grid-template-columns:1fr; }
-    .bb-calc-grid    { grid-template-columns:1fr; }
-    .bb-page         { padding:16px 12px 48px; gap:10px; }
-    .bb-card-inner   { padding:22px 18px; }
-  }
+/* ── 우측 계산기 ── */
+.bb-right { position: sticky; top: 24px; display: flex; flex-direction: column; gap: 10px; }
+
+.bb-calc-inner { padding: 20px 18px; }
+.bb-calc-hd {
+  font-family: 'BookkGothic', 'Pretendard', sans-serif;
+  font-size: 19px; font-weight: 700; color: #0a0a0a;
+  letter-spacing: -0.02em; line-height: 1.3; margin-bottom: 4px;
+}
+.bb-calc-sub { font-size: 11px; color: #bbb; margin-bottom: 16px; line-height: 1.5; }
+
+.bb-field-sm { margin-bottom: 9px; }
+.bb-field-sm label { font-size: 11px; color: #aaa; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.03em; }
+.bb-field-sm input, .bb-field-sm select {
+  width: 100%; padding: 8px 10px;
+  border: 1.5px solid #ebebeb; border-radius: 8px;
+  font-size: 14px; color: #222; background: #fafafa;
+  font-family: 'Pretendard', sans-serif; outline: none; transition: border-color .15s;
+}
+.bb-field-sm input:focus, .bb-field-sm select:focus { border-color: #0046FF; }
+
+.bb-calc-result {
+  background: #0a0a0a; border-radius: 10px; padding: 14px 14px;
+  display: flex; align-items: center; justify-content: space-between; margin: 12px 0; gap: 10px;
+}
+.bb-calc-result-lbl { font-size: 11px; color: #666; margin-bottom: 4px; }
+.bb-calc-result-val { font-size: 36px; font-weight: 900; color: #0046FF; line-height: 1; }
+.bb-calc-result-sub { font-size: 11px; color: #444; margin-top: 4px; }
+.bb-meter-sm { width: 64px; height: 64px; position: relative; flex-shrink: 0; }
+.bb-meter-sm svg { transform: rotate(-90deg); display: block; }
+.bb-meter-sm-num { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-size: 14px; font-weight: 800; color: #0046FF; }
+
+.bb-calc-cta {
+  display: block; width: 100%; padding: 11px;
+  background: #0a0a0a; color: #fff; border: none; border-radius: 8px;
+  font-size: 14px; font-weight: 700; cursor: pointer;
+  font-family: 'Pretendard', sans-serif; transition: background .2s; text-align: center;
+}
+.bb-calc-cta:hover { background: #0046FF; }
+
+/* ── 반응형 ── */
+@media (max-width: 1080px) {
+  .bb-layout { grid-template-columns: 190px minmax(0,1fr) 240px; }
+}
+@media (max-width: 800px) {
+  .bb-layout { grid-template-columns: 1fr; }
+  .bb-left, .bb-right { position: static; }
+  .bb-posts-grid { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
-<div class="bb-page">
+<div class="bb-wrap">
+<div class="bb-layout">
 
-  <!-- HERO -->
-  <div class="bb-card">
-    <div class="bb-card-inner">
-      <div class="bb-hero-banner">
-        <img src="/assets/hero.png" alt="블랙북" loading="eager">
-        <div class="bb-hero-overlay">
-          <div class="bb-hero-center">
-            <div class="bb-hero-overlay-title">BLACK BOOK</div>
-            <div class="bb-hero-overlay-sub">재무 담당자를 위한 지침서</div>
-          </div>
-          <div class="bb-hero-pills">
-            <a href="#bb-sec02" class="bb-pill">🏦 대출 계산기</a>
-            <a href="/archive" class="bb-pill">📂 자료실</a>
-            <a href="#bb-sec03" class="bb-pill">✍️ 재무 콘텐츠</a>
-            <a href="#bb-sec04" class="bb-pill">📝 기고 콘텐츠</a>
-          </div>
+  <!-- ── 좌측 네비 ── -->
+  <aside class="bb-left">
+    <div class="bb-card">
+      <div class="bb-brand">
+        <div class="bb-brand-logo">BLACK BOOK</div>
+        <div class="bb-brand-sub">재무 담당자를 위한 지침서</div>
+      </div>
+      <div class="bb-nav-inner">
+
+        <a href="/calendar" class="bb-nav-item">
+          <span>📅</span>캘린더
+        </a>
+        <div class="bb-nav-sub">
+          <a href="/calendar" class="bb-nav-sub-item">세무일정</a>
+          <a href="/calendar" class="bb-nav-sub-item">주요일정</a>
+          <a href="/calendar" class="bb-nav-sub-item">업데이트</a>
         </div>
+
+        <div class="bb-nav-divider"></div>
+
+        <a href="/archive" class="bb-nav-item">
+          <span>📂</span>자료실
+        </a>
+
+        <div class="bb-nav-divider"></div>
+
+        <a href="/content" class="bb-nav-item">
+          <span>✍️</span>콘텐츠
+        </a>
+        <div class="bb-nav-sub">
+          <a href="/content" class="bb-nav-sub-item">특별기고</a>
+          <a href="/content" class="bb-nav-sub-item">재무</a>
+          <a href="/content" class="bb-nav-sub-item">기업신용</a>
+        </div>
+
+        <div class="bb-nav-divider"></div>
+
+        <a href="/community/talk" class="bb-nav-item">
+          <span>💬</span>커뮤니티
+        </a>
+        <div class="bb-nav-sub">
+          <a href="/community/talk" class="bb-nav-sub-item">실무자톡</a>
+          <a href="/community/qna"  class="bb-nav-sub-item">진짜 QnA</a>
+        </div>
+
+        <div class="bb-nav-divider"></div>
+
+        <span class="bb-nav-item coming">
+          <span>🔍</span>정책자금 파인더
+          <span class="bb-nav-badge">예정</span>
+        </span>
+
+      </div>
+      <button class="bb-sub-btn">🔔 업데이트 알림 받기</button>
     </div>
-  </div>
+  </aside>
 
-  <!-- 01 재무 캘린더 -->
-  <div class="bb-card" id="bb-sec01">
-    <div class="bb-card-inner">
-      <p class="bb-sec-label">01 — 재무 캘린더</p>
-      <h2 class="bb-sec-title">재무 캘린더</h2>
-      <div class="bb-dday" id="cal-dday" style="display:none"></div>
-      <div class="bb-cal-mock">
-        <div class="bb-cal-top">
-          <span class="bb-cal-month" id="cal-month-label">2026년 5월</span>
-          <div class="bb-cal-arrows">
-            <button id="cal-prev">‹</button>
-            <button id="cal-next">›</button>
-          </div>
+  <!-- ── 중앙 메인 ── -->
+  <main class="bb-main">
+
+    <!-- 01 캘린더 프리뷰 -->
+    <div class="bb-card bb-home-sec">
+      <div class="bb-home-sec-hd">
+        <div>
+          <div class="bb-home-sec-label">01 — 재무 캘린더</div>
+          <h2 class="bb-home-sec-title">재무 캘린더</h2>
         </div>
-        <div class="bb-cal-grid" id="cal-grid">
-          <div class="bb-dow">일</div>
-          <div class="bb-dow">월</div>
-          <div class="bb-dow">화</div>
-          <div class="bb-dow">수</div>
-          <div class="bb-dow">목</div>
-          <div class="bb-dow">금</div>
-          <div class="bb-dow">토</div>
-        </div>
-        <div class="bb-date-panel" id="cal-date-panel" style="display:none"></div>
-        <div class="bb-chips" id="cal-chips">
-          <span class="bb-chip" style="color:#aaa;border-color:#dde">불러오는 중…</span>
-        </div>
+        <a href="/calendar" class="bb-home-sec-more">전체 보기 →</a>
+      </div>
+      <div class="bb-home-sec-body">
+        <div class="bb-home-dday" id="home-dday"></div>
       </div>
     </div>
-  </div>
 
-  <!-- 02 기업대출 확률 계산기 (위자드) -->
-  <div id="bb-sec02">
-    <div class="bb-card-inner">
-      <p class="bb-sec-label">02 / Loan Probability</p>
-
-      <div id="wiz-indicator" style="display:none">
-        <div class="bb-wiz-stepnum" id="wiz-stepnum"></div>
-        <div class="bb-wiz-dots" id="wiz-dots"></div>
-      </div>
-
-      <!-- STEP 1: 인트로 -->
-      <div class="bb-wiz-step" data-step="1">
-        <div class="bb-wiz-intro-top">
-          <h2 class="bb-wiz-intro-hd">우리 회사,<br>대출 될까요?</h2>
-          <div class="bb-wiz-intro-deco">
-            <img src="/assets/calc-deco.png" alt="" loading="lazy">
-          </div>
+    <!-- 02 자료실 프리뷰 -->
+    <div class="bb-card bb-home-sec">
+      <div class="bb-home-sec-hd">
+        <div>
+          <div class="bb-home-sec-label">02 — 자료실</div>
+          <h2 class="bb-home-sec-title">자료실</h2>
         </div>
-        <p class="bb-wiz-intro-sub">실제 금융기관 심사 기준 기반 · 4단계 1분 진단</p>
-        <ul class="bb-wiz-intro-list">
-          <li data-num="01">업종 · 업력</li>
-          <li data-num="02">연매출 · 부채비율</li>
-          <li data-num="03">신용등급 · 희망 금액</li>
-          <li data-num="04">진단 결과 확인</li>
+        <a href="/archive" class="bb-home-sec-more">전체 보기 →</a>
+      </div>
+      <div class="bb-home-sec-body">
+        <div class="bb-home-tabs" id="res-tabs">
+          <button class="bb-home-tab active" data-cat="전체">전체</button>
+          <button class="bb-home-tab" data-cat="자동화·AI활용">AI·자동화</button>
+          <button class="bb-home-tab" data-cat="실무서식">실무서식</button>
+          <button class="bb-home-tab" data-cat="정책·세무">정책·세무</button>
+        </div>
+        <ul class="bb-res-list" id="home-res-list">
+          <li style="padding:16px 0;text-align:center;color:#aaa;font-size:13px">불러오는 중…</li>
         </ul>
-        <div class="bb-wiz-disclaimer">
-          본 결과는 <strong>참고용 추정치</strong>입니다. 실제 금융기관의 심사 결과와 다를 수 있습니다.
-        </div>
-        <button class="bb-wiz-btn primary" onclick="wizGo(2)" style="width:100%;">시작하기 →</button>
-      </div>
-
-      <!-- STEP 2: 업종 + 업력 -->
-      <div class="bb-wiz-step" data-step="2" hidden>
-        <div class="bb-wiz-q">어떤 업종이세요?</div>
-        <select class="bb-wiz-select" id="wiz-industry">
-          <option>제조업</option>
-          <option>도소매업</option>
-          <option>서비스업</option>
-          <option>IT·정보통신</option>
-          <option>건설업</option>
-        </select>
-
-        <div class="bb-wiz-q">업력이 어떻게 되시나요?</div>
-        <select class="bb-wiz-select" id="wiz-age">
-          <option>1년 미만</option>
-          <option>1~3년</option>
-          <option>3~5년</option>
-          <option>5~7년</option>
-          <option>7년 이상</option>
-        </select>
-
-        <div class="bb-wiz-nav">
-          <button class="bb-wiz-btn ghost" onclick="wizGo(1)">← 이전</button>
-          <button class="bb-wiz-btn primary" onclick="wizGo(3)">다음 →</button>
-        </div>
-      </div>
-
-      <!-- STEP 3: 재무 정보 -->
-      <div class="bb-wiz-step" data-step="3" hidden>
-        <div class="bb-wiz-q">최근 1년 매출은 얼마인가요?</div>
-        <input type="number" class="bb-wiz-input" id="wiz-revenue" placeholder="억원 단위 (예: 15)">
-        <div class="bb-wiz-hint" id="wiz-revenue-hint">미입력 시 업종 평균값으로 계산됩니다</div>
-
-        <div class="bb-wiz-q">부채비율은 얼마인가요?</div>
-        <input type="number" class="bb-wiz-input" id="wiz-debt" placeholder="% (예: 120)">
-        <div class="bb-wiz-hint" id="wiz-debt-hint">미입력 시 업종 평균값으로 계산됩니다</div>
-
-        <div class="bb-wiz-nav">
-          <button class="bb-wiz-btn ghost" onclick="wizGo(2)">← 이전</button>
-          <button class="bb-wiz-btn primary" onclick="wizGo(4)">다음 →</button>
-        </div>
-      </div>
-
-      <!-- STEP 4: 신용 + 희망금액 -->
-      <div class="bb-wiz-step" data-step="4" hidden>
-        <div class="bb-wiz-q">대표자 신용등급은?</div>
-        <select class="bb-wiz-select" id="wiz-credit">
-          <option>1~3등급 (우수)</option>
-          <option>4~6등급 (보통)</option>
-          <option>7등급 이하 (낮음)</option>
-        </select>
-
-        <div class="bb-wiz-q">희망 대출 금액은?</div>
-        <input type="number" class="bb-wiz-input" id="wiz-amount" placeholder="억원 단위 (예: 5)">
-        <div class="bb-wiz-hint" id="wiz-amount-hint">미입력 시 업종 통상값으로 계산됩니다</div>
-
-        <div class="bb-wiz-nav">
-          <button class="bb-wiz-btn ghost" onclick="wizGo(3)">← 이전</button>
-          <button class="bb-wiz-btn primary" onclick="wizCalculate()">진단하기 →</button>
-        </div>
-      </div>
-
-      <!-- STEP 5: 결과 -->
-      <div class="bb-wiz-step" data-step="5" hidden>
-        <div class="bb-result-hero">
-          <div class="bb-result-label">대출 승인 추정 확률</div>
-          <div class="bb-result-val" id="wiz-result-pct">—</div>
-          <div class="bb-result-sub" id="wiz-result-sub"></div>
-        </div>
-
-        <div class="bb-scorecard" id="wiz-scorecard"></div>
-
-        <div class="bb-wiz-disclaimer">
-          본 결과는 입력값 기반의 <strong>참고용 추정치</strong>입니다. 실제 금융기관 심사 결과와 다를 수 있으며, 정확한 대출 가능 여부는 전문가 상담을 통해 확인하시기 바랍니다.
-        </div>
-
-        <button class="bb-cta-btn">AI 경영진단으로 정밀 분석 →</button>
-        <button class="bb-cta-btn outline" onclick="wizReset()" style="margin-top:8px">다시 진단하기</button>
+        <a href="/archive" class="bb-viewall">전체 자료 보기 →</a>
       </div>
     </div>
-  </div>
 
-  <!-- 자료실 -->
-  <div class="bb-res-ed" id="bb-sec-res">
-    <div class="bb-res-ed-inner">
-      <div class="bb-res-ed-eyebrow">Resources</div>
-      <div class="bb-res-ed-title">자료실</div>
-      <div class="bb-res-ed-sub">실무에서 바로 쓸 수 있는 파일만 모았습니다</div>
-      <ul class="bb-res-ed-list" id="res-list">
-        <li style="padding:20px 0;text-align:center;color:#aaa;font-size:14px">불러오는 중…</li>
-      </ul>
-      <a href="/archive" style="display:block;text-align:center;margin-top:4px;padding:14px 0;font-size:14px;font-weight:700;color:#0a0a0a;text-decoration:none;border-top:1px solid #efefef;">전체 자료 보기 →</a>
-    </div>
-  </div>
-
-  <!-- 03 재무 인사이트 -->
-  <div id="bb-sec03">
-    <div class="bb-card-inner">
-      <p class="bb-sec-label">03 / Insights</p>
-      <h2 class="bb-sec-title">재무 인사이트</h2>
-      <p class="bb-sec-desc">크레디뷰 블로그 최신 글</p>
-      <div class="bb-posts" id="posts-grid">
-        <div style="grid-column:1/-1;text-align:center;padding:24px;color:#aaa;font-size:12px;font-weight:300;">불러오는 중…</div>
+    <!-- 03 콘텐츠 프리뷰 -->
+    <div class="bb-card bb-home-sec">
+      <div class="bb-home-sec-hd">
+        <div>
+          <div class="bb-home-sec-label">03 — 콘텐츠</div>
+          <h2 class="bb-home-sec-title">재무 인사이트</h2>
+        </div>
+        <a href="/content" class="bb-home-sec-more">더 보기 →</a>
       </div>
-      <a href="https://crediview.co.kr/blog" target="_blank" rel="noopener noreferrer"
-         class="bb-more" id="posts-more" style="display:block;">View All Posts</a>
-    </div>
-  </div>
-
-  <!-- 04 기고 콘텐츠 -->
-  <div class="bb-card" id="bb-sec04">
-    <div class="bb-card-inner">
-      <p class="bb-sec-label">04 — 기고 콘텐츠 영역</p>
-      <h2 class="bb-sec-title">재무 인플루언서 큐레이션</h2>
-      <p class="bb-sec-desc">재무 관련 인플루언서 콘텐츠 수급 영역</p>
-      <div class="bb-contrib-grid">
-        <a href="#" class="bb-contrib-card">
-          <div class="bb-contrib-source">재무선배 · 브런치</div>
-          <div class="bb-contrib-title">재무선배가 떠먹여주는 실무자를 위한 재무꿀팁</div>
-          <div class="bb-contrib-desc">부채비율 분석부터 현금흐름표 읽는 법까지, 현직 재무팀장이 정리한 실전 노하우.</div>
-          <div class="bb-contrib-footer">
-            <span class="bb-contrib-date">May 20, 2026</span>
-            <span class="bb-contrib-link">읽기 →</span>
-          </div>
-        </a>
-        <a href="#" class="bb-contrib-card">
-          <div class="bb-contrib-source">CFO 레터 · 뉴스레터</div>
-          <div class="bb-contrib-title">현직 CFO가 알려주는 월말결산 체크리스트</div>
-          <div class="bb-contrib-desc">결산 오류의 80%는 이 5가지에서 발생합니다. 담당자라면 반드시 확인해야 할 항목 정리.</div>
-          <div class="bb-contrib-footer">
-            <span class="bb-contrib-date">May 17, 2026</span>
-            <span class="bb-contrib-link">읽기 →</span>
-          </div>
-        </a>
-        <a href="#" class="bb-contrib-card">
-          <div class="bb-contrib-source">스타트업 회계 · 팟캐스트</div>
-          <div class="bb-contrib-title">시리즈A 투자 전 반드시 정리해야 할 재무 서류</div>
-          <div class="bb-contrib-desc">투자자가 가장 먼저 보는 서류 7종 — 준비 순서와 실수 포인트까지 구체적으로 안내합니다.</div>
-          <div class="bb-contrib-footer">
-            <span class="bb-contrib-date">May 12, 2026</span>
-            <span class="bb-contrib-link">읽기 →</span>
-          </div>
-        </a>
-        <a href="#" class="bb-contrib-card">
-          <div class="bb-contrib-source">중기부 공식 · 정책 가이드</div>
-          <div class="bb-contrib-title">2026 정책자금 한 번에 정리하는 법</div>
-          <div class="bb-contrib-desc">소진공·기보·신보·지역신보 4대 기관 공고 일정 비교와 신청 전략을 정리했습니다.</div>
-          <div class="bb-contrib-footer">
-            <span class="bb-contrib-date">May 8, 2026</span>
-            <span class="bb-contrib-link">읽기 →</span>
-          </div>
-        </a>
+      <div class="bb-home-sec-body">
+        <div class="bb-home-tabs">
+          <button class="bb-home-tab active">특별기고</button>
+          <button class="bb-home-tab">재무</button>
+          <button class="bb-home-tab">기업신용</button>
+        </div>
+        <div class="bb-posts-grid" id="home-posts">
+          <div style="grid-column:1/-1;text-align:center;padding:20px;color:#aaa;font-size:13px">불러오는 중…</div>
+        </div>
+        <a href="https://crediview.co.kr/blog" target="_blank" rel="noopener noreferrer" class="bb-viewall">크레디뷰 블로그 →</a>
       </div>
     </div>
-  </div>
 
-  <!-- Footer -->
-  <div class="bb-footer">
-    <p>© 2026 크레디뷰 · 블랙북 — 재무 담당자를 위한 지침서</p>
-    <p style="margin-top:4px"><a href="#">이용약관</a> · <a href="#">개인정보처리방침</a> · <a href="#">고객센터</a></p>
-  </div>
+    <!-- 04 커뮤니티 CTA -->
+    <div class="bb-comm-cta">
+      <div class="bb-comm-cta-icon">💬</div>
+      <div class="bb-comm-cta-info">
+        <div class="bb-comm-cta-title">재무 실무자 커뮤니티</div>
+        <div class="bb-comm-cta-desc">같은 고민을 가진 재무·회계 실무자들과 소통하고,<br>기업신용평가사에게 직접 질문해보세요.</div>
+      </div>
+      <div class="bb-comm-cta-btns">
+        <a href="/community/talk" class="bb-cta-sm bb-cta-sm-blue">실무자톡</a>
+        <a href="/community/qna"  class="bb-cta-sm bb-cta-sm-out">진짜 QnA</a>
+      </div>
+    </div>
 
+    <!-- 05 정책자금 파인더 -->
+    <div class="bb-finder-cta">
+      <div class="bb-finder-eyebrow">Coming Soon</div>
+      <div class="bb-finder-title">정책자금<br>파인더</div>
+      <div class="bb-finder-desc">우리 회사에 맞는 정책자금을 AI가 자동으로 찾아드립니다.<br>출시 알림을 받아보세요.</div>
+      <div class="bb-finder-email">
+        <input type="email" placeholder="이메일 주소 입력">
+        <button onclick="alert('알림 신청이 완료되었습니다!')">알림 받기</button>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- ── 우측 계산기 ── -->
+  <aside class="bb-right">
+    <div class="bb-card">
+      <div class="bb-calc-inner">
+        <div class="bb-calc-hd">우리 회사,<br>대출 될까?</div>
+        <div class="bb-calc-sub">AI 경영진단 기반 기업대출 확률 계산기</div>
+        <div class="bb-field-sm">
+          <label>업종</label>
+          <select><option>제조업</option><option>도소매업</option><option>서비스업</option></select>
+        </div>
+        <div class="bb-field-sm">
+          <label>업력</label>
+          <select><option>3년 미만</option><option>3~5년</option><option>5년 이상</option></select>
+        </div>
+        <div class="bb-field-sm">
+          <label>연매출 (억원)</label>
+          <input type="number" placeholder="예: 15">
+        </div>
+        <div class="bb-field-sm">
+          <label>부채비율 (%)</label>
+          <input type="number" placeholder="예: 120">
+        </div>
+        <div class="bb-field-sm">
+          <label>신용등급</label>
+          <select><option>1~3등급</option><option>4~6등급</option><option>7등급 이하</option></select>
+        </div>
+        <div class="bb-field-sm">
+          <label>희망 금액 (억원)</label>
+          <input type="number" placeholder="예: 5">
+        </div>
+        <div class="bb-calc-result">
+          <div>
+            <div class="bb-calc-result-lbl">AI 대출 승인 추정 확률</div>
+            <div class="bb-calc-result-val">74%</div>
+            <div class="bb-calc-result-sub">적합 상품 3건 탐지</div>
+          </div>
+          <div class="bb-meter-sm">
+            <svg width="64" height="64" viewBox="0 0 100 100">
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#1e1e1e" stroke-width="10"/>
+              <circle cx="50" cy="50" r="40" fill="none" stroke="#0046FF" stroke-width="10"
+                stroke-dasharray="251" stroke-dashoffset="65" stroke-linecap="round"/>
+            </svg>
+            <div class="bb-meter-sm-num">74%</div>
+          </div>
+        </div>
+        <button class="bb-calc-cta">AI 경영진단 시작하기 →</button>
+      </div>
+    </div>
+
+    <div class="bb-card">
+      <div style="padding:14px 16px">
+        <div style="font-size:10px;color:#bbb;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:6px">Powered by</div>
+        <a href="https://crediview.co.kr" target="_blank" rel="noopener noreferrer"
+           style="font-size:15px;font-weight:700;color:#0a0a0a;text-decoration:none;display:flex;align-items:center;gap:4px;">
+          크레디뷰 <span style="color:#0046FF">→</span>
+        </a>
+        <div style="font-size:12px;color:#bbb;margin-top:2px">기업신용 전문 플랫폼</div>
+      </div>
+    </div>
+  </aside>
+
+</div>
 </div>
 
 <script>
-/* ═══════════════════════════════════════
-   01 캘린더 — 기업마당 API 연동
-═══════════════════════════════════════ */
-let calDate     = new Date(2026, 4); // 2026-05
-let calEvents   = [];
-let calSelected = null;
-let calLoading  = false;
-let calError    = false;
+const TYPE_COLOR = { tax:'#0046FF', policy:'#00B050', update:'#FF8C00' };
+const TYPE_LABEL = { tax:'세무일정', policy:'주요일정', update:'업데이트' };
 
-const DOW_HEADERS = ['일','월','화','수','목','금','토'];
-
-function getField(item, ...names) {
-  for (const n of names) {
-    const el = item.querySelector(n);
-    if (el && el.textContent.trim()) return el.textContent.trim();
-  }
-  return '';
-}
-
-// ── 재무 법정기한 (12월 결산법인 기준 · 세법·상법 명시 기한) ──────────────
-const CAL_SCHEDULE = {
-  1:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-        { day: 25, title: '부가세 2기 확정신고·납부', type: 'end' },
-      ],
-  2:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-      ],
-  3:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-        { day: 31, title: '법인세 확정신고·납부 (12월 결산법인)', type: 'end' },
-        { day: 31, title: '정기주주총회 기한 (12월 결산법인)', type: 'end' },
-      ],
-  4:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-        { day: 25, title: '부가세 1기 예정신고·납부', type: 'end' },
-      ],
-  5:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-        { day: 31, title: '종합소득세 확정신고·납부', type: 'end' },
-      ],
-  6:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-      ],
-  7:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '원천세 반기납부 (1~6월분, 해당 사업자)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-        { day: 25, title: '부가세 1기 확정신고·납부', type: 'end' },
-        { day: 31, title: '재산세 1기 납부 (건물·주택)', type: 'end' },
-      ],
-  8:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-        { day: 31, title: '법인세 중간예납 신고·납부 (12월 결산법인)', type: 'end' },
-      ],
-  9:  [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-        { day: 30, title: '재산세 2기 납부 (토지)', type: 'end' },
-      ],
-  10: [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-        { day: 25, title: '부가세 2기 예정신고·납부', type: 'end' },
-      ],
-  11: [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-      ],
-  12: [
-        { day: 10, title: '원천세 납부 (전월분)', type: 'end' },
-        { day: 10, title: '국민연금·건강보험료 납부', type: 'end' },
-        { day: 15, title: '고용·산재보험료 납부', type: 'end' },
-      ],
+const TAX = {
+  1:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'},{day:25,title:'부가세 2기 확정신고·납부'}],
+  2:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'}],
+  3:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'},{day:31,title:'법인세 확정신고·납부'},{day:31,title:'정기주주총회 기한'}],
+  4:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'},{day:25,title:'부가세 1기 예정신고·납부'}],
+  5:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'},{day:31,title:'종합소득세 확정신고·납부'}],
+  6:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'}],
+  7:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'},{day:25,title:'부가세 1기 확정신고·납부'},{day:31,title:'재산세 1기 납부 (건물·주택)'}],
+  8:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'},{day:31,title:'법인세 중간예납 신고·납부'}],
+  9:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'},{day:30,title:'재산세 2기 납부 (토지)'}],
+  10:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'},{day:25,title:'부가세 2기 예정신고·납부'}],
+  11:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'}],
+  12:[{day:10,title:'원천세 납부 (전월분)'},{day:10,title:'국민연금·건강보험료 납부'},{day:15,title:'고용·산재보험료 납부'}],
 };
 
-function getNextDeadlines(count) {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
+/* D-day */
+function renderHomeDday() {
+  const el = document.getElementById('home-dday');
+  const today = new Date(); today.setHours(0,0,0,0);
   const results = [];
-  let skipFrom = 0;
-
-  for (let offset = 0; offset <= 90 && results.length < count; offset++) {
-    if (offset < skipFrom) continue;
+  for (let offset = 0; offset <= 90 && results.length < 3; offset++) {
     const d = new Date(today);
     d.setDate(today.getDate() + offset);
-    const mo = d.getMonth() + 1;
-    const dy = d.getDate();
-    const hits = (CAL_SCHEDULE[mo] || []).filter(ev => ev.day === dy);
-    if (hits.length > 0) {
-      results.push({ title: hits[0].title, days: offset, month: mo, day: dy, count: hits.length });
-      skipFrom = offset + 1;
-    }
+    const mo = d.getMonth() + 1, dy = d.getDate();
+    const hits = (TAX[mo]||[]).filter(e => e.day === dy);
+    if (!hits.length) continue;
+    const key = `${mo}-${dy}`;
+    if (!results.find(r => r.key === key))
+      results.push({ key, title: hits[0].title, extra: hits.length-1, days: offset, month: mo, day: dy, type: 'tax' });
   }
-  return results;
-}
-
-function renderDday() {
-  const el = document.getElementById('cal-dday');
-  if (!el) return;
-  const list = getNextDeadlines(2);
-  if (list.length === 0) { el.style.display = 'flex'; return; }
-
-  el.style.display = 'flex';
-  el.innerHTML = list.map((next, i) => {
-    const badge    = next.days === 0 ? 'D-Day' : `D-${next.days}`;
-    const badgeCls = next.days === 0 ? 'bb-dday-badge today' : 'bb-dday-badge';
-    const extra    = next.count > 1 ? ` 외 ${next.count - 1}건` : '';
-    const rowCls   = i === 1 ? 'bb-dday-row dim' : 'bb-dday-row';
-    return `
-      <div class="${rowCls}">
-        <div class="${badgeCls}">${badge}</div>
-        <div class="bb-dday-divider"></div>
-        <div class="bb-dday-info">
-          <div class="bb-dday-title">${next.title}${extra}</div>
-          <div class="bb-dday-date">${next.month}월 ${next.day}일 마감</div>
-        </div>
-      </div>`;
+  if (!results.length) { el.innerHTML = '<div style="padding:14px;text-align:center;color:#aaa;font-size:13px">일정 없음</div>'; return; }
+  el.innerHTML = results.map(r => {
+    const color = TYPE_COLOR[r.type];
+    const badge = r.days === 0 ? 'D-Day' : `D-${r.days}`;
+    const extra = r.extra > 0 ? ` 외 ${r.extra}건` : '';
+    return `<div class="bb-home-dday-row">
+      <div class="bb-home-dday-badge" style="color:${color}">${badge}</div>
+      <div class="bb-home-dday-divider" style="background:${color}"></div>
+      <div class="bb-home-dday-info">
+        <div class="bb-home-dday-type" style="color:${color}">${TYPE_LABEL[r.type]}</div>
+        <div class="bb-home-dday-title">${r.title}${extra}</div>
+        <div class="bb-home-dday-date">${r.month}월 ${r.day}일 마감</div>
+      </div></div>`;
   }).join('');
 }
 
-function fetchCalEvents() {
-  const m = calDate.getMonth() + 1;
+/* 자료실 프리뷰 */
+let resAll = [], resCat = '전체';
 
-  calLoading  = false;
-  calError    = false;
-  calSelected = null;
-  calEvents   = (CAL_SCHEDULE[m] || []).map(ev => ({ ...ev, link: '' }));
-  renderDday();
-  renderCalendar();
-}
-
-function renderCalendar() {
-  const y    = calDate.getFullYear();
-  const m    = calDate.getMonth();
-  const now  = new Date();
-  const todayMark = (now.getFullYear() === y && now.getMonth() === m) ? now.getDate() : -1;
-  const firstDow  = new Date(y, m, 1).getDay();
-  const daysInMonth = new Date(y, m + 1, 0).getDate();
-
-  document.getElementById('cal-month-label').textContent = `${y}년 ${m+1}월`;
-
-  const grid = document.getElementById('cal-grid');
-  grid.innerHTML = DOW_HEADERS.map(d => `<div class="bb-dow">${d}</div>`).join('');
-
-  for (let i = 0; i < firstDow; i++) {
-    const el = document.createElement('div');
-    el.className = 'bb-day';
-    grid.appendChild(el);
-  }
-
-  for (let d = 1; d <= daysInMonth; d++) {
-    const hasEv = calEvents.some(e => e.day === d);
-    const isTd  = d === todayMark;
-    const isSel = d === calSelected;
-    const cls   = ['bb-day', hasEv && 'ev', isTd && 'td', isSel && 'sel'].filter(Boolean).join(' ');
-    const cell  = document.createElement('div');
-    cell.className = cls;
-    cell.textContent = d;
-    if (hasEv) {
-      const dot = document.createElement('div');
-      dot.className = 'bb-dot';
-      cell.appendChild(dot);
-    }
-    const day = d;
-    cell.addEventListener('click', () => {
-      calSelected = (calSelected === day) ? null : day;
-      renderCalendar();
-    });
-    grid.appendChild(cell);
-  }
-
-  renderDatePanel();
-  renderChips();
-}
-
-function renderDatePanel() {
-  const panel = document.getElementById('cal-date-panel');
-  if (!calSelected) { panel.style.display = 'none'; return; }
-
-  const m = calDate.getMonth();
-  const events = calEvents.filter(e => e.day === calSelected);
-  panel.style.display = 'block';
-
-  let html = `<div class="bb-date-panel-hd">${m+1}월 ${calSelected}일 공고</div>`;
-  if (calLoading) {
-    html += '<p style="font-size:14px;color:#aaa">불러오는 중…</p>';
-  } else if (events.length === 0) {
-    html += '<p style="font-size:14px;color:#aaa">해당 날짜 공고 없음</p>';
-  } else {
-    html += '<ul class="bb-date-panel-list">';
-    events.forEach(ev => {
-      const tagCls  = ev.type === 'end' ? 'bb-ev-end' : 'bb-ev-start';
-      const tagText = ev.type === 'end' ? '마감' : '시작';
-      const title   = ev.link
-        ? `<a href="${ev.link}" target="_blank" rel="noopener noreferrer">${ev.title}</a>`
-        : ev.title;
-      html += `<li class="bb-date-panel-item"><span class="bb-ev-tag ${tagCls}">${tagText}</span>${title}</li>`;
-    });
-    html += '</ul>';
-  }
-  panel.innerHTML = html;
-}
-
-function renderChips() {
-  const el = document.getElementById('cal-chips');
-  if (calLoading) {
-    el.innerHTML = '<span class="bb-chip" style="color:#aaa;border-color:#dde">불러오는 중…</span>';
-    return;
-  }
-  if (calError) {
-    el.innerHTML = '<span class="bb-chip" style="color:#c33;border-color:#fcc">API 연결 오류</span>';
-    return;
-  }
-  if (calEvents.length === 0) {
-    el.innerHTML = '<span class="bb-chip" style="color:#aaa">이번 달 공고 없음</span>';
-    return;
-  }
-  const seen = new Map();
-  calEvents.forEach(e => { if (!seen.has(e.title)) seen.set(e.title, e); });
-  el.innerHTML = Array.from(seen.values()).slice(0, 5).map(e => {
-    const t = e.title.length > 16 ? e.title.slice(0, 16) + '…' : e.title;
-    return `<span class="bb-chip">${t}</span>`;
-  }).join('');
-}
-
-document.getElementById('cal-prev').addEventListener('click', () => {
-  calDate = new Date(calDate.getFullYear(), calDate.getMonth() - 1);
-  fetchCalEvents();
-});
-document.getElementById('cal-next').addEventListener('click', () => {
-  calDate = new Date(calDate.getFullYear(), calDate.getMonth() + 1);
-  fetchCalEvents();
-});
-
-fetchCalEvents();
-
-/* ═══════════════════════════════════════
-   03 인블로그 포스트
-═══════════════════════════════════════ */
-const GRADS = [
-  'linear-gradient(135deg,#00103d,#002066)',
-  'linear-gradient(135deg,#1a0a00,#3d1f00)',
-  'linear-gradient(135deg,#001a0a,#003322)',
-  'linear-gradient(135deg,#1a001a,#3d003d)',
-  'linear-gradient(135deg,#001a1a,#003333)',
-  'linear-gradient(135deg,#0d0d00,#2a2a00)',
-  'linear-gradient(135deg,#001020,#002040)',
-  'linear-gradient(135deg,#100010,#300030)',
-  'linear-gradient(135deg,#001010,#003030)',
-];
-const EMOJIS = ['🏢','📈','💡','🏦','⚖️','📊','💰','🔍','📋'];
-
-let allPosts = [];
-
-function postCardHTML(p, i) {
-  const grad  = GRADS[i % GRADS.length];
-  const emoji = EMOJIS[i % EMOJIS.length];
-  const url   = `https://inblog.ai/crediview/${p.slug}`;
-  const date  = p.date
-    ? new Date(p.date).toLocaleDateString('ko-KR', { year:'numeric', month:'short', day:'numeric' })
-    : '';
-  const thumbHtml = p.image
-    ? `<img src="${p.image}" alt="${p.title}" loading="lazy">`
-    : emoji;
-  const thumbStyle = p.image ? '' : `style="background:${grad}"`;
-  return `
-    <a href="${url}" target="_blank" rel="noopener noreferrer" class="bb-post">
-      <div class="bb-post-thumb" ${thumbStyle}>${thumbHtml}</div>
-      <div class="bb-post-body">
-        <div class="bb-post-cat">Crediview</div>
-        <div class="bb-post-title">${p.title}</div>
-        <div class="bb-post-date">${date}</div>
-      </div>
-    </a>`;
-}
-
-async function loadPosts() {
-  const grid = document.getElementById('posts-grid');
-  const more = document.getElementById('posts-more');
-
+async function loadResPreview() {
+  const list = document.getElementById('home-res-list');
   try {
-    const r    = await fetch('/api/posts');
-    const data = await r.json();
-    allPosts   = data.posts || [];
-
-    if (allPosts.length === 0) {
-      grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#aaa;font-size:14px">콘텐츠가 없습니다.</div>';
-      return;
-    }
-
-    grid.innerHTML = allPosts.slice(0, 2).map(postCardHTML).join('');
-    more.style.display = 'block';
+    const data = await (await fetch('/api/archive')).json();
+    resAll = (data.values||[]).filter(r => r && r[0]);
+    renderRes();
   } catch {
-    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:24px;color:#c33;font-size:14px">콘텐츠를 불러오지 못했습니다.</div>';
+    list.innerHTML = '<li style="padding:16px 0;text-align:center;color:#aaa;font-size:13px">자료를 불러오지 못했습니다.</li>';
   }
 }
 
-loadPosts();
+function renderRes() {
+  const list = document.getElementById('home-res-list');
+  const items = resCat === '전체' ? resAll : resAll.filter(r => r[2] === resCat);
+  const top5 = [...items].sort((a,b) => parseInt(b[8]||'0',10) - parseInt(a[8]||'0',10)).slice(0,5);
+  if (!top5.length) {
+    list.innerHTML = '<li style="padding:16px 0;text-align:center;color:#aaa;font-size:13px">등록된 자료가 없습니다.</li>';
+    return;
+  }
+  list.innerHTML = top5.map((r,i) => `
+    <li class="bb-res-item" onclick="location.href='/archive'">
+      <span class="bb-res-num">${String(i+1).padStart(2,'0')}</span>
+      <div class="bb-res-info">
+        <div class="bb-res-name">${r[0]||''}</div>
+        <div class="bb-res-meta">${[r[2],r[7]].filter(Boolean).join(' · ')}</div>
+      </div>
+      <span class="bb-res-badge">.${(r[3]||'').toLowerCase()}</span>
+    </li>`).join('');
+}
 
-/* ═══════════════════════════════════════
-   자료실 프리뷰
-═══════════════════════════════════════ */
-async function loadArchivePreview() {
-  const list = document.getElementById('res-list');
+document.getElementById('res-tabs').addEventListener('click', e => {
+  const btn = e.target.closest('.bb-home-tab');
+  if (!btn) return;
+  document.querySelectorAll('#res-tabs .bb-home-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  resCat = btn.dataset.cat;
+  renderRes();
+});
+
+/* 콘텐츠 프리뷰 */
+const GRADS  = ['linear-gradient(135deg,#00103d,#002066)','linear-gradient(135deg,#001a0a,#003322)','linear-gradient(135deg,#1a001a,#3d003d)'];
+const EMOJIS = ['📈','💡','📊'];
+
+async function loadPostsPreview() {
+  const grid = document.getElementById('home-posts');
   try {
-    const r    = await fetch('/api/archive');
-    const data = await r.json();
-    const rows = (data.values || []).filter(r => r && r[0]);
-    if (rows.length === 0) {
-      list.innerHTML = '<li style="padding:20px 0;text-align:center;color:#aaa;font-size:14px">등록된 자료가 없습니다.</li>';
-      return;
-    }
-    const sorted = rows
-      .sort((a, b) => parseInt(b[8] || '0', 10) - parseInt(a[8] || '0', 10))
-      .slice(0, 5);
-    list.innerHTML = sorted.map((r, i) => {
-      const name = r[0] || '';
-      const cat  = r[2] || '';
-      const type = (r[3] || '').toLowerCase();
-      const date = r[7] || '';
-      const num  = String(i + 1).padStart(2, '0');
-      const meta = [cat, date].filter(Boolean).join(' · ');
-      return `
-        <li class="bb-res-ed-item" onclick="location.href='/archive'">
-          <span class="bb-res-ed-num">${num}</span>
-          <div class="bb-res-ed-info">
-            <div class="bb-res-ed-name">${name}</div>
-            <div class="bb-res-ed-meta">${meta}</div>
-          </div>
-          <span class="bb-res-ed-badge">.${type}</span>
-        </li>`;
+    const data  = await (await fetch('/api/posts')).json();
+    const posts = (data.posts||[]).slice(0,3);
+    if (!posts.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#aaa;font-size:13px">콘텐츠가 없습니다.</div>'; return; }
+    grid.innerHTML = posts.map((p,i) => {
+      const url   = `https://inblog.ai/crediview/${p.slug}`;
+      const date  = p.date ? new Date(p.date).toLocaleDateString('ko-KR',{month:'short',day:'numeric'}) : '';
+      const thumb = p.image ? `<img src="${p.image}" alt="${p.title}" loading="lazy">` : EMOJIS[i%EMOJIS.length];
+      const style = p.image ? '' : `style="background:${GRADS[i%GRADS.length]}"`;
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer" class="bb-post-card">
+        <div class="bb-post-thumb" ${style}>${thumb}</div>
+        <div class="bb-post-body">
+          <div class="bb-post-cat">크레디뷰</div>
+          <div class="bb-post-ttl">${p.title}</div>
+          <div class="bb-post-date">${date}</div>
+        </div></a>`;
     }).join('');
   } catch {
-    list.innerHTML = '<li style="padding:20px 0;text-align:center;color:#aaa;font-size:14px">자료를 불러오지 못했습니다.</li>';
+    grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:20px;color:#c33;font-size:13px">콘텐츠를 불러오지 못했습니다.</div>';
   }
 }
-loadArchivePreview();
 
-/* ═══════════════════════════════════════
-   02 대출 확률 계산기 — 위자드
-═══════════════════════════════════════ */
-const INDUSTRY_AVG = {
-  '제조업':     { revenue: 18, debt: 180, amount: 5 },
-  '도소매업':   { revenue: 22, debt: 220, amount: 3 },
-  '서비스업':   { revenue: 8,  debt: 130, amount: 2 },
-  'IT·정보통신':{ revenue: 12, debt: 90,  amount: 4 },
-  '건설업':     { revenue: 30, debt: 280, amount: 8 },
-};
-
-let wizStep = 1;
-
-function wizGo(n) {
-  wizStep = n;
-  document.querySelectorAll('.bb-wiz-step').forEach(el => {
-    el.hidden = parseInt(el.dataset.step) !== n;
-  });
-  const ind = document.getElementById('wiz-indicator');
-  if (n >= 2 && n <= 4) {
-    ind.style.display = 'block';
-    const idx = n - 1;
-    document.getElementById('wiz-stepnum').textContent = `STEP ${String(idx).padStart(2,'0')} / 03`;
-    document.getElementById('wiz-dots').innerHTML =
-      [1,2,3].map(i => {
-        const cls = i <= idx ? 'done' : '';
-        return `<div class="bb-wiz-dot ${cls}"></div>`;
-      }).join('');
-  } else {
-    ind.style.display = 'none';
-  }
-  updateHints();
-  document.getElementById('bb-sec02').scrollIntoView({ behavior:'smooth', block:'start' });
-}
-
-function updateHints() {
-  const industrySel = document.getElementById('wiz-industry');
-  if (!industrySel) return;
-  const industry = industrySel.value;
-  const avg = INDUSTRY_AVG[industry] || INDUSTRY_AVG['제조업'];
-  const rh = document.getElementById('wiz-revenue-hint');
-  const dh = document.getElementById('wiz-debt-hint');
-  const ah = document.getElementById('wiz-amount-hint');
-  if (rh) rh.textContent = `미입력 시 ${industry} 평균 ${avg.revenue}억 적용`;
-  if (dh) dh.textContent = `미입력 시 ${industry} 평균 ${avg.debt}% 적용`;
-  if (ah) ah.textContent = `미입력 시 ${industry} 통상 ${avg.amount}억 적용`;
-}
-document.getElementById('wiz-industry').addEventListener('change', updateHints);
-
-function wizCalculate() {
-  const industry = document.getElementById('wiz-industry').value;
-  const age      = document.getElementById('wiz-age').value;
-  const credit   = document.getElementById('wiz-credit').value;
-  const avg      = INDUSTRY_AVG[industry] || INDUSTRY_AVG['제조업'];
-
-  const revRaw    = parseFloat(document.getElementById('wiz-revenue').value);
-  const debtRaw   = parseFloat(document.getElementById('wiz-debt').value);
-  const amountRaw = parseFloat(document.getElementById('wiz-amount').value);
-
-  const revenue = isFinite(revRaw)    && revRaw    > 0 ? revRaw    : avg.revenue;
-  const debt    = isFinite(debtRaw)   && debtRaw   > 0 ? debtRaw   : avg.debt;
-  const amount  = isFinite(amountRaw) && amountRaw > 0 ? amountRaw : avg.amount;
-
-  let fin = 70;
-  if (debt <= avg.debt * 0.7)     fin += 20;
-  else if (debt <= avg.debt)      fin += 10;
-  else if (debt > avg.debt * 1.5) fin -= 15;
-  if (debt > 300) fin -= 25;
-  fin = Math.max(5, Math.min(100, fin));
-
-  let rep = 70;
-  const ratio = amount / revenue;
-  if (ratio <= 0.2)      rep += 22;
-  else if (ratio <= 0.3) rep += 10;
-  else if (ratio <= 0.5) rep -= 5;
-  else if (ratio <= 0.8) rep -= 22;
-  else                   rep -= 40;
-  rep = Math.max(5, Math.min(100, rep));
-
-  let cre = 70;
-  if (credit.startsWith('1~3')) cre += 20;
-  else if (credit.startsWith('4~6')) cre += 0;
-  else cre -= 22;
-
-  if (age === '7년 이상')   cre += 12;
-  else if (age === '5~7년') cre += 6;
-  else if (age === '3~5년') cre += 2;
-  else if (age === '1~3년') cre -= 5;
-  else                       cre -= 12;
-  cre = Math.max(5, Math.min(100, cre));
-
-  const overall = Math.round((fin * 0.35) + (rep * 0.35) + (cre * 0.30));
-
-  const finCmt = fin >= 85 ? `부채비율 ${debt}%, 업종 평균 대비 매우 안정`
-              : fin >= 65 ? `부채비율 ${debt}%, 업종 평균 수준`
-              : fin >= 45 ? `부채비율 ${debt}%, 업종 평균 대비 다소 높음`
-              : `부채비율 ${debt}% — 은행 부결 기준선 근접`;
-
-  const ratioPct = Math.round(ratio * 100);
-  const repCmt = rep >= 85 ? `희망 ${amount}억은 매출 대비 ${ratioPct}%, 안정권`
-              : rep >= 65 ? `희망금액이 매출 대비 ${ratioPct}%, 적정 수준`
-              : rep >= 45 ? `희망금액이 매출 대비 ${ratioPct}%, 다소 부담`
-              : `희망금액이 매출 대비 ${ratioPct}% — 상환 능력 검토 필요`;
-
-  const creCmt = cre >= 85 ? '신용·업력 모두 우수'
-              : cre >= 65 ? '신용 양호, 업력 가점 가능'
-              : cre >= 45 ? '신용 또는 업력 한쪽 보강 필요'
-              : '신용·업력 모두 보강 필요';
-
-  document.getElementById('wiz-result-pct').textContent = overall + '%';
-  const subText = overall >= 75 ? '시중은행 일반 대출 가능 구간'
-               : overall >= 55 ? '조건부 승인 가능 · 보증부 대출 권장'
-               : overall >= 35 ? '정책자금·보증부 대출 우선 검토'
-               : '일반 대출 어려움 · 정책 지원 또는 재무 개선 필요';
-  document.getElementById('wiz-result-sub').textContent = subText;
-
-  const colorOf = s => s >= 70 ? '' : (s >= 45 ? 'warn' : 'bad');
-  const scorecard = [
-    { name:'재무 안정성', val:fin, cmt:finCmt },
-    { name:'상환 능력',   val:rep, cmt:repCmt },
-    { name:'신용·업력',   val:cre, cmt:creCmt },
-  ];
-  document.getElementById('wiz-scorecard').innerHTML = scorecard.map(s => `
-    <div class="bb-score">
-      <div class="bb-score-head">
-        <span class="bb-score-name">${s.name}</span>
-        <span class="bb-score-val">${s.val}점</span>
-      </div>
-      <div class="bb-score-bar">
-        <div class="bb-score-fill ${colorOf(s.val)}" style="width:${s.val}%"></div>
-      </div>
-      <div class="bb-score-comment">${s.cmt}</div>
-    </div>`).join('');
-
-  wizGo(5);
-}
-
-function wizReset() {
-  document.getElementById('wiz-revenue').value = '';
-  document.getElementById('wiz-debt').value    = '';
-  document.getElementById('wiz-amount').value  = '';
-  document.getElementById('wiz-industry').selectedIndex = 0;
-  document.getElementById('wiz-age').selectedIndex      = 0;
-  document.getElementById('wiz-credit').selectedIndex   = 0;
-  wizGo(1);
-}
+renderHomeDday();
+loadResPreview();
+loadPostsPreview();
 </script>
 </body>
 </html>
