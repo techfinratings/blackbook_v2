@@ -45,13 +45,13 @@ module.exports = async (req, res) => {
       const bgDe   = getTag(item, 'applBgngDe')  || getTag(item, 'pbancBgngDt') ||
                      getTag(item, 'rceptBgngDt');
 
-      const push = (de, type) => {
+      const push = (de, tag) => {
         if (!de || de.length < 8) return;
         const eY = parseInt(de.slice(0,4));
         const eM = parseInt(de.slice(4,6));
         const eD = parseInt(de.slice(6,8));
         if (eY === y && eM === m) {
-          events.push({ day: eD, title: title || '정부공고', link, type });
+          events.push({ day: eD, title: title || '정부공고', link, type: 'policy', tag });
         }
       };
 
