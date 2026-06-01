@@ -22,23 +22,26 @@ module.exports = async (req, res) => {
 
     if (!r.ok) throw new Error(`bizinfo ${r.status}`);
 
-    const data  = await r.json();
-    const items = Array.isArray(data) ? data : (data.items || data.jsonArray || []);
+    const data   = await r.json();
+    const items  = data.jsonArray || [];
     const events = [];
 
     items.forEach(item => {
-      const title   = item.title   || item.TITLE   || '';
-      const link    = item.link    || item.LINK    || '';
-      const reqstDt = item.reqstDt || item.REQSTDT || '';
-      if (!title || !reqstDt) return;
+      const title   = item.pblancNm       || '';
+      const link    = item.pblancUrl      || '';
+      const reqstDt = item.reqstBeginEndDe || '';
 
+      // 날짜 없는 항목 제외 ("예산 소진시까지" 등)
+      if (!title || !reqstDt || !reqstDt.includes('~')) return;
+
+      // "2026-06-01 ~ 2026-06-08" 형태 파싱
       const parts = reqstDt.split('~').map(s => s.trim());
 
       const parseDate = str => {
         if (!str) return null;
-        const p = str.replace(/\./g, '').trim();
-        if (p.length < 8) return null;
-        return { y: parseInt(p.slice(0,4)), m: parseInt(p.slice(4,6)), d: parseInt(p.slice(6,8)) };
+        const p = str.trim().split(' ')[0].split('-');
+        if (p.length < 3) return null;
+        return { y: parseInt(p[0]), m: parseInt(p[1]), d: parseInt(p[2]) };
       };
 
       const start = parseDate(parts[0]);
