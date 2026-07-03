@@ -1,7 +1,0 @@
-.env.local
-.env
-node_modules/
-.vercel/
-assets/hero.svg
-assets/hero_check0.png
-source/
