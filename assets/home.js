@@ -1,0 +1,181 @@
+/* Homepage interactions: content tabs · Q&A carousel · live 일정 module */
+(function () {
+  'use strict';
+
+  var CAT_COLOR = { '세무': '#C2611B', '회계': '#1F8455', '법령': '#6A3FC0', '실무': '#2348D6', '경영': '#181B1E' };
+
+  var QA = {
+    hot: [
+      { cat: '세무', ans: 4, t: '15분 전', q: '관계회사 대여금, 업무무관 가지급금으로 보는 기준이 어디까지인가요?' },
+      { cat: '실무', ans: 2, t: '1시간 전', q: '거래처 신용등급이 두 단계 떨어졌는데 여신 한도 어떻게 조정하세요?' },
+      { cat: '세무', ans: 7, t: '3시간 전', q: '가업승계 증여세 특례, 사후관리 요건 실무 경험 있으신 분?' },
+      { cat: '회계', ans: 5, t: '5시간 전', q: '리스 회계처리, 사용권자산 감가 기준 다들 어떻게 잡으세요?' }
+    ],
+    new: [
+      { cat: '회계', ans: 1, t: '2분 전', q: '사용권자산 상각, 리스기간과 내용연수가 다를 때 기준은?' },
+      { cat: '법령', ans: 0, t: '12분 전', q: '중대재해처벌법 적용 사업장, 재무팀이 챙길 항목이 있을까요?' },
+      { cat: '실무', ans: 3, t: '40분 전', q: '결산 마감 일정 관리, 부서별 체크리스트 템플릿 공유 가능?' },
+      { cat: '세무', ans: 2, t: '1시간 전', q: '외화환산손익 인식 시점, 결산일 기준 환율 적용이 맞나요?' }
+    ]
+  };
+
+  /* ---------- content segmented tabs ---------- */
+  function initContentTabs() {
+    var seg = document.getElementById('contentSeg');
+    if (!seg) return;
+    seg.addEventListener('click', function (e) {
+      var btn = e.target.closest('[data-seg]');
+      if (!btn) return;
+      var key = btn.getAttribute('data-seg');
+      seg.querySelectorAll('button').forEach(function (b) { b.classList.toggle('on', b === btn); });
+      document.querySelectorAll('[data-view]').forEach(function (v) {
+        v.style.display = v.getAttribute('data-view') === key ? '' : 'none';
+      });
+    });
+  }
+
+  /* ---------- Q&A carousel ---------- */
+  function initQA() {
+    var track = document.querySelector('[data-qtrack]');
+    var dotsWrap = document.querySelector('[data-qdots]');
+    var recent = document.querySelector('[data-qrecent]');
+    var modes = document.querySelector('[data-qmodes]');
+    if (!track) return;
+
+    var mode = 'hot', idx = 0, timer;
+
+    function render() {
+      var list = QA[mode];
+      track.innerHTML = list.map(function (q) {
+        var col = CAT_COLOR[q.cat] || '#2348D6';
+        return '<div class="q-slide">' +
+          '<div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;">' +
+          '<span class="mono" style="font-size:10px;letter-spacing:.05em;color:' + col + ';">' + q.cat + '</span>' +
+          '<span class="mono" style="font-size:10px;color:#7E868F;">' + q.t + '</span></div>' +
+          '<div class="bt" style="font-size:17px;font-weight:700;line-height:1.5;min-height:78px;">' + q.q + '</div>' +
+          '<div class="mono" style="margin-top:6px;font-size:11px;color:#2348D6;font-weight:500;">답변 ' + q.ans + '</div></div>';
+      }).join('');
+      dotsWrap.innerHTML = list.map(function (_, i) {
+        return '<span data-i="' + i + '"' + (i === idx ? ' class="on"' : '') + '></span>';
+      }).join('');
+      if (recent) {
+        recent.innerHTML = list.map(function (q) {
+          var col = CAT_COLOR[q.cat] || '#2348D6';
+          return '<a href="/community/talk" style="display:flex;gap:9px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;">' +
+            '<span class="mono" style="font-size:9.5px;color:' + col + ';flex-shrink:0;margin-top:3px;">' + q.cat + '</span>' +
+            '<div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;line-height:1.45;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + q.q + '</div>' +
+            '<span class="mono" style="font-size:10px;color:#7E868F;">답변 ' + q.ans + ' · ' + q.t + '</span></div></a>';
+        }).join('');
+      }
+      move();
+    }
+    function move() { track.style.transform = 'translateX(' + (-idx * 100) + '%)'; }
+    function go(i) { idx = (i + QA[mode].length) % QA[mode].length; render(); }
+
+    dotsWrap.addEventListener('click', function (e) {
+      var s = e.target.closest('[data-i]'); if (!s) return;
+      go(parseInt(s.getAttribute('data-i'), 10)); reset();
+    });
+    if (modes) modes.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-qmode]'); if (!b) return;
+      mode = b.getAttribute('data-qmode'); idx = 0;
+      modes.querySelectorAll('button').forEach(function (x) { x.classList.toggle('on', x === b); });
+      render(); reset();
+    });
+    function reset() { clearInterval(timer); timer = setInterval(function () { go(idx + 1); }, 4200); }
+
+    render(); reset();
+  }
+
+  /* ---------- live 일정 module (mini calendar + list) ---------- */
+  function initSchedule() {
+    var root = document.querySelector('[data-schedule]');
+    if (!root || !window.BBCalendar) return;
+
+    var now = new Date();
+    var year = now.getFullYear(), month = now.getMonth() + 1, todayD = now.getDate();
+    var CATS = window.BBCalendar.CATS;
+    var off = {};
+
+    var monthEl = root.querySelector('[data-cal-month]');
+    var chipsEl = root.querySelector('[data-cal-chips]');
+    var gridEl = root.querySelector('[data-cal-grid]');
+    var eventsEl = root.querySelector('[data-cal-events]');
+    monthEl.textContent = year + '. ' + month;
+
+    var events = [];
+
+    function counts() {
+      var c = { fund: 0, tax: 0, acc: 0, law: 0 };
+      events.forEach(function (e) { if (c[e.cat] != null) c[e.cat]++; });
+      return c;
+    }
+    function renderChips() {
+      var c = counts();
+      chipsEl.innerHTML = ['fund', 'tax', 'acc', 'law'].map(function (k) {
+        var cat = CATS[k], on = !off[k];
+        return '<button class="chip' + (on ? '' : ' off') + '" data-cat="' + k + '">' +
+          '<i style="background:' + (on ? cat.color : '#E1E4E8') + ';"></i>' + cat.label +
+          '<span class="mono" style="margin-left:2px;opacity:.7;">' + c[k] + '</span></button>';
+      }).join('');
+    }
+    function visible() { return events.filter(function (e) { return !off[e.cat]; }); }
+
+    function renderGrid() {
+      var firstDow = new Date(year, month - 1, 1).getDay();
+      var lastDay = new Date(year, month, 0).getDate();
+      var byDay = {};
+      visible().forEach(function (e) { (byDay[e.day] = byDay[e.day] || []).push(CATS[e.cat].color); });
+
+      var wd = ['일', '월', '화', '수', '목', '금', '토'];
+      var html = wd.map(function (w) { return '<div class="mini-wd">' + w + '</div>'; }).join('');
+      for (var i = 0; i < firstDow; i++) html += '<div class="mini-cell dim"></div>';
+      for (var d = 1; d <= lastDay; d++) {
+        var isToday = d === todayD;
+        var dots = (byDay[d] || []).slice(0, 3);
+        var cls = 'mini-cell' + (isToday ? ' today' : (dots.length ? ' has' : ''));
+        html += '<div class="' + cls + '">' + d +
+          '<div class="mini-dots">' + dots.map(function (c) {
+            return '<i style="background:' + (isToday ? '#fff' : c) + ';"></i>';
+          }).join('') + '</div></div>';
+      }
+      gridEl.innerHTML = html;
+    }
+    function renderList() {
+      var pad = function (n) { return String(n).padStart(2, '0'); };
+      var vis = visible().slice().sort(function (a, b) { return a.day - b.day; });
+      var upcoming = vis.filter(function (e) { return e.day >= todayD; });
+      var list = (upcoming.length ? upcoming : vis).slice(0, 4);
+      if (!list.length) {
+        eventsEl.innerHTML = '<div class="mono" style="font-size:12px;color:#7E868F;padding:8px 0;">이달 등록된 일정이 없습니다.</div>';
+        return;
+      }
+      eventsEl.innerHTML = list.map(function (e) {
+        var cat = CATS[e.cat];
+        return '<a class="ev-row"' + (e.link ? ' href="' + e.link + '" target="_blank" rel="noopener"' : '') + '>' +
+          '<span class="mono" style="font-size:11px;font-weight:600;color:#181B1E;width:40px;flex-shrink:0;">' + pad(month) + '.' + pad(e.day) + '</span>' +
+          '<span style="width:7px;height:7px;border-radius:50%;background:' + cat.color + ';margin-top:5px;flex-shrink:0;"></span>' +
+          '<div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;line-height:1.4;">' + e.title + '</div>' +
+          '<span class="mono" style="font-size:10px;color:#7E868F;">' + cat.label + '</span></div></a>';
+      }).join('');
+    }
+    function renderAll() { renderChips(); renderGrid(); renderList(); }
+
+    chipsEl.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-cat]'); if (!b) return;
+      var k = b.getAttribute('data-cat'); off[k] = !off[k]; renderAll();
+    });
+
+    // initial paint (grid skeleton) then live data
+    renderAll();
+    window.BBCalendar.load(year, month).then(function (evs) {
+      events = evs; renderAll();
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    initContentTabs();
+    initQA();
+    initSchedule();
+  });
+})();
