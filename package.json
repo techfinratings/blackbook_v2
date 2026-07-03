@@ -1,7 +1,0 @@
-{
-  "name": "blackbook",
-  "version": "1.0.0",
-  "description": "블랙북 — 재무 담당자를 위한 지침서",
-  "engines": { "node": "24.x" },
-  "scripts": { "dev": "vercel dev" }
-}
