@@ -1,0 +1,68 @@
+/* ============================================================
+   COLORS — BLACK BOOK / THE LEDGER
+   A printed-ledger palette: near-white neutral paper, cool ink,
+   and a single BLUE brand accent. Category hues are reserved for
+   content classification only — never for UI chrome.
+   ============================================================ */
+:root {
+  /* — Paper (near-white neutral surfaces, light → deep) — */
+  --paper-0: #FFFFFF;   /* raised / hover surface            */
+  --paper-1: #F7F8FA;   /* the page (default canvas)         */
+  --paper-2: #EEF0F2;   /* sunken band / masthead meta strip */
+  --paper-3: #E7EAED;   /* recessed index tab                */
+  --paper-4: #DCE0E4;   /* striped placeholder, cell border  */
+
+  /* — Ink (text + dark chrome, deep → faint) — */
+  --ink-0: #0F1113;     /* back cover / footer                */
+  --ink-1: #181B1E;     /* primary ink · spine · rules        */
+  --ink-2: #49505A;     /* body / secondary text              */
+  --ink-3: #7E868F;     /* muted label / meta                 */
+  --ink-4: #AEB6BE;     /* faint · disabled · ghost numerals  */
+
+  /* — Rules / hairlines — */
+  --rule-hair: #E1E4E8;   /* default 1px divider              */
+  --rule-soft: #EEF0F2;   /* very light inner divider         */
+  --rule-strong: #181B1E; /* 1.5px ink rule under headers/nav */
+
+  /* — Blue (the single brand accent) — */
+  --blue: #2348D6;        /* accent · active · key figures    */
+  --blue-deep: #16329E;   /* pressed / hover-dark             */
+  --blue-soft: #EDF0FD;   /* accent tint surface              */
+
+  /* — Category hues (content tags ONLY) — */
+  --cat-fund: #2348D6;  /* 정책자금 */
+  --cat-tax:  #C2611B;  /* 세무     */
+  --cat-acc:  #1F8455;  /* 회계     */
+  --cat-law:  #6A3FC0;  /* 법령     */
+  --cat-work: #16329E;  /* 실무     */
+  --cat-biz:  #181B1E;  /* 경영     */
+
+  /* — File-type chips — */
+  --file-xls: #1F8455;
+  --file-ppt: #C2611B;
+  --file-md:  #49505A;
+  --file-pdf: #B4322B;
+
+  /* ---- Semantic aliases (prefer these in product code) ---- */
+  --bg-page:    var(--paper-1);
+  --bg-raised:  var(--paper-0);
+  --bg-sunken:  var(--paper-2);
+  --surface-ink: var(--ink-1);
+  --surface-ink-deep: var(--ink-0);
+
+  --text-strong: var(--ink-1);
+  --text-body:   var(--ink-2);
+  --text-muted:  var(--ink-3);
+  --text-faint:  var(--ink-4);
+  --text-on-ink: var(--paper-1);
+
+  --accent:       var(--blue);
+  --accent-press: var(--blue-deep);
+  --accent-tint:  var(--blue-soft);
+
+  --border-hair:   var(--rule-hair);
+  --border-strong: var(--rule-strong);
+
+  --selection-bg: var(--blue);
+  --selection-fg: #FFFFFF;
+}

@@ -1,0 +1,6 @@
+/* Webfonts — open-source, served from CDN.
+   Pretendard (SIL OFL) · Gowun Batang (OFL) · IBM Plex Mono (OFL).
+   @font-face declarations live inside these imported stylesheets.
+   NOTE: binaries are CDN-hosted, not vendored into the repo. */
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.css");
+@import url("https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap");

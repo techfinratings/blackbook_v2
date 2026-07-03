@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Pretendard Variable",Pretendard,sans-serif;background:#F7F8FA;color:#181B1E;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  .bt{font-family:"Gowun Batang",serif;word-break:keep-all;}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+  ::selection{background:#2348D6;color:#fff;}
+  a{color:inherit;text-decoration:none;}
+</style>
+</helmet>
+
+<div style="position:fixed;top:0;bottom:0;right:0;width:22px;z-index:5;background:#EEF0F2;border-left:1px solid #E1E4E8;background-image:repeating-linear-gradient(90deg,rgba(24,27,30,.045) 0 1px,transparent 1px 4px);"></div>
+
+<div data-screen-label="실무 이야기 목록" style="padding-right:22px;">
+  <div style="background:#181B1E;border-bottom:1.5px solid #2348D6;position:sticky;top:0;z-index:40;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px;">
+      <img src="assets/logo_white.png" style="height:26px;display:block;" alt="BLACK BOOK"/>
+      <div style="display:flex;align-items:center;gap:3px;height:100%;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6"><span style="{{ n.style }}">{{ n.label }}</span></sc-for>
+      </div>
+      <span style="margin-left:auto;font-size:13px;font-weight:600;color:#D2D7DD;cursor:pointer;">로그인</span>
+      <span style="font-size:13px;font-weight:700;color:#fff;background:#2348D6;padding:8px 16px;border-radius:3px;cursor:pointer;">회원가입</span>
+    </div>
+  </div>
+
+  <div style="max-width:1020px;margin:0 auto;padding:40px 40px 0;">
+    <div class="mono" style="font-size:11.5px;letter-spacing:.1em;color:#2348D6;">INDEX 02 — 실무 이야기</div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:12px;">
+      <div>
+        <h1 class="bt" style="font-size:38px;font-weight:700;letter-spacing:-.01em;margin:0;">실무 이야기</h1>
+        <p style="font-size:15px;color:#49505A;margin:9px 0 0;max-width:560px;line-height:1.65;">막힌 자리에서 동료에게 묻고, 겪은 것을 한 줄씩 기입하는 문답 장부.<br>실무자와 운영사 크레디뷰(기업신용평가사)가 함께 답을 채웁니다.</p>
+      </div>
+      <span onClick="{{ openCompose }}" style="flex-shrink:0;background:#181B1E;color:#fff;font-size:13px;font-weight:700;padding:12px 22px;border-radius:3px;cursor:pointer;">＋ 문답 기입하기</span>
+    </div>
+  </div>
+
+  <div style="max-width:1020px;margin:0 auto;padding:26px 40px 72px;display:grid;grid-template-columns:1.6fr .9fr;gap:44px;align-items:start;">
+
+    <!-- FEED -->
+    <div style="min-width:0;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1.5px solid #181B1E;">
+        <div style="display:flex;align-items:flex-end;">
+          <sc-for list="{{ sorts }}" as="s" hint-placeholder-count="3"><span onClick="{{ s.set }}" style="{{ s.style }}">{{ s.label }}</span></sc-for>
+        </div>
+        <span class="mono" style="font-size:11px;color:#7E868F;padding-bottom:11px;">{{ count }}건</span>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6"><span onClick="{{ f.set }}" style="{{ f.style }}">{{ f.label }}</span></sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;margin-top:6px;">
+        <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6">
+          <a href="3-1. 실무 이야기 상세.dc.html" style="display:flex;gap:20px;padding:22px 2px;border-bottom:1px solid #E1E4E8;cursor:pointer;">
+            <div style="width:60px;flex-shrink:0;text-align:center;padding-top:2px;">
+              <div class="mono" style="font-size:23px;font-weight:600;line-height:1;color:{{ q.ansCol }};">{{ q.ans }}</div>
+              <div class="mono" style="font-size:10px;color:#7E868F;margin-top:3px;">답변</div>
+            </div>
+            <div style="min-width:0;flex:1;">
+              <div style="display:flex;align-items:center;gap:10px;">
+                <span class="mono" style="font-size:10px;letter-spacing:.05em;color:{{ q.col }};">{{ q.cat }}</span>
+                <sc-if value="{{ q.official }}" hint-placeholder-val="{{ false }}"><span class="mono" style="font-size:9.5px;font-weight:600;color:#2348D6;background:#EDF0FD;border-radius:3px;padding:2px 7px;">크레디뷰 답변</span></sc-if>
+                <span class="mono" style="font-size:10px;color:#9BA3AB;margin-left:auto;">{{ q.t }}</span>
+              </div>
+              <h3 class="bt" style="font-size:19px;line-height:1.45;font-weight:700;margin:8px 0 0;">{{ q.title }}</h3>
+              <p style="font-size:13.5px;color:#6A7079;line-height:1.6;margin:7px 0 0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">{{ q.snippet }}</p>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;">
+                <span class="mono" style="font-size:10.5px;color:#7E868F;">{{ q.author }}</span>
+                <span style="color:#D8DCE0;">·</span>
+                <span class="mono" style="font-size:10.5px;color:#7E868F;">조회 {{ q.views }}</span>
+                <div style="display:flex;gap:6px;margin-left:6px;">
+                  <sc-for list="{{ q.tags }}" as="t" hint-placeholder-count="2"><span class="mono" style="font-size:10px;color:#49505A;background:#EEF0F2;padding:3px 8px;border-radius:3px;">#{{ t }}</span></sc-for>
+                </div>
+              </div>
+            </div>
+          </a>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-top:40px;">
+        <span style="font-size:13px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:11px 26px;cursor:pointer;">더 펼치기 ↓</span>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div style="display:flex;flex-direction:column;gap:30px;position:sticky;top:88px;">
+      <div style="border:1px solid #E1E4E8;background:#fff;">
+        <div class="mono" style="font-size:10px;letter-spacing:.1em;color:#7E868F;padding:15px 18px 0;">오늘의 장부</div>
+        <div style="padding:6px 18px 14px;">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;padding:11px 0;border-bottom:1px solid #EEF0F2;">
+              <span style="font-size:13px;color:#49505A;">{{ s.label }}</span>
+              <span class="mono" style="font-size:15px;font-weight:600;color:#181B1E;">{{ s.val }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:9px;">
+          <h3 class="bt" style="font-size:18px;font-weight:700;margin:0;">이달의 답변자</h3>
+          <span class="mono" style="font-size:10px;color:#7E868F;">답변 수 기준</span>
+        </div>
+        <div style="display:flex;flex-direction:column;">
+          <div style="display:flex;align-items:center;gap:13px;padding:14px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;">
+            <div style="width:34px;height:34px;border-radius:50%;background:#EDF0FD;color:#2348D6;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px;flex-shrink:0;" class="mono">CR</div>
+            <div style="min-width:0;flex:1;">
+              <div style="display:flex;align-items:center;gap:6px;"><span style="font-size:13.5px;font-weight:700;">크레디뷰 리서치</span><span class="mono" style="font-size:8.5px;font-weight:600;color:#fff;background:#2348D6;border-radius:2px;padding:2px 5px;">운영사</span></div>
+              <div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:1px;">기업신용평가사</div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;"><div class="mono" style="font-size:13px;font-weight:600;color:#2348D6;">128</div><div class="mono" style="font-size:9px;color:#9BA3AB;">답변</div></div>
+          </div>
+          <sc-for list="{{ answerers }}" as="a" hint-placeholder-count="5">
+            <div style="display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;">
+              <span class="bt" style="font-size:18px;font-weight:700;color:{{ a.rankCol }};width:20px;text-align:center;flex-shrink:0;">{{ a.rank }}</span>
+              <div style="width:34px;height:34px;border-radius:50%;background:#EEF0F2;color:#49505A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;" class="bt">{{ a.initial }}</div>
+              <div style="min-width:0;flex:1;"><div style="font-size:13.5px;font-weight:700;">{{ a.name }}</div><div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:1px;">{{ a.role }}</div></div>
+              <div style="text-align:right;flex-shrink:0;"><div class="mono" style="font-size:13px;font-weight:600;color:#181B1E;">{{ a.picked }}</div><div class="mono" style="font-size:9px;color:#9BA3AB;">답변</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#181B1E;color:#F7F8FA;padding:22px 20px;">
+        <div class="bt" style="font-size:17px;font-weight:700;line-height:1.5;">막힌 자리를 그냥 두지 마세요.</div>
+        <p style="font-size:12.5px;color:#AEB6BE;line-height:1.65;margin:8px 0 16px;">한 줄의 질문이 다음 실무자의 지침이 됩니다. 오늘의 문답을 장부에 기입해 보세요.</p>
+        <span onClick="{{ openCompose }}" style="display:block;text-align:center;background:#2348D6;color:#fff;font-size:13px;font-weight:700;padding:11px;cursor:pointer;">문답 기입하기</span>
+      </div>
+    </div>
+
+  </div>
+
+  <sc-if value="{{ composeOpen }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeCompose }}" style="position:fixed;inset:0;z-index:100;background:rgba(15,17,19,.55);display:flex;align-items:flex-start;justify-content:center;padding:64px 20px;overflow-y:auto;">
+    <div onClick="{{ stop }}" style="width:100%;max-width:620px;background:#F7F8FA;border:1px solid #181B1E;border-radius:8px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.32);">
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1.5px solid #181B1E;">
+        <div><div class="mono" style="font-size:10px;letter-spacing:.1em;color:#2348D6;">INDEX 02 · 기입</div><h3 class="bt" style="font-size:22px;font-weight:700;margin:5px 0 0;">문답 기입하기</h3></div>
+        <span onClick="{{ closeCompose }}" style="font-size:24px;color:#9BA3AB;cursor:pointer;line-height:1;">×</span>
+      </div>
+      <div style="padding:22px 24px 24px;display:flex;flex-direction:column;gap:16px;">
+        <div>
+          <div class="mono" style="font-size:10px;letter-spacing:.06em;color:#7E868F;margin-bottom:9px;">카테고리</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;"><sc-for list="{{ ccats }}" as="c" hint-placeholder-count="5"><span onClick="{{ c.set }}" style="{{ c.style }}">{{ c.label }}</span></sc-for></div>
+        </div>
+        <input placeholder="무엇이 막혔나요? 한 문장으로 적어 주세요." style="width:100%;border:1px solid #D8DCE0;border-radius:3px;padding:13px 14px;font-family:inherit;font-size:15.5px;color:#181B1E;outline:none;"/>
+        <textarea placeholder="상황과 조건을 구체적으로 적을수록 좋은 답이 옵니다. 관련 조문·기준이 있다면 함께 적어 주세요." style="width:100%;border:1px solid #D8DCE0;border-radius:3px;padding:14px;font-family:inherit;font-size:14.5px;line-height:1.8;color:#181B1E;min-height:160px;resize:vertical;outline:none;"></textarea>
+        <div style="display:flex;align-items:center;flex-wrap:wrap;gap:7px;border:1px solid #D8DCE0;border-radius:3px;padding:10px 12px;">
+          <input placeholder="태그 입력 후 Enter · 선택" style="flex:1;min-width:140px;border:0;outline:none;font-family:inherit;font-size:13px;color:#181B1E;background:transparent;padding:3px 2px;"/>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-top:6px;border-top:1px solid #E1E4E8;margin-top:2px;padding-top:16px;">
+          <label style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:#49505A;cursor:pointer;"><input type="checkbox" style="accent-color:#2348D6;width:15px;height:15px;"/>익명으로 기입</label>
+          <div style="display:flex;gap:10px;">
+            <span onClick="{{ closeCompose }}" style="font-size:13px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:10px 18px;cursor:pointer;">취소</span>
+            <span style="font-size:13px;font-weight:700;color:#fff;background:#181B1E;padding:10px 24px;border-radius:3px;cursor:pointer;">문답 기입하기</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  </sc-if>
+
+  <footer style="background:#0F1113;color:#8A929B;">
+    <div style="max-width:1180px;margin:0 auto;padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <img src="assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"/>
+      <div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1560}}">
+class Component extends DCLogic {
+  state = { sort:'hot', filter:'전체', composeOpen:false, ccat:'세무' };
+  _data(){ return [
+    {cat:'세무', solved:true,  ans:4, views:'128', mins:15,   author:'익명 · 세무담당', title:'관계회사 대여금, 업무무관 가지급금으로 보는 기준이 어디까지인가요?', snippet:'특수관계자 간 자금 대여인데 이자를 받고 있어도 업무무관으로 보는지 실무 경험이 궁금합니다.', tags:['가지급금','특수관계자']},
+    {cat:'실무', solved:false, ans:2, views:'96',  mins:60,   author:'김대리 · 재무팀', title:'거래처 신용등급이 두 단계 떨어졌는데 여신 한도 어떻게 조정하세요?', snippet:'주 거래처 등급이 갑자기 하락했습니다. 한도 축소 기준과 통보 방식 다들 어떻게 하시는지.', tags:['여신','신용등급']},
+    {cat:'세무', solved:true,  ans:7, views:'240', mins:180,  author:'이과장 · 회계', title:'가업승계 증여세 특례, 사후관리 요건 실무 경험 있으신 분?', snippet:'5년 사후관리 중 고용유지 요건을 못 맞출 것 같은데 추징 규모가 어느 정도인지 궁금합니다.', tags:['가업승계','증여세']},
+    {cat:'회계', solved:true,  ans:5, views:'182', mins:300,  author:'익명 · 결산담당', title:'리스 회계처리, 사용권자산 감가 기준 다들 어떻게 잡으세요?', snippet:'리스기간과 내용연수가 다를 때 상각 기준을 어디에 맞추는지 실무 사례가 필요합니다.', tags:['리스','사용권자산']},
+    {cat:'법령', solved:false, ans:0, views:'54',  mins:12,   author:'박주임 · 관리', title:'중대재해처벌법 적용 사업장, 재무·관리팀이 챙길 항목이 있을까요?', snippet:'안전관리 예산 편성과 증빙 관리 측면에서 재무팀이 준비할 게 있는지 궁금합니다.', tags:['중대재해','컴플라이언스']},
+    {cat:'실무', solved:false, ans:3, views:'310', mins:40,   author:'최팀장 · 재무', title:'결산 마감 일정 관리, 부서별 체크리스트 템플릿 공유 가능하신 분?', snippet:'분기 결산마다 부서 취합이 늦어집니다. 쓰시는 체크리스트나 캘린더 공유 부탁드려요.', tags:['결산','템플릿']},
+    {cat:'세무', solved:false, ans:2, views:'88',  mins:60,   author:'익명', title:'외화환산손익 인식 시점, 결산일 기준 환율 적용이 맞나요?', snippet:'외화예금과 외화매출채권 환산 시점을 결산일 매매기준율로 잡는 게 맞는지 확인 부탁드립니다.', tags:['외화환산','결산']},
+    {cat:'경영', solved:true,  ans:6, views:'420', mins:1440, author:'정이사 · CFO', title:'런웨이 12개월 남은 시점, 재무팀이 먼저 손대야 할 항목의 우선순위는?', snippet:'비용 구조를 다시 짜야 하는데 어디부터 손대는 게 효과적이었는지 경험 나눠주세요.', tags:['런웨이','비용관리']},
+    {cat:'회계', solved:false, ans:1, views:'62',  mins:120,  author:'한사원', title:'개발비 자산화 요건, 내부 프로젝트에서 어디까지 인정받으셨나요?', snippet:'무형자산 인식 기준 중 기술적 실현가능성을 어떤 문서로 입증해 남기시는지 궁금합니다.', tags:['개발비','무형자산']},
+    {cat:'법령', solved:true,  ans:3, views:'140', mins:1440, author:'익명 · 노무', title:'주 52시간 유연근무 도입, 급여 설계에서 놓치기 쉬운 지점은?', snippet:'선택근로제 정산기간 설정과 연장수당 계산에서 실수했던 사례 공유 부탁드립니다.', tags:['주52시간','급여']},
+  ]; }
+  renderVals(){
+    const col={세무:'#C2611B',회계:'#1F8455',법령:'#6A3FC0',실무:'#2348D6',경영:'#181B1E'};
+    const navItems=[['홈',false],['콘텐츠',false],['실무 이야기',true],['자료실',false],['캘린더',false],['파인더',false]];
+    const sort=this.state.sort, filter=this.state.filter, ccat=this.state.ccat;
+
+    let list=this._data().slice();
+    if(sort==='new') list.sort((a,b)=>a.mins-b.mins);
+    else if(sort==='open') list=list.filter(q=>!q.solved);
+    if(filter!=='전체') list=list.filter(q=>q.cat===filter);
+
+    const sortDefs=[['hot','요즘 뜨는'],['new','새 기록']];
+    const sortStyle=(on)=>({fontSize:'15px',fontWeight:on?700:600,fontFamily:'"Gowun Batang",serif',color:on?'#181B1E':'#9BA3AB',padding:'0 2px 11px',marginRight:'24px',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),marginBottom:'-1.5px',cursor:'pointer'});
+    const filterDefs=['전체','세무','회계','법령','실무','경영'];
+    const rankCol=['#2348D6','#2348D6','#2348D6','#C2C9D0','#C2C9D0'];
+
+    return {
+      nav: navItems.map(([label,on])=>({label,style:{display:'flex',alignItems:'center',height:'100%',padding:'0 12px',fontSize:'14px',whiteSpace:'nowrap',fontWeight:on?700:600,color:on?'#fff':'#9BA3AB',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),cursor:'pointer'}})),
+      sorts: sortDefs.map(([k,l])=>({label:l,set:()=>this.setState({sort:k}),style:sortStyle(sort===k)})),
+      filters: filterDefs.map(f=>{ const on=filter===f; return {label:f,set:()=>this.setState({filter:f}),
+        style:{fontSize:'12.5px',fontWeight:on?700:600,color:on?'#fff':'#49505A',background:on?'#181B1E':'transparent',border:'1px solid '+(on?'#181B1E':'#D8DCE0'),borderRadius:'3px',padding:'6px 14px',cursor:'pointer',userSelect:'none'}}; }),
+      count: list.length,
+      composeOpen: this.state.composeOpen,
+      openCompose: ()=>this.setState({composeOpen:true}),
+      closeCompose: ()=>this.setState({composeOpen:false}),
+      stop: (e)=>{ if(e&&e.stopPropagation) e.stopPropagation(); },
+      ccats: ['세무','회계','법령','실무','경영'].map(k=>{ const on=ccat===k; const c=col[k];
+        return {label:k,set:()=>this.setState({ccat:k}),
+          style:{fontSize:'13px',fontWeight:on?700:600,color:on?'#fff':c,background:on?c:'transparent',border:'1px solid '+(on?c:'#D8DCE0'),borderRadius:'3px',padding:'7px 15px',cursor:'pointer',userSelect:'none'}}; }),
+      questions: list.map(q=>({...q, official:q.solved, t:(q.mins<60?q.mins+'분 전':(q.mins<1440?Math.round(q.mins/60)+'시간 전':'어제')), col:col[q.cat]||'#181B1E', ansCol:q.solved?'#2348D6':(q.ans>0?'#181B1E':'#C2C9D0')})),
+      stats: [
+        {label:'오늘 올라온 문답', val:'38'},
+        {label:'누적 문답', val:'12,480'},
+        {label:'평균 첫 답변', val:'42분'},
+        {label:'크레디뷰 답변', val:'1,240'},
+      ],
+      answerers: [
+        {rank:'1', initial:'김', name:'김세무', role:'세무사 · 세정회계', picked:'32'},
+        {rank:'2', initial:'이', name:'이회계', role:'공인회계사', picked:'27'},
+        {rank:'3', initial:'박', name:'박현업', role:'前 상장사 CFO', picked:'21'},
+        {rank:'4', initial:'정', name:'정노무', role:'노무사', picked:'18'},
+        {rank:'5', initial:'최', name:'최여신', role:'前 은행 여신심사역', picked:'15'},
+      ].map((a,i)=>({...a, rankCol:rankCol[i]})),
+    };
+  }
+}
+</script>
+</body>
+</html>

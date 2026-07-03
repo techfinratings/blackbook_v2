@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Pretendard Variable",Pretendard,sans-serif;background:#F7F8FA;color:#181B1E;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  .bt{font-family:"Gowun Batang",serif;}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+  ::selection{background:#2348D6;color:#fff;}
+</style>
+</helmet>
+
+<div style="position:fixed;top:0;bottom:0;right:0;width:22px;z-index:5;background:#EEF0F2;border-left:1px solid #E1E4E8;background-image:repeating-linear-gradient(90deg,rgba(24,27,30,.045) 0 1px,transparent 1px 4px);"></div>
+
+<div data-screen-label="캘린더 전체" style="padding-right:22px;">
+  <div style="background:#181B1E;border-bottom:1.5px solid #2348D6;position:sticky;top:0;z-index:40;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px;">
+      <img src="assets/logo_white.png" style="height:26px;display:block;" alt="BLACK BOOK"/>
+      <div style="display:flex;align-items:center;gap:3px;height:100%;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6"><span style="{{ n.style }}">{{ n.label }}</span></sc-for>
+      </div>
+      <span style="margin-left:auto;font-size:13px;font-weight:600;color:#D2D7DD;cursor:pointer;">로그인</span>
+      <span style="font-size:13px;font-weight:700;color:#fff;background:#2348D6;padding:8px 16px;border-radius:3px;cursor:pointer;">회원가입</span>
+    </div>
+  </div>
+
+  <div style="max-width:1180px;margin:0 auto;padding:38px 40px 16px;">
+    <div class="mono" style="font-size:11.5px;letter-spacing:.1em;color:#2348D6;">INDEX 04 — 일정</div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:12px;">
+      <div>
+        <h1 class="bt" style="font-size:34px;font-weight:700;letter-spacing:-.01em;margin:0;">실무 캘린더</h1>
+        <p style="font-size:14.5px;color:#49505A;margin:8px 0 0;max-width:520px;line-height:1.6;">정책자금·세무·회계·법령 일정을 법제처·공공 API로 모았습니다. 원하는 카테고리만 골라 내 캘린더에 담아 보세요.</p>
+      </div>
+      <span style="flex-shrink:0;background:#2348D6;color:#fff;font-size:13px;font-weight:700;padding:11px 20px;border-radius:8px;cursor:pointer;display:flex;align-items:center;gap:8px;">＋ 내 캘린더 구독</span>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;">
+      <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span onClick="{{ c.set }}" style="{{ c.style }}"><span style="{{ c.dotStyle }}"></span>{{ c.label }}<span class="mono" style="margin-left:3px;opacity:.7;">{{ c.count }}</span></span></sc-for>
+    </div>
+  </div>
+
+  <div style="max-width:1180px;margin:0 auto;padding:8px 40px 64px;display:flex;flex-direction:column;gap:22px;">
+
+    <div style="background:#fff;border:1px solid #E1E4E8;border-radius:14px;box-shadow:0 1px 2px rgba(24,27,30,.04),0 5px 16px rgba(24,27,30,.05);padding:24px 26px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
+        <h2 class="bt" style="font-size:25px;font-weight:700;margin:0;">{{ monthLabel }}</h2>
+        <div style="display:flex;gap:7px;">
+          <span style="width:30px;height:30px;border:1px solid #E1E4E8;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#49505A;cursor:pointer;font-size:14px;">‹</span>
+          <span style="font-size:12.5px;font-weight:700;color:#49505A;border:1px solid #E1E4E8;border-radius:8px;padding:0 13px;display:flex;align-items:center;cursor:pointer;">오늘</span>
+          <span style="width:30px;height:30px;border:1px solid #E1E4E8;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#49505A;cursor:pointer;font-size:14px;">›</span>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px;">
+        <sc-for list="{{ weekdays }}" as="w" hint-placeholder-count="7"><div class="mono" style="{{ w.style }}">{{ w.label }}</div></sc-for>
+        <sc-for list="{{ cells }}" as="c" hint-placeholder-count="42">
+          <div onClick="{{ c.set }}" style="{{ c.style }}">
+            <span class="mono" style="{{ c.numStyle }}">{{ c.num }}</span>
+            <div style="display:flex;flex-direction:column;gap:3px;margin-top:4px;">
+              <sc-for list="{{ c.chips }}" as="e" hint-placeholder-count="0"><div style="{{ e.style }}">{{ e.title }}</div></sc-for>
+              <sc-if value="{{ c.hasMore }}" hint-placeholder-val="{{ false }}"><span class="mono" style="font-size:9.5px;color:#7E868F;padding-left:2px;">+{{ c.more }}</span></sc-if>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+
+    <div style="background:#fff;border:1px solid #E1E4E8;border-radius:14px;box-shadow:0 1px 2px rgba(24,27,30,.04),0 5px 16px rgba(24,27,30,.05);padding:24px 26px;">
+      <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:11px;">
+        <h2 class="bt" style="font-size:21px;font-weight:700;margin:0;">전체 일정 <span class="mono" style="font-size:13px;font-weight:500;color:#7E868F;">{{ total }}건</span></h2>
+        <span class="mono" style="font-size:11.5px;color:#7E868F;">{{ rangeLabel }}</span>
+      </div>
+      <div style="display:flex;flex-direction:column;">
+        <sc-for list="{{ paged }}" as="e" hint-placeholder-count="15">
+          <div style="display:flex;gap:18px;align-items:center;padding:13px 2px;border-bottom:1px solid #EEF0F2;cursor:pointer;">
+            <div style="width:74px;flex-shrink:0;text-align:center;">
+              <div class="mono" style="font-size:15px;font-weight:600;color:#181B1E;">{{ e.dd }}</div>
+              <div class="mono" style="font-size:10px;color:#7E868F;margin-top:1px;">{{ e.wd }}</div>
+            </div>
+            <span style="width:3px;height:34px;border-radius:2px;background:{{ e.col }};flex-shrink:0;"></span>
+            <span style="font-size:10.5px;font-weight:700;color:{{ e.col }};background:{{ e.soft }};padding:4px 9px;border-radius:6px;flex-shrink:0;width:62px;text-align:center;">{{ e.cat }}</span>
+            <div style="font-size:14.5px;font-weight:600;flex:1;min-width:0;line-height:1.4;">{{ e.title }}</div>
+            <span class="mono" style="font-size:11px;color:#7E868F;flex-shrink:0;">{{ e.tag }}</span>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;">
+        <span onClick="{{ prev }}" style="{{ prevStyle }}">‹</span>
+        <sc-for list="{{ pages }}" as="p" hint-placeholder-count="2"><span onClick="{{ p.set }}" style="{{ p.style }}">{{ p.n }}</span></sc-for>
+        <span onClick="{{ next }}" style="{{ nextStyle }}">›</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer style="background:#0F1113;color:#8A929B;">
+    <div style="max-width:1180px;margin:0 auto;padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <img src="assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"/>
+      <div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1480}}">
+class Component extends DCLogic {
+  state = { off:{}, sel:16, page:0 };
+  _ev(){ return {1:[['law','전자세금계산서 의무발급 확대 시행']],2:[['fund','○○산업 정책자금 신청 마감']],3:[['acc','법인 지방소득세 신고 안내']],4:[['tax','부가가치세 예정신고 기한']],5:[['fund','기술보증기금 지원 설명회'],['law','중대재해처벌법 개정 시행']],6:[['tax','일용근로소득 지급명세서 제출']],9:[['acc','반기 결산 일정 공유']],10:[['acc','반기 결산 사전 점검'],['fund','소상공인 정책자금 2차 접수']],11:[['law','개인정보보호법 시행령 개정']],12:[['tax','원천세 신고·납부']],13:[['fund','수출기업 금융지원 신청']],16:[['tax','법인세 중간예납 안내'],['acc','6월 결산 마감 D-DAY']],17:[['law','근로기준법 개정안 공포']],18:[['acc','감가상각 명세서 정리']],19:[['fund','스마트공장 지원 설명회']],20:[['tax','부가세 환급 신청 마감']],23:[['law','상법 개정안 입법예고']],24:[['tax','법인세 중간예납'],['acc','결산 검토 회의']],25:[['fund','창업기업 R&D 지원 공고']],26:[['acc','재고실사 일정 점검']],27:[['fund','스마트공장 지원사업 마감']],30:[['acc','반기 결산 마감'],['tax','원천세 반기납부 신청']]}; }
+  renderVals(){
+    const col={fund:'#2348D6',tax:'#C2611B',acc:'#1F8455',law:'#6A3FC0'};
+    const ko={fund:'정책자금',tax:'세무',acc:'회계',law:'법령'};
+    const soft={fund:'#EDF0FD',tax:'#FBF0E6',acc:'#E8F2EC',law:'#F0EAFA'};
+    const wd=['일','월','화','수','목','금','토'];
+    const ev=this._ev(); const off=this.state.off; const today=16; const sel=this.state.sel;
+    const navItems=[['홈',false],['콘텐츠',false],['실무 이야기',false],['자료실',false],['캘린더',true],['파인더',false]];
+    const counts={fund:0,tax:0,acc:0,law:0}; Object.keys(ev).forEach(d=>ev[d].forEach(([k])=>counts[k]++));
+    const dayEv=(d)=>(ev[d]||[]).filter(([k])=>!off[k]);
+    const weekdays=wd.map((l,i)=>({label:l,style:{fontSize:'10px',fontWeight:600,color:i===0?'#C2611B':(i===6?'#2348D6':'#7E868F'),textAlign:'center',padding:'0 0 8px'}}));
+    const mk=(day,dim)=>{ const es=dim?[]:dayEv(day); const isToday=!dim&&day===today; const isSel=!dim&&day===sel;
+      const chips=es.slice(0,2).map(([k,t])=>({title:t,style:{fontSize:'10px',lineHeight:1.25,fontWeight:600,color:col[k],background:soft[k],borderRadius:'4px',padding:'2px 5px',whiteSpace:'nowrap',overflow:'hidden',textOverflow:'ellipsis'}}));
+      return { num:String(day), set:dim?(()=>{}):(()=>this.setState({sel:day})), chips, hasMore:es.length>2, more:es.length-2,
+        numStyle:{fontSize:'11.5px',fontWeight:isToday?700:600,color:isToday?'#fff':(dim?'#C7CDD3':'#49505A'),background:isToday?'#2348D6':'transparent',borderRadius:'50%',width:'21px',height:'21px',display:'flex',alignItems:'center',justifyContent:'center'},
+        style:{minHeight:'98px',border:'1px solid '+(isSel?'#2348D6':'#EEF0F2'),outline:isSel?'1px solid #2348D6':'none',borderRadius:'9px',background:dim?'transparent':'#fff',padding:'7px 7px 6px',display:'flex',flexDirection:'column',cursor:dim?'default':'pointer',opacity:dim?.45:1,overflow:'hidden'} }; };
+    const cells=[]; [25,26,27,28,29,30,31].forEach(d=>cells.push(mk(d,true)));
+    for(let d=1;d<=30;d++) cells.push(mk(d,false));
+    [1,2,3,4,5].forEach(d=>cells.push(mk(d,true)));
+    // flat list
+    const all=[]; for(let d=1;d<=30;d++) dayEv(d).forEach(([k,t])=>all.push({dd:'06.'+String(d).padStart(2,'0'), wd:'('+wd[new Date(2025,5,d).getDay()]+')', cat:ko[k], col:col[k], soft:soft[k], title:t, tag:d<today?'마감':(d===today?'오늘':'D-'+(d-today))}));
+    const per=15; const total=all.length; const pageCount=Math.max(1,Math.ceil(total/per));
+    const page=Math.min(this.state.page,pageCount-1);
+    const paged=all.slice(page*per,page*per+per);
+    const pBtn=(on)=>({minWidth:'30px',height:'30px',padding:'0 8px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'13px',fontWeight:on?700:600,cursor:'pointer',border:'1px solid '+(on?'#2348D6':'#E1E4E8'),background:on?'#2348D6':'#fff',color:on?'#fff':'#49505A'});
+    const navBtn=(dis)=>({width:'30px',height:'30px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'14px',cursor:dis?'default':'pointer',border:'1px solid #E1E4E8',background:'#fff',color:dis?'#C7CDD3':'#49505A'});
+    return {
+      nav: navItems.map(([label,on])=>({label,style:{display:'flex',alignItems:'center',height:'100%',padding:'0 12px',fontSize:'14px',whiteSpace:'nowrap',fontWeight:on?700:600,color:on?'#fff':'#9BA3AB',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),cursor:'pointer'}})),
+      monthLabel:'2025. 6', weekdays, cells,
+      chips: [['fund','정책자금'],['tax','세무'],['acc','회계'],['law','법령']].map(([k,l])=>{ const on=!off[k];
+        return {label:l,count:counts[k],on,set:()=>this.setState(s=>({off:{...s.off,[k]:!s.off[k]},page:0})),dotStyle:{width:'8px',height:'8px',borderRadius:'50%',background:on?col[k]:'#C7CDD3'},
+          style:{display:'flex',alignItems:'center',gap:'7px',fontSize:'12.5px',fontWeight:600,color:on?'#181B1E':'#7E868F',border:'1px solid '+(on?'#181B1E':'#E1E4E8'),borderRadius:'8px',padding:'7px 13px',cursor:'pointer',userSelect:'none',opacity:on?1:.5}}; }),
+      total, paged,
+      rangeLabel: total? (page*per+1)+'–'+Math.min(page*per+per,total)+' / '+total : '0',
+      pages: Array.from({length:pageCount},(_,i)=>({n:String(i+1),set:()=>this.setState({page:i}),style:pBtn(i===page)})),
+      prev:()=>this.setState(s=>({page:Math.max(0,s.page-1)})), next:()=>this.setState(s=>({page:Math.min(pageCount-1,s.page+1)})),
+      prevStyle:navBtn(page===0), nextStyle:navBtn(page>=pageCount-1),
+    };
+  }
+}
+</script>
+</body>
+</html>

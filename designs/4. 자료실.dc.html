@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Pretendard Variable",Pretendard,sans-serif;background:#F7F8FA;color:#181B1E;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  .bt{font-family:"Gowun Batang",serif;word-break:keep-all;}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+  ::selection{background:#2348D6;color:#fff;}
+  a{color:inherit;text-decoration:none;}
+  input::placeholder{color:#A7AEB6;}
+</style>
+</helmet>
+
+<div style="position:fixed;top:0;bottom:0;right:0;width:22px;z-index:5;background:#EEF0F2;border-left:1px solid #E1E4E8;background-image:repeating-linear-gradient(90deg,rgba(24,27,30,.045) 0 1px,transparent 1px 4px);"></div>
+
+<div data-screen-label="자료실" style="padding-right:22px;">
+  <div style="background:#181B1E;border-bottom:1.5px solid #2348D6;position:sticky;top:0;z-index:40;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px;">
+      <img src="assets/logo_white.png" style="height:26px;display:block;" alt="BLACK BOOK"/>
+      <div style="display:flex;align-items:center;gap:3px;height:100%;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6"><span style="{{ n.style }}">{{ n.label }}</span></sc-for>
+      </div>
+      <span style="margin-left:auto;font-size:13px;font-weight:600;color:#D2D7DD;cursor:pointer;">로그인</span>
+      <span style="font-size:13px;font-weight:700;color:#fff;background:#2348D6;padding:8px 16px;border-radius:3px;cursor:pointer;">회원가입</span>
+    </div>
+  </div>
+
+  <div style="max-width:1020px;margin:0 auto;padding:40px 40px 0;">
+    <div class="mono" style="font-size:11.5px;letter-spacing:.1em;color:#2348D6;">INDEX 03 — 자료실</div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-top:12px;">
+      <div>
+        <h1 class="bt" style="font-size:38px;font-weight:700;letter-spacing:-.01em;margin:0;">자료실</h1>
+        <p style="font-size:15px;color:#49505A;margin:9px 0 0;max-width:560px;line-height:1.65;">크레디뷰가 정리한 실무 서식·템플릿·요약 자료.<br>바로 내려받아 오늘의 장부에 붙여 쓰세요.</p>
+      </div>
+      <label style="flex-shrink:0;display:flex;align-items:center;gap:9px;border:1px solid #D8DCE0;border-radius:3px;padding:10px 14px;background:#fff;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#7E868F" stroke-width="1.8" style="width:15px;height:15px;"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3" stroke-linecap="round"/></svg>
+        <input placeholder="자료 검색" class="mono" style="border:0;outline:none;background:transparent;font-size:12.5px;color:#181B1E;width:150px;"/>
+      </label>
+    </div>
+  </div>
+
+  <div style="max-width:1020px;margin:0 auto;padding:26px 40px 72px;display:grid;grid-template-columns:1.6fr .9fr;gap:44px;align-items:start;">
+
+    <!-- LIST -->
+    <div style="min-width:0;">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1.5px solid #181B1E;">
+        <div style="display:flex;align-items:flex-end;">
+          <sc-for list="{{ segs }}" as="s" hint-placeholder-count="2"><span onClick="{{ s.set }}" style="{{ s.style }}">{{ s.label }}</span></sc-for>
+        </div>
+        <span class="mono" style="font-size:11px;color:#7E868F;padding-bottom:11px;">{{ count }}건</span>
+      </div>
+
+      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="6"><span onClick="{{ f.set }}" style="{{ f.style }}">{{ f.label }}</span></sc-for>
+      </div>
+
+      <div style="display:flex;flex-direction:column;margin-top:8px;">
+        <sc-for list="{{ files }}" as="f" hint-placeholder-count="8">
+          <div style="display:grid;grid-template-columns:42px 1fr auto;gap:16px;align-items:center;padding:18px 2px;border-bottom:1px solid #E1E4E8;cursor:pointer;">
+            <span class="mono" style="width:42px;height:42px;display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:600;color:#fff;background:{{ f.tcol }};border-radius:3px;">{{ f.type }}</span>
+            <div style="min-width:0;">
+              <div style="font-size:15px;font-weight:600;line-height:1.4;">{{ f.name }}</div>
+              <div style="font-size:12.5px;color:#7E868F;line-height:1.5;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ f.desc }}</div>
+              <div style="display:flex;align-items:center;gap:8px;margin-top:7px;flex-wrap:wrap;">
+                <span class="mono" style="font-size:10px;color:{{ f.ccol }};">{{ f.cat }}</span>
+                <span style="color:#D8DCE0;">·</span>
+                <span class="mono" style="font-size:10px;color:#7E868F;">업데이트 {{ f.date }}</span>
+                <span style="color:#D8DCE0;">·</span>
+                <span class="mono" style="font-size:10px;color:#7E868F;">{{ f.size }} · 내려받기 {{ f.dl }}</span>
+              </div>
+            </div>
+            <span style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:9px 15px;cursor:pointer;white-space:nowrap;">↓ 내려받기</span>
+          </div>
+        </sc-for>
+      </div>
+
+      <div style="display:flex;justify-content:center;margin-top:40px;">
+        <span style="font-size:13px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:11px 26px;cursor:pointer;">더 펼치기 ↓</span>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <div style="display:flex;flex-direction:column;gap:30px;position:sticky;top:88px;">
+      <div style="border:1px solid #E1E4E8;background:#fff;">
+        <div class="mono" style="font-size:10px;letter-spacing:.1em;color:#7E868F;padding:15px 18px 0;">오늘의 장부</div>
+        <div style="padding:6px 18px 14px;">
+          <sc-for list="{{ stats }}" as="s" hint-placeholder-count="3">
+            <div style="display:flex;align-items:baseline;justify-content:space-between;padding:11px 0;border-bottom:1px solid #EEF0F2;">
+              <span style="font-size:13px;color:#49505A;">{{ s.label }}</span>
+              <span class="mono" style="font-size:15px;font-weight:600;color:#181B1E;">{{ s.val }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:9px;">
+          <h3 class="bt" style="font-size:18px;font-weight:700;margin:0;">이번 주 많이 받은 자료</h3>
+        </div>
+        <div style="display:flex;flex-direction:column;">
+          <sc-for list="{{ popular }}" as="p" hint-placeholder-count="4">
+            <div style="display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;">
+              <span class="bt" style="font-size:18px;font-weight:700;color:{{ p.rankCol }};width:18px;text-align:center;flex-shrink:0;">{{ p.rank }}</span>
+              <span class="mono" style="font-size:8.5px;font-weight:600;color:#fff;background:{{ p.tcol }};border-radius:2px;padding:3px 5px;flex-shrink:0;">{{ p.type }}</span>
+              <div style="min-width:0;flex:1;"><div style="font-size:13px;font-weight:600;line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ p.name }}</div><div class="mono" style="font-size:10px;color:#7E868F;margin-top:1px;">내려받기 {{ p.dl }}</div></div>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+
+      <div style="background:#181B1E;color:#F7F8FA;padding:22px 20px;">
+        <div class="bt" style="font-size:17px;font-weight:700;line-height:1.5;">필요한 자료가 없나요?</div>
+        <p style="font-size:12.5px;color:#AEB6BE;line-height:1.65;margin:8px 0 16px;">실무에 필요한 서식을 요청하면 크레디뷰가 정리해 올립니다.</p>
+        <span style="display:block;text-align:center;background:#2348D6;color:#fff;font-size:13px;font-weight:700;padding:11px;cursor:pointer;">자료 요청하기</span>
+      </div>
+    </div>
+
+  </div>
+
+  <footer style="background:#0F1113;color:#8A929B;">
+    <div style="max-width:1180px;margin:0 auto;padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <img src="assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"/>
+      <div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1420}}">
+class Component extends DCLogic {
+  state = { seg:'new', filter:'전체' };
+  _data(){ return [
+    {type:'XLS', name:'현금흐름 추정 템플릿', desc:'3개년 추정과 시나리오 분석이 연결된 표준 양식', cat:'재무', date:'2일 전', size:'142KB', dl:2480, days:2},
+    {type:'PDF', name:'2025 세법개정 요약', desc:'법인·소득·부가세 주요 개정 항목 한 장 정리', cat:'세무', date:'1주 전', size:'860KB', dl:3240, days:7},
+    {type:'XLS', name:'부가세 신고 체크시트', desc:'예정·확정 신고 전 점검 항목과 산식', cat:'세무', date:'3일 전', size:'88KB', dl:1760, days:3},
+    {type:'PPT', name:'여신심사 보고 양식', desc:'거래처 재무 요약과 한도 의견을 담는 보고 템플릿', cat:'재무', date:'5일 전', size:'3.1MB', dl:1120, days:5},
+    {type:'MD', name:'결산 마감 체크리스트', desc:'월·분기 결산 부서별 취합 항목 체크리스트', cat:'실무', date:'2일 전', size:'18KB', dl:2010, days:2},
+    {type:'DOC', name:'법인세 결산 조정 명세 양식', desc:'세무조정 계산서 작성용 표준 서식', cat:'회계', date:'6일 전', size:'210KB', dl:940, days:6},
+    {type:'PDF', name:'중대재해처벌법 대응 가이드', desc:'재무·관리팀이 확인할 예산·증빙 관리 포인트', cat:'법령', date:'1주 전', size:'1.4MB', dl:620, days:8},
+    {type:'XLS', name:'운전자본 관리 대시보드', desc:'DSO·DIO·DPO 추이와 현금전환주기 자동 계산', cat:'재무', date:'4일 전', size:'320KB', dl:1380, days:4},
+    {type:'PPT', name:'이사회 재무보고 템플릿', desc:'런웨이·핵심 지표를 한 장에 담는 보고 양식', cat:'경영', date:'1주 전', size:'2.6MB', dl:780, days:9},
+    {type:'PDF', name:'정책자금 신청 서류 모음', desc:'주요 정책자금별 제출 서류 체크리스트', cat:'정책자금', date:'3일 전', size:'2.1MB', dl:1520, days:3},
+  ]; }
+  renderVals(){
+    const tcol={XLS:'#1F8455',PPT:'#C2611B',PDF:'#B4322B',DOC:'#2348D6',MD:'#49505A',HWP:'#6A3FC0'};
+    const ccol={세무:'#C2611B',회계:'#1F8455',법령:'#6A3FC0',실무:'#2348D6',경영:'#181B1E',재무:'#2348D6',정책자금:'#2348D6'};
+    const navItems=[['홈',false],['콘텐츠',false],['실무 이야기',false],['자료실',true],['캘린더',false],['파인더',false]];
+    const seg=this.state.seg, filter=this.state.filter;
+
+    let list=this._data().slice();
+    if(seg==='hot') list.sort((a,b)=>b.dl-a.dl);
+    else list.sort((a,b)=>a.days-b.days);
+    if(filter!=='전체') list=list.filter(f=>f.cat===filter);
+
+    const segDefs=[['new','최신'],['hot','인기']];
+    const segStyle=(on)=>({fontSize:'15px',fontWeight:on?700:600,fontFamily:'"Gowun Batang",serif',color:on?'#181B1E':'#9BA3AB',padding:'0 2px 11px',marginRight:'24px',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),marginBottom:'-1.5px',cursor:'pointer'});
+    const filterDefs=['전체','세무','회계','재무','법령','실무','경영','정책자금'];
+    const rankCol=['#2348D6','#2348D6','#2348D6','#C2C9D0'];
+    const fmt=(n)=>n.toLocaleString();
+    const popular=this._data().slice().sort((a,b)=>b.dl-a.dl).slice(0,4);
+
+    return {
+      nav: navItems.map(([label,on])=>({label,style:{display:'flex',alignItems:'center',height:'100%',padding:'0 12px',fontSize:'14px',whiteSpace:'nowrap',fontWeight:on?700:600,color:on?'#fff':'#9BA3AB',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),cursor:'pointer'}})),
+      segs: segDefs.map(([k,l])=>({label:l,set:()=>this.setState({seg:k}),style:segStyle(seg===k)})),
+      filters: filterDefs.map(f=>{ const on=filter===f; return {label:f,set:()=>this.setState({filter:f}),
+        style:{fontSize:'12.5px',fontWeight:on?700:600,color:on?'#fff':'#49505A',background:on?'#181B1E':'transparent',border:'1px solid '+(on?'#181B1E':'#D8DCE0'),borderRadius:'3px',padding:'6px 14px',cursor:'pointer',userSelect:'none'}}; }),
+      count: list.length,
+      files: list.map(f=>({...f, tcol:tcol[f.type]||'#49505A', ccol:ccol[f.cat]||'#181B1E', dl:fmt(f.dl)})),
+      stats: [
+        {label:'누적 자료', val:'1,240'},
+        {label:'이번 달 추가', val:'38'},
+        {label:'총 내려받기', val:'24,800'},
+      ],
+      popular: popular.map((p,i)=>({rank:String(i+1), name:p.name, type:p.type, tcol:tcol[p.type], dl:fmt(p.dl), rankCol:rankCol[i]})),
+    };
+  }
+}
+</script>
+</body>
+</html>

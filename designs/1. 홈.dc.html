@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Pretendard Variable",Pretendard,sans-serif;background:#F7F8FA;color:#181B1E;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  .bt{font-family:"Gowun Batang",serif;}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+  @keyframes rise{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+  @keyframes fade{from{opacity:0;}to{opacity:1;}}
+  ::selection{background:#2348D6;color:#F7F8FA;}
+</style>
+</helmet>
+
+<div style="position:fixed;inset:0;pointer-events:none;z-index:9990;opacity:.075;mix-blend-mode:multiply;background-image:url(&quot;data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>&quot;);background-size:150px;"></div>
+
+<div style="position:fixed;top:0;bottom:0;right:0;width:22px;z-index:20;background:#EEF0F2;border-left:1px solid #E1E4E8;background-image:repeating-linear-gradient(90deg,rgba(24,27,30,.045) 0 1px,transparent 1px 4px);"></div>
+
+<div data-screen-label="홈 — THE LEDGER" style="padding-right:22px;">
+  <div style="background:#181B1E;border-bottom:1.5px solid #2348D6;position:sticky;top:0;z-index:40;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px;">
+      <img src="assets/logo_white.png" style="height:26px;display:block;" alt="BLACK BOOK"/>
+      <div style="display:flex;align-items:center;gap:3px;height:100%;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6"><span style="{{ n.style }}">{{ n.label }}</span></sc-for>
+      </div>
+      <span style="margin-left:auto;font-size:13px;font-weight:600;color:#D2D7DD;cursor:pointer;">로그인</span>
+      <span style="font-size:13px;font-weight:700;color:#fff;background:#2348D6;padding:8px 16px;border-radius:3px;cursor:pointer;">회원가입</span>
+    </div>
+  </div>
+</div>
+
+
+<div style="padding-right:22px;">
+  <div style="max-width:1180px;margin:0 auto;padding:30px 40px 64px;">
+    <div style="display:grid;grid-template-columns:1.62fr .9fr;gap:24px;align-items:start;">
+
+      <div onDragOver="{{ mainCol.onDragOver }}" onDrop="{{ mainCol.onDrop }}" style="min-width:0;display:flex;flex-direction:column;">
+        <sc-for list="{{ mainModules }}" as="mod" hint-placeholder-count="1">
+        <div draggable="true" onDragStart="{{ mod.onDragStart }}" onDragOver="{{ mod.onDragOver }}" onDrop="{{ mod.onDrop }}" style="{{ mod.wrapStyle }}"><div style="{{ mod.gripStyle }}" title="끌어서 이동">⠿</div>
+        <sc-if value="{{ mod.isContent }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:10px;">
+          <h2 class="bt" style="font-size:23px;font-weight:700;margin:0;white-space:nowrap;">콘텐츠</h2>
+          <span style="font-size:12.5px;font-weight:600;color:#2348D6;cursor:pointer;">전체 →</span>
+        </div>
+        <div style="display:flex;gap:7px;margin:16px 0 2px;">
+          <sc-for list="{{ segTabs }}" as="s" hint-placeholder-count="2"><span onClick="{{ s.set }}" style="{{ s.style }}">{{ s.label }}</span></sc-for>
+        </div>
+
+        <sc-if value="{{ segInsight }}" hint-placeholder-val="{{ true }}">
+        <div style="margin-top:16px;cursor:pointer;">
+          <div style="width:100%;aspect-ratio:16/8.5;border-radius:10px;background:#2348D6;position:relative;overflow:hidden;">
+            <span class="mono" style="position:absolute;left:13px;top:13px;font-size:10px;font-weight:600;color:#2348D6;background:#F7F8FA;padding:4px 9px;border-radius:6px;">재무</span>
+            <svg viewBox="0 0 600 240" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%"><g stroke="rgba(255,255,255,.55)" stroke-width="2.5" fill="none"><path d="M30 188 L150 150 L270 166 L390 86 L500 118 L580 50"/></g><g fill="#fff"><circle cx="150" cy="150" r="5"/><circle cx="390" cy="86" r="5"/><circle cx="580" cy="50" r="5"/></g></svg>
+          </div>
+          <span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:#C2611B;display:block;margin-top:14px;">세무 · 재무</span>
+          <h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;">부채비율만 보던 여신 심사, 현금흐름까지 읽는 법</h3>
+          <p style="font-size:14px;color:#49505A;margin:9px 0 0;line-height:1.6;">재무제표 세 장으로 거래처의 상환 능력을 가늠하는 실무 체크포인트.</p>
+          <div class="mono" style="font-size:11px;color:#7E868F;margin-top:11px;">크레디뷰 리서치 · 8분 읽기 · 조회 1,240</div>
+        </div>
+        <div style="display:flex;flex-direction:column;margin-top:10px;border-top:1px solid #E1E4E8;">
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;padding:16px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;">
+            <span class="bt" style="font-size:24px;font-weight:400;color:#C2C9D0;line-height:1;width:32px;">02</span>
+            <div style="min-width:0;"><span class="mono" style="font-size:10px;letter-spacing:.06em;color:#181B1E;">경영</span><h3 class="bt" style="font-size:17px;line-height:1.42;font-weight:700;margin:4px 0 0;">런웨이가 6개월 남았다는 신호를 재무팀이 먼저 잡는 5가지 지표</h3></div>
+            <div style="text-align:right;white-space:nowrap;"><div class="mono" style="font-size:12.5px;font-weight:600;color:#181B1E;">870</div><div class="mono" style="font-size:9.5px;color:#7E868F;margin-top:2px;">조회</div></div>
+          </div>
+          <div style="display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;padding:16px 0;cursor:pointer;">
+            <span class="bt" style="font-size:24px;font-weight:400;color:#C2C9D0;line-height:1;width:32px;">03</span>
+            <div style="min-width:0;"><span class="mono" style="font-size:10px;letter-spacing:.06em;color:#1F8455;">회계</span><h3 class="bt" style="font-size:17px;line-height:1.42;font-weight:700;margin:4px 0 0;">리스 회계처리, 사용권자산 감가 기준을 둘러싼 실무 쟁점</h3></div>
+            <div style="text-align:right;white-space:nowrap;"><div class="mono" style="font-size:12.5px;font-weight:600;color:#181B1E;">640</div><div class="mono" style="font-size:9.5px;color:#7E868F;margin-top:2px;">조회</div></div>
+          </div>
+        </div>
+        </sc-if>
+
+        <sc-if value="{{ segOpinion }}" hint-placeholder-val="{{ false }}">
+        <div style="margin-top:16px;cursor:pointer;">
+          <div style="width:100%;aspect-ratio:16/8.5;border-radius:10px;border:1px solid #E1E4E8;position:relative;overflow:hidden;background-image:repeating-linear-gradient(45deg,#EEF0F2 0 16px,#E4E8EC 16px 32px);">
+            <span class="mono" style="position:absolute;left:13px;top:13px;font-size:10px;font-weight:600;color:#2348D6;background:#F7F8FA;padding:4px 9px;border-radius:6px;">이달의 기고</span>
+            <span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;letter-spacing:.12em;color:#9CA4AC;">PORTRAIT</span>
+          </div>
+          <span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:#2348D6;display:block;margin-top:14px;">전문가 기고 · 김재무 前 상장사 CFO</span>
+          <h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;">"재무팀은 비용 센터가 아니라, 의사결정의 마지막 검산이다"</h3>
+          <p style="font-size:14px;color:#49505A;margin:9px 0 0;line-height:1.6;">숫자를 닫는 사람에서 판단을 여는 사람으로. 30년 현업이 본 재무 조직의 역할 변화.</p>
+          <div class="mono" style="font-size:11px;color:#7E868F;margin-top:11px;">김재무 · 매달 1회 발행 · 6분 읽기</div>
+        </div>
+        </sc-if>
+        </sc-if>
+        <sc-if value="{{ mod.isQa }}" hint-placeholder-val="{{ false }}"><div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:9px;">
+            <h2 class="bt" style="font-size:23px;font-weight:700;margin:0;white-space:nowrap;">실무 이야기</h2>
+            <span style="font-size:12px;font-weight:600;color:#2348D6;cursor:pointer;white-space:nowrap;">전체 →</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;"><sc-for list="{{ qmodes }}" as="m" hint-placeholder-count="2"><span onClick="{{ m.set }}" style="{{ m.style }}">{{ m.label }}</span></sc-for></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;margin-top:10px;">
+            <div style="overflow:hidden;">
+              <div style="{{ qTrackStyle }}">
+                <sc-for list="{{ qlist }}" as="q" hint-placeholder-count="4">
+                  <div style="min-width:100%;box-sizing:border-box;padding:14px 0 4px;cursor:pointer;">
+                    <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;"><span class="mono" style="font-size:10px;letter-spacing:.05em;color:{{ q.col }};">{{ q.cat }}</span><span class="mono" style="font-size:10px;color:#7E868F;">{{ q.t }}</span></div>
+                    <div class="bt" style="font-size:18px;font-weight:700;line-height:1.5;min-height:80px;">{{ q.q }}</div>
+                    <div class="mono" style="margin-top:6px;font-size:11px;color:#2348D6;font-weight:500;">답변 {{ q.ans }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;gap:6px;margin-top:8px;"><sc-for list="{{ qdots }}" as="d" hint-placeholder-count="4"><span onClick="{{ d.set }}" style="{{ d.style }}"></span></sc-for></div>
+            </div>
+            <div style="display:flex;flex-direction:column;border-left:1px solid #E1E4E8;padding-left:26px;">
+              <div class="mono" style="font-size:10px;letter-spacing:.1em;color:#7E868F;margin-bottom:4px;">최근 올라온 이야기</div>
+              <sc-for list="{{ qlist }}" as="q" hint-placeholder-count="4">
+                <div style="display:flex;gap:9px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;"><span class="mono" style="font-size:9.5px;color:{{ q.col }};flex-shrink:0;margin-top:3px;">{{ q.cat }}</span><div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;line-height:1.45;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">{{ q.q }}</div><span class="mono" style="font-size:10px;color:#7E868F;">답변 {{ q.ans }} · {{ q.t }}</span></div></div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="margin-top:16px;background:#181B1E;color:#F7F8FA;font-size:13px;font-weight:700;text-align:center;padding:12px;cursor:pointer;">문답 기입하기</div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ mod.isCal }}" hint-placeholder-val="{{ false }}"><div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:9px;"><div style="display:flex;align-items:baseline;gap:10px;"><h2 class="bt" style="font-size:23px;font-weight:700;margin:0;white-space:nowrap;">일정</h2><span class="mono" style="font-size:12px;color:#49505A;">{{ month }}</span></div><span style="font-size:12px;font-weight:600;color:#2348D6;cursor:pointer;white-space:nowrap;">전체 →</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin:16px 0;">
+            <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span onClick="{{ c.set }}" style="{{ c.style }}"><span style="{{ c.dotStyle }}"></span>{{ c.label }}</span></sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:30px;align-items:start;">
+            <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">
+              <div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">일</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">월</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">화</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">수</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">목</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">금</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">토</div>
+              <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="42">
+                <div style="{{ c.style }}" class="mono">{{ c.num }}<div style="display:flex;gap:2px;"><sc-for list="{{ c.dots }}" as="d" hint-placeholder-count="0"><i style="{{ d.style }}"></i></sc-for></div></div>
+              </sc-for>
+            </div>
+            <div style="display:flex;flex-direction:column;">
+              <div class="mono" style="font-size:10px;letter-spacing:.1em;color:#7E868F;margin-bottom:6px;">이달의 일정</div>
+              <sc-for list="{{ calEvents }}" as="e" hint-placeholder-count="6">
+                <div style="display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;">
+                  <span class="mono" style="font-size:11px;font-weight:600;color:#181B1E;width:40px;flex-shrink:0;">{{ e.day }}</span>
+                  <span style="width:7px;height:7px;border-radius:50%;background:{{ e.col }};margin-top:5px;flex-shrink:0;"></span>
+                  <div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;line-height:1.4;">{{ e.title }}</div><span class="mono" style="font-size:10px;color:#7E868F;">{{ e.cat }}</span></div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        </sc-if>
+        </div>
+        </sc-for>
+      </div>
+
+      <div onDragOver="{{ sideCol.onDragOver }}" onDrop="{{ sideCol.onDrop }}" style="min-width:0;display:flex;flex-direction:column;gap:20px;">
+        <sc-for list="{{ sideModules }}" as="mod" hint-placeholder-count="3">
+        <div draggable="true" onDragStart="{{ mod.onDragStart }}" onDragOver="{{ mod.onDragOver }}" onDrop="{{ mod.onDrop }}" style="{{ mod.wrapStyle }}"><div style="{{ mod.gripStyle }}" title="끌어서 이동">⠿</div>
+        <sc-if value="{{ mod.isQa }}" hint-placeholder-val="{{ true }}"><div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:9px;">
+            <h2 class="bt" style="font-size:19px;font-weight:700;margin:0;white-space:nowrap;">실무 이야기</h2>
+            <span style="font-size:12px;font-weight:600;color:#2348D6;cursor:pointer;white-space:nowrap;">전체 →</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px;"><sc-for list="{{ qmodes }}" as="m" hint-placeholder-count="2"><span onClick="{{ m.set }}" style="{{ m.style }}">{{ m.label }}</span></sc-for></div>
+          <div style="overflow:hidden;margin-top:4px;">
+            <div style="{{ qTrackStyle }}">
+              <sc-for list="{{ qlist }}" as="q" hint-placeholder-count="4">
+                <div style="min-width:100%;box-sizing:border-box;padding:16px 0 4px;cursor:pointer;">
+                  <div style="display:flex;align-items:center;gap:9px;margin-bottom:8px;"><span class="mono" style="font-size:10px;letter-spacing:.05em;color:{{ q.col }};">{{ q.cat }}</span><span class="mono" style="font-size:10px;color:#7E868F;">{{ q.t }}</span></div>
+                  <div class="bt" style="font-size:17px;font-weight:700;line-height:1.5;min-height:78px;">{{ q.q }}</div>
+                  <div class="mono" style="margin-top:6px;font-size:11px;color:#2348D6;font-weight:500;">답변 {{ q.ans }}</div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px;margin-top:8px;"><sc-for list="{{ qdots }}" as="d" hint-placeholder-count="4"><span onClick="{{ d.set }}" style="{{ d.style }}"></span></sc-for></div>
+          <div style="margin-top:14px;background:#181B1E;color:#F7F8FA;font-size:13px;font-weight:700;text-align:center;padding:12px;cursor:pointer;">문답 기입하기</div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ mod.isCal }}" hint-placeholder-val="{{ true }}"><div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:9px;"><div style="display:flex;align-items:baseline;gap:9px;"><h2 class="bt" style="font-size:19px;font-weight:700;margin:0;white-space:nowrap;">일정</h2><span class="mono" style="font-size:11.5px;color:#49505A;">{{ month }}</span></div><span style="font-size:12px;font-weight:600;color:#2348D6;cursor:pointer;white-space:nowrap;">전체 →</span></div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin:14px 0;">
+            <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span onClick="{{ c.set }}" style="{{ c.style }}"><span style="{{ c.dotStyle }}"></span>{{ c.label }}</span></sc-for>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:3px;">
+            <div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">일</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">월</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">화</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">수</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">목</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">금</div><div class="mono" style="font-size:9.5px;font-weight:600;color:#7E868F;text-align:center;padding:2px 0 6px;">토</div>
+            <sc-for list="{{ calCells }}" as="c" hint-placeholder-count="42">
+              <div style="{{ c.style }}" class="mono">{{ c.num }}<div style="display:flex;gap:2px;"><sc-for list="{{ c.dots }}" as="d" hint-placeholder-count="0"><i style="{{ d.style }}"></i></sc-for></div></div>
+            </sc-for>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ mod.isFiles }}" hint-placeholder-val="{{ false }}"><div>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:9px;margin-bottom:2px;">
+            <h2 class="bt" style="font-size:19px;font-weight:700;margin:0;white-space:nowrap;">자료실</h2>
+            <span style="font-size:12px;font-weight:600;color:#2348D6;cursor:pointer;white-space:nowrap;">전체 →</span>
+          </div>
+          <div style="display:flex;flex-direction:column;">
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;"><span class="mono" style="font-size:9.5px;font-weight:600;color:#F7F8FA;background:#1F8455;padding:4px 7px;border-radius:6px;">XLS</span><span style="font-size:13.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">현금흐름 추정 템플릿</span><span class="mono" style="font-size:11px;color:#7E868F;">142KB</span></div>
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;"><span class="mono" style="font-size:9.5px;font-weight:600;color:#F7F8FA;background:#C2611B;padding:4px 7px;border-radius:6px;">PPT</span><span style="font-size:13.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">여신심사 보고 양식</span><span class="mono" style="font-size:11px;color:#7E868F;">3.1MB</span></div>
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;"><span class="mono" style="font-size:9.5px;font-weight:600;color:#F7F8FA;background:#49505A;padding:4px 7px;border-radius:6px;">MD</span><span style="font-size:13.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">결산 체크리스트</span><span class="mono" style="font-size:11px;color:#7E868F;">18KB</span></div>
+            <div style="display:flex;align-items:center;gap:11px;padding:13px 0;cursor:pointer;"><span class="mono" style="font-size:9.5px;font-weight:600;color:#F7F8FA;background:#B4322B;padding:4px 7px;border-radius:6px;">PDF</span><span style="font-size:13.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">2025 세법개정 요약</span><span class="mono" style="font-size:11px;color:#7E868F;">870KB</span></div>
+          </div>
+        </div>
+        </sc-if>
+        <sc-if value="{{ mod.isSuggest }}" hint-placeholder-val="{{ false }}"><div style="text-align:center;">
+          <div style="border:1.5px dashed #C6CCD2;border-radius:12px;padding:26px 20px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:#EDF0FD;color:#2348D6;display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:24px;font-weight:600;line-height:1;">+</div>
+            <h3 class="bt" style="font-size:18px;font-weight:700;margin:14px 0 0;">이 자리는 아직 비어 있어요</h3>
+            <p style="font-size:13px;color:#49505A;line-height:1.6;margin:9px 0 0;">어떤 내용이 있으면 좋을까요? 이 공간은 <b style="color:#181B1E;">여러분의 의견</b>으로 채워집니다.</p>
+            <div style="margin-top:16px;background:#2348D6;color:#fff;font-size:12.5px;font-weight:700;padding:10px 18px;border-radius:8px;cursor:pointer;display:inline-block;">의견 보내기</div>
+          </div>
+        </div>
+        </sc-if></div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#181B1E;color:#F7F8FA;">
+    <div style="max-width:1180px;margin:0 auto;padding:48px 40px;display:flex;align-items:center;justify-content:space-between;gap:34px;position:relative;overflow:hidden;">
+      <div class="bt" style="position:absolute;right:24px;top:-58px;font-size:178px;line-height:1;color:#F7F8FA;opacity:.045;pointer-events:none;">06</div>
+      <div style="position:relative;">
+        <span class="mono" style="font-size:11px;letter-spacing:.14em;color:#2348D6;">INDEX 05 — COMING SOON</span>
+        <h3 class="bt" style="font-size:30px;font-weight:700;margin:13px 0 9px;">우리 회사가 받을 수 있는 정책자금, 한 번에</h3>
+        <p style="color:#AEB6BE;font-size:14.5px;margin:0;max-width:520px;line-height:1.65;">업종·규모·재무 상태로 맞는 정책자금을 추려주는 파인더가 곧 펼쳐집니다. 사전예약하면 가장 먼저 알려드릴게요.</p>
+      </div>
+      <div style="position:relative;flex-shrink:0;background:#2348D6;color:#FFFFFF;font-size:14px;font-weight:700;padding:15px 28px;cursor:pointer;display:flex;align-items:center;gap:9px;white-space:nowrap;">사전예약 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:16px;height:16px;"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+    </div>
+  </div>
+
+  <footer style="background:#0F1113;color:#8A929B;">
+    <div style="max-width:1180px;margin:0 auto;padding:48px 40px 36px;">
+      <div style="display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;">
+        <div style="max-width:320px;">
+          <img src="assets/logo_white.png" style="height:20px;margin-bottom:15px;" alt="BLACK BOOK"/>
+          <p style="font-size:12.5px;line-height:1.75;margin:0;">재무·회계 실무자가 매일 한 줄씩 채워가는 장부이자 커뮤니티. <b style="color:#D2D7DD;white-space:nowrap;">크레디뷰</b>가 펴냅니다.</p>
+        </div>
+        <div style="display:flex;gap:54px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;gap:11px;"><span class="mono" style="font-size:10px;letter-spacing:.08em;color:#6A7079;margin-bottom:3px;">커뮤니티</span><a style="font-size:13px;color:#AEB6BE;">콘텐츠</a><a style="font-size:13px;color:#AEB6BE;">Q&amp;A</a><a style="font-size:13px;color:#AEB6BE;">자료실</a><a style="font-size:13px;color:#AEB6BE;">캘린더</a></div>
+          <div style="display:flex;flex-direction:column;gap:11px;"><span class="mono" style="font-size:10px;letter-spacing:.08em;color:#6A7079;margin-bottom:3px;">크레디뷰 서비스</span><a style="font-size:13px;color:#AEB6BE;">기업신용평가등급</a><a style="font-size:13px;color:#AEB6BE;">AI 경영진단보고서</a><a style="font-size:13px;color:#AEB6BE;">기업모니터링</a><a style="font-size:13px;color:#AEB6BE;">DB조회</a></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:40px;padding-top:22px;border-top:1px solid #2A2E33;">
+        <div class="mono" style="font-size:10.5px;color:#6A7079;line-height:1.8;">(주)테크핀레이팅스 · 크레디뷰 · help@blackbook.co.kr</div>
+        <div style="display:flex;gap:18px;"><a class="mono" style="font-size:10.5px;color:#6A7079;">이용약관</a><a class="mono" style="font-size:10.5px;color:#6A7079;">개인정보처리방침</a><a class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK</a></div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<div onClick="{{ calcToggle }}" style="{{ calcFabStyle }}" title="대출 가능성 계산기">
+  <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" style="width:24px;height:24px;"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 18h4" stroke-linecap="round"/></svg>
+</div>
+<div style="{{ calcPanelStyle }}">
+  <div style="display:flex;align-items:center;gap:9px;padding:12px 14px 11px;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#2348D6" stroke-width="1.8" style="width:16px;height:16px;flex-shrink:0;"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M8 11h.01M16 11h.01M8 15h.01M16 15h.01" stroke-linecap="round"/></svg>
+    <span class="mono" style="font-size:10px;letter-spacing:.08em;color:#D2D7DD;">대출 가능성 계산기</span>
+    <span onClick="{{ calcToggle }}" style="margin-left:auto;width:24px;height:24px;border-radius:7px;background:#2A2E33;color:#D2D7DD;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;line-height:1;">–</span>
+  </div>
+  <div style="margin:0 12px;background:#C7D0C3;border-radius:9px;padding:11px 13px 12px;box-shadow:inset 0 1px 4px rgba(0,0,0,.28);">
+    <div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="mono" style="font-size:9px;color:#5C6356;letter-spacing:.04em;">연 매출</span><input class="mono" value="1,200,000,000" style="border:0;outline:0;background:transparent;font-weight:500;color:#1B1F17;width:128px;text-align:right;font-size:12px;"/></div>
+    <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:5px;"><span class="mono" style="font-size:9px;color:#5C6356;letter-spacing:.04em;">자기자본</span><input class="mono" value="350,000,000" style="border:0;outline:0;background:transparent;font-weight:500;color:#1B1F17;width:128px;text-align:right;font-size:12px;"/></div>
+    <div style="border-top:1px solid rgba(27,31,23,.22);margin-top:9px;padding-top:8px;display:flex;align-items:flex-end;justify-content:space-between;">
+      <span class="mono" style="font-size:9px;color:#5C6356;letter-spacing:.06em;padding-bottom:4px;">예상 한도</span>
+      <span class="mono" style="font-size:24px;font-weight:600;color:#1B1F17;letter-spacing:-.01em;line-height:1;">≈ 4.2억<span style="font-size:12px;"> 원</span></span>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:12px;">
+    <sc-for list="{{ calcKeys }}" as="k" hint-placeholder-count="16"><div style="{{ k.style }}">{{ k.k }}</div></sc-for>
+  </div>
+  <div style="margin:0 12px 12px;background:#2348D6;color:#fff;font-size:12px;font-weight:700;text-align:center;padding:11px;border-radius:9px;cursor:pointer;">정확한 진단 — AI 경영진단보고서</div>
+</div></x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1700}}">
+class Component extends DCLogic {
+  state = { tab:'홈', qmode:'hot', qi:0, off:{}, calcOpen:true, seg:'insight', mainOrder:['content','qa'], sideOrder:['cal','files','suggest'] };
+  _dropMod(targetId){ const d=this._drag; if(!d) return; this.setState(s=>{ const key=d.col==='main'?'mainOrder':'sideOrder'; const arr=[...s[key]]; const fi=arr.indexOf(d.id); if(fi<0) return {}; arr.splice(fi,1); let ti=targetId!=null?arr.indexOf(targetId):-1; if(ti<0) ti=arr.length; arr.splice(ti,0,d.id); return {[key]:arr}; }); this._drag=null; }
+  componentDidMount(){ this._qt=setInterval(()=>this.setState(s=>({qi:(s.qi+1)%4})),4200); }
+  componentWillUnmount(){ clearInterval(this._qt); }
+  _hot(){ return [
+    {cat:'세무', ans:4, t:'15분 전', q:'관계회사 대여금, 업무무관 가지급금으로 보는 기준이 어디까지인가요?'},
+    {cat:'실무', ans:2, t:'1시간 전', q:'거래처 신용등급이 두 단계 떨어졌는데 여신 한도 어떻게 조정하세요?'},
+    {cat:'세무', ans:7, t:'3시간 전', q:'가업승계 증여세 특례, 사후관리 요건 실무 경험 있으신 분?'},
+    {cat:'회계', ans:5, t:'5시간 전', q:'리스 회계처리, 사용권자산 감가 기준 다들 어떻게 잡으세요?'},
+  ]; }
+  _new(){ return [
+    {cat:'회계', ans:1, t:'2분 전', q:'사용권자산 상각, 리스기간과 내용연수가 다를 때 기준은?'},
+    {cat:'법령', ans:0, t:'12분 전', q:'중대재해처벌법 적용 사업장, 재무팀이 챙길 항목이 있을까요?'},
+    {cat:'실무', ans:3, t:'40분 전', q:'결산 마감 일정 관리, 부서별 체크리스트 템플릿 공유 가능?'},
+    {cat:'세무', ans:2, t:'1시간 전', q:'외화환산손익 인식 시점, 결산일 기준 환율 적용이 맞나요?'},
+  ]; }
+  renderVals(){
+    const items=[['00','홈'],['01','콘텐츠'],['02','Q&A'],['03','자료실'],['04','캘린더'],['05','파인더']];
+    const tab=this.state.tab;
+    const tabStyle=(on)=>({display:'flex',alignItems:'baseline',gap:'7px',whiteSpace:'nowrap',cursor:'pointer',
+      padding: on?'11px 17px 12px':'9px 15px 9px',
+      background: on?'#F7F8FA':'#E7EAED',
+      border:'1.5px solid '+(on?'#181B1E':'#E1E4E8'),
+      borderBottom: on?'1.5px solid #F7F8FA':'1.5px solid #E1E4E8',
+      borderRadius:'9px 9px 0 0',
+      marginRight:'5px', marginBottom:'-1.5px',
+      boxShadow: on?'inset 0 3px 0 #2348D6':'none',
+      color:on?'#181B1E':'#7E868F', fontSize:'14px', fontWeight:on?700:600,
+      position:'relative', zIndex:on?2:1, top:on?'0':'2px'});
+    const numStyle=(on)=>({fontSize:'10px',fontWeight:500,letterSpacing:'.06em',color:on?'#2348D6':'#AEB6BE'});
+    const qs=this.state.qmode==='hot'?this._hot():this._new();
+    const catColor={'세무':'#C2611B','회계':'#1F8455','법령':'#6A3FC0','실무':'#2348D6','경영':'#181B1E'};
+    const self=this;
+    const mkMod=(id,col)=>({ id, isContent:id==='content', isQa:id==='qa', isFiles:id==='files', isCal:id==='cal', isSuggest:id==='suggest',
+      wrapStyle:{position:'relative',background:'#FFFFFF',border:'1px solid #E1E4E8',borderRadius:'12px',boxShadow:'0 1px 2px rgba(24,27,30,.04),0 5px 16px rgba(24,27,30,.05)',padding:'22px 24px'},
+      gripStyle:{position:'absolute',left:'-26px',top:'2px',width:'20px',height:'24px',display:'flex',alignItems:'center',justifyContent:'center',color:'#B7C0C8',cursor:'grab',fontSize:'13px',lineHeight:1,userSelect:'none'},
+      onDragStart:(e)=>{ self._drag={id,col}; if(e&&e.dataTransfer){ e.dataTransfer.effectAllowed='move'; } },
+      onDragOver:(e)=>{ if(e&&e.preventDefault) e.preventDefault(); },
+      onDrop:(e)=>{ if(e){ if(e.preventDefault)e.preventDefault(); if(e.stopPropagation)e.stopPropagation(); } self._dropMod(id); } });
+    const navItems=[['홈',true],['콘텐츠',false],['실무 이야기',false],['자료실',false],['캘린더',false],['파인더',false]];
+    return {
+      nav: navItems.map(([label,on])=>({label,style:{display:'flex',alignItems:'center',height:'100%',padding:'0 12px',fontSize:'14px',whiteSpace:'nowrap',fontWeight:on?700:600,color:on?'#fff':'#9BA3AB',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),cursor:'pointer'}})),
+      tabs: items.map(([n,l])=>({num:n,label:l,on:l===tab,set:()=>this.setState({tab:l}),style:tabStyle(l===tab),numStyle:numStyle(l===tab)})),
+      mainModules: this.state.mainOrder.map(id=>mkMod(id,'main')),
+      sideModules: this.state.sideOrder.map(id=>mkMod(id,'side')),
+      mainCol:{ onDragOver:(e)=>{ if(e&&e.preventDefault) e.preventDefault(); }, onDrop:(e)=>{ if(e&&e.preventDefault) e.preventDefault(); this._dropMod(null); } },
+      sideCol:{ onDragOver:(e)=>{ if(e&&e.preventDefault) e.preventDefault(); }, onDrop:(e)=>{ if(e&&e.preventDefault) e.preventDefault(); this._dropMod(null); } },
+      segInsight: this.state.seg==='insight',
+      segOpinion: this.state.seg==='opinion',
+      segTabs: [['insight','아티클'],['opinion','전문가 기고']].map(([k,l])=>({label:l,on:this.state.seg===k,set:()=>this.setState({seg:k}),style:{fontSize:'12px',fontWeight:700,padding:'6px 13px',borderRadius:'7px',cursor:'pointer',whiteSpace:'nowrap',color:this.state.seg===k?'#FFFFFF':'#7E868F',background:this.state.seg===k?'#181B1E':'#EEF0F2'}})),
+      stats: [{label:'장부에 기록된 실무자',val:'12,480'},{label:'오늘 올라온 문답',val:'38'},{label:'내려받은 실무 자료',val:'1,240'}],
+      qmodes: [['hot','분주한'],['new','새 기록']].map(([m,l])=>({label:l,on:m===this.state.qmode,set:()=>this.setState({qmode:m,qi:0}),
+        style:{fontSize:'12px',fontWeight:700,padding:'5px 11px',cursor:'pointer',color:m===this.state.qmode?'#181B1E':'#7E868F',borderBottom:'2px solid '+(m===this.state.qmode?'#2348D6':'transparent')}})),
+      qlist: qs.map(q=>({...q,col:catColor[q.cat]||'#2348D6'})),
+      qTrackStyle:{ display:'flex', transition:'transform .5s cubic-bezier(.4,0,.2,1)', transform:'translateX('+(-this.state.qi*100)+'%)' },
+      qdots: qs.map((_,i)=>({ set:()=>this.setState({qi:i}), style:{ width:i===this.state.qi?'16px':'6px', height:'6px', borderRadius:'3px', background:i===this.state.qi?'#2348D6':'#DCE0E4', cursor:'pointer', transition:'all .2s' } })),
+      chips: [['fund','정책자금','#2348D6'],['tax','세무','#C2611B'],['acc','회계','#1F8455'],['law','법령','#6A3FC0']].map(([k,l,c])=>{
+        const on=!this.state.off[k];
+        return {label:l,on,set:()=>this.setState(s=>({off:{...s.off,[k]:!s.off[k]}})),dotStyle:{width:'7px',height:'7px',borderRadius:'50%',background:on?c:'#E1E4E8'},
+          style:{display:'flex',alignItems:'center',gap:'6px',fontSize:'11.5px',fontWeight:600,color:on?'#181B1E':'#7E868F',border:'1px solid '+(on?'#181B1E':'#E1E4E8'),padding:'5px 10px',cursor:'pointer',userSelect:'none',opacity:on?1:.5}};
+      }),
+      month:'2025. 6',
+      calEvents: (()=>{ const col={fund:'#2348D6',tax:'#C2611B',acc:'#1F8455',law:'#6A3FC0'}; const ko={fund:'정책자금',tax:'세무',acc:'회계',law:'법령'};
+        const evs=[{d:2,k:'fund',t:'○○산업 정책자금 신청 마감'},{d:4,k:'tax',t:'부가가치세 예정신고 기한'},{d:5,k:'law',t:'중대재해처벌법 개정 시행'},{d:10,k:'acc',t:'반기 결산 사전 점검'},{d:12,k:'tax',t:'원천세 신고·납부'},{d:17,k:'law',t:'근로기준법 개정안 공포'},{d:19,k:'fund',t:'기술보증기금 지원 설명회'},{d:24,k:'tax',t:'법인세 중간예납'},{d:27,k:'fund',t:'스마트공장 지원사업 마감'}];
+        return evs.filter(e=>!this.state.off[e.k]).map(e=>({ day:'06.'+String(e.d).padStart(2,'0'), cat:ko[e.k], col:col[e.k], title:e.t })).slice(0,4); })(),
+      calCells: (()=>{ const col={fund:'#2348D6',tax:'#C2611B',acc:'#1F8455',law:'#6A3FC0'};
+        const evs={2:['fund'],4:['tax'],5:['fund','law'],10:['acc'],12:['tax'],17:['law'],19:['fund'],24:['tax','acc'],27:['fund']};
+        const cells=[]; [25,26,27,28,29,30,31].forEach(d=>cells.push({day:d,dim:true,today:false,evs:[]}));
+        for(let d=1;d<=30;d++){ const e=(evs[d]||[]).filter(k=>!this.state.off[k]).map(k=>col[k]); cells.push({day:d,dim:false,today:d===16,evs:e}); }
+        [1,2,3,4,5].forEach(d=>cells.push({day:d,dim:true,today:false,evs:[]}));
+        return cells.map(c=>({ ...c, num:String(c.day),
+          style:{aspectRatio:'1',background:c.today?'#181B1E':'transparent',border:c.today?'none':'1px solid '+(c.dim?'transparent':'#DCE0E4'),display:'flex',flexDirection:'column',alignItems:'center',paddingTop:'5px',fontSize:'11px',fontWeight:600,color:c.today?'#F7F8FA':(c.dim?'#AEB6BE':'#49505A'),opacity:c.dim?.5:1,position:'relative',gap:'3px',cursor:c.dim?'default':'pointer'},
+          dots: c.evs.map(cc=>({style:{width:'5px',height:'5px',borderRadius:'50%',background:c.today?'#2348D6':cc}})) }));
+      })(),
+      calcToggle:()=>this.setState(s=>({calcOpen:!s.calcOpen})),
+      calcPanelStyle:{ position:'fixed',right:'40px',bottom:'26px',zIndex:9995,width:'286px',background:'#181B1E',borderRadius:'20px',boxShadow:'0 18px 44px rgba(15,17,19,.36)',overflow:'hidden',display:this.state.calcOpen?'block':'none' },
+      calcFabStyle:{ position:'fixed',right:'40px',bottom:'26px',zIndex:9995,width:'58px',height:'58px',borderRadius:'50%',background:'#2348D6',boxShadow:'0 12px 30px rgba(35,72,214,.42)',display:this.state.calcOpen?'none':'flex',alignItems:'center',justifyContent:'center',cursor:'pointer' },
+      calcKeys: (()=>{ const ops=['÷','×','−','+']; const rows=[['7','8','9','÷'],['4','5','6','×'],['1','2','3','−'],['0','.','=','+']]; const keys=[]; rows.forEach(r=>r.forEach(k=>{ const isOp=ops.indexOf(k)>=0; const isEq=k==='='; keys.push({k, style:{height:'32px',borderRadius:'8px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'14px',fontWeight:600,cursor:'pointer',fontFamily:'"IBM Plex Mono",monospace',background:isEq?'#2348D6':(isOp?'#2E333A':'#262A2F'),color:isEq?'#fff':(isOp?'#9FB4FF':'#E7EAED')}}); })); return keys; })(),
+    };
+  }
+}
+</script>
+</body>
+</html>

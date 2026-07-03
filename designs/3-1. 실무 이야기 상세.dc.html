@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Pretendard Variable",Pretendard,sans-serif;background:#F7F8FA;color:#181B1E;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  .bt{font-family:"Gowun Batang",serif;word-break:keep-all;}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+  ::selection{background:#2348D6;color:#fff;}
+  a{color:inherit;text-decoration:none;}
+  .qbody{font-size:15.5px;line-height:1.8;color:#2C313A;}
+  .abody{font-size:15px;line-height:1.8;color:#2C313A;}
+</style>
+</helmet>
+
+<div style="position:fixed;top:0;bottom:0;right:0;width:22px;z-index:5;background:#EEF0F2;border-left:1px solid #E1E4E8;background-image:repeating-linear-gradient(90deg,rgba(24,27,30,.045) 0 1px,transparent 1px 4px);"></div>
+
+<div data-screen-label="실무 이야기 상세" style="padding-right:22px;">
+  <div style="background:#181B1E;border-bottom:1.5px solid #2348D6;position:sticky;top:0;z-index:40;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px;">
+      <img src="assets/logo_white.png" style="height:26px;display:block;" alt="BLACK BOOK"/>
+      <div style="display:flex;align-items:center;gap:3px;height:100%;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6"><span style="{{ n.style }}">{{ n.label }}</span></sc-for>
+      </div>
+      <span style="margin-left:auto;font-size:13px;font-weight:600;color:#D2D7DD;cursor:pointer;">로그인</span>
+      <span style="font-size:13px;font-weight:700;color:#fff;background:#2348D6;padding:8px 16px;border-radius:3px;cursor:pointer;">회원가입</span>
+    </div>
+  </div>
+
+  <div style="max-width:800px;margin:0 auto;padding:40px 24px 72px;">
+    <a href="3. 실무 이야기.dc.html" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:#7E868F;cursor:pointer;">← 실무 이야기</a>
+
+    <!-- QUESTION -->
+    <div style="margin-top:22px;">
+      <div style="display:flex;align-items:center;gap:11px;">
+        <span class="mono" style="font-size:10.5px;letter-spacing:.05em;color:#C2611B;">세무</span>
+        <span class="mono" style="font-size:10.5px;color:#9BA3AB;">15분 전 · 조회 128</span>
+      </div>
+      <h1 class="bt" style="font-size:29px;line-height:1.45;font-weight:700;margin:12px 0 0;">관계회사 대여금, 업무무관 가지급금으로 보는 기준이 어디까지인가요?</h1>
+      <div class="qbody" style="margin-top:18px;">
+        <p style="margin:0 0 14px;">거래처가 아닌 <b>관계회사(지분 40%)</b>에 운영자금을 대여했습니다. 이자율은 가중평균차입이자율로 받고 있는데, 세무조사에서 업무무관 가지급금으로 볼 여지가 있는지 궁금합니다.</p>
+        <p style="margin:0;">인정이자 계산이나 지급이자 손금불산입까지 걸리는 기준선이 실무적으로 어디쯤인지, 소명 자료는 어디까지 준비해 두시는지 경험 있으신 분들 의견 부탁드립니다.</p>
+      </div>
+      <div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:18px;">
+        <span class="mono" style="font-size:10.5px;color:#49505A;background:#EEF0F2;padding:5px 10px;border-radius:3px;">#가지급금</span>
+        <span class="mono" style="font-size:10.5px;color:#49505A;background:#EEF0F2;padding:5px 10px;border-radius:3px;">#특수관계자</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:13px;margin-top:22px;padding-top:18px;border-top:1px solid #E1E4E8;">
+        <div style="width:36px;height:36px;border-radius:50%;background:#EEF0F2;color:#7E868F;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;" class="bt">익</div>
+        <div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;">익명 · 세무담당</div></div>
+        <span style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:7px 13px;cursor:pointer;">공감 <span class="mono">17</span></span>
+        <span style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:7px 13px;cursor:pointer;">스크랩</span>
+      </div>
+    </div>
+
+    <!-- ANSWERS -->
+    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:10px;margin-top:44px;">
+      <h2 class="bt" style="font-size:21px;font-weight:700;margin:0;">답변 <span class="mono" style="font-size:14px;font-weight:500;color:#7E868F;">3</span></h2>
+      <span class="mono" style="font-size:11px;color:#7E868F;">누구나 답할 수 있어요</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;">
+      <sc-for list="{{ answers }}" as="a" hint-placeholder-count="3">
+        <div style="{{ a.wrapStyle }}">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="{{ a.avatarStyle }}" class="{{ a.avatarClass }}">{{ a.initial }}</div>
+            <div style="flex:1;min-width:0;">
+              <div style="display:flex;align-items:center;gap:7px;"><span style="font-size:13.5px;font-weight:700;">{{ a.name }}</span><sc-if value="{{ a.official }}" hint-placeholder-val="{{ false }}"><span class="mono" style="font-size:8.5px;font-weight:600;color:#fff;background:#2348D6;border-radius:2px;padding:2px 6px;">운영사</span></sc-if></div>
+              <div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:1px;">{{ a.role }}</div>
+            </div>
+            <span class="mono" style="font-size:10.5px;color:#9BA3AB;">{{ a.time }}</span>
+          </div>
+          <div class="abody" style="margin-top:14px;">
+            <sc-for list="{{ a.paras }}" as="p" hint-placeholder-count="1"><p style="margin:0 0 12px;">{{ p }}</p></sc-for>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;margin-top:6px;">
+            <span style="display:flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:6px 12px;cursor:pointer;">도움돼요 <span class="mono">{{ a.helpful }}</span></span>
+            <span style="font-size:12px;font-weight:600;color:#7E868F;cursor:pointer;">답글</span>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- WRITE ANSWER -->
+    <div style="margin-top:36px;border:1px solid #E1E4E8;background:#fff;padding:20px;">
+      <div class="mono" style="font-size:10px;letter-spacing:.1em;color:#7E868F;">답변 기입</div>
+      <textarea placeholder="겪은 것을 한 줄씩. 근거가 되는 조문·사례가 있다면 함께 적어 주세요." style="width:100%;margin-top:10px;border:1px solid #E1E4E8;border-radius:3px;padding:13px;font-family:inherit;font-size:14px;line-height:1.7;color:#181B1E;min-height:110px;resize:vertical;outline:none;"></textarea>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;">
+        <label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#49505A;cursor:pointer;"><input type="checkbox" style="accent-color:#2348D6;width:15px;height:15px;"/>익명으로 답변</label>
+        <span style="font-size:13px;font-weight:700;color:#fff;background:#181B1E;padding:10px 22px;border-radius:3px;cursor:pointer;">답변 기입하기</span>
+      </div>
+    </div>
+  </div>
+
+  <footer style="background:#0F1113;color:#8A929B;">
+    <div style="max-width:1180px;margin:0 auto;padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <img src="assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"/>
+      <div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1500}}">
+class Component extends DCLogic {
+  renderVals(){
+    const navItems=[['홈',false],['콘텐츠',false],['실무 이야기',true],['자료실',false],['캘린더',false],['파인더',false]];
+    const answers=[
+      {official:true, name:'크레디뷰 리서치', role:'기업신용평가사 · 운영사', initial:'CR', time:'12분 전', helpful:42,
+        paras:[
+          '업무무관 가지급금 판단의 핵심은 \u2018대여의 업무 관련성\u2019입니다. 관계회사라는 사실만으로 곧바로 업무무관이 되지는 않지만, ① 대여의 사업상 필요성, ② 적정 이자의 수취, ③ 회수 계획의 구체성이 소명되지 않으면 세무상 업무무관으로 재구성될 수 있습니다.',
+          '가중평균차입이자율 이상으로 이자를 받고 계신다면 인정이자 이슈는 크지 않습니다. 다만 대여 규모가 자기자본 대비 과도하거나 회수가 장기 지연되면 지급이자 손금불산입 대상이 될 수 있으니, 이사회 결의서·금전소비대차 약정서·회수 이력을 함께 갖춰 두시길 권합니다.',
+          '거래처·관계회사의 상환 여력이 흔들리는 신호는 크레디뷰 기업모니터링에서 매주 추적해 알림으로 받아보실 수 있습니다.'
+        ]},
+      {official:false, name:'이세무', role:'세무사', initial:'이', time:'8분 전', helpful:9,
+        paras:[
+          '실무에서는 \u2018왜 이 시점에, 왜 이 회사에 빌려줬는가\u2019에 대한 사업상 이유를 문서로 남기는 게 가장 중요합니다. 이자율만 맞춰 두고 근거 서류가 없으면 조사에서 방어가 어렵습니다.',
+          '지분 40%면 특수관계가 명확하니, 시가(가중평균차입이자율) 적용과 이자 실제 수령 내역까지 꼭 챙기세요.'
+        ]},
+      {official:false, name:'익명 · 재무팀', role:'', initial:'익', time:'3분 전', helpful:4,
+        paras:[
+          '저희는 회수기한을 짧게(6개월 단위 갱신) 잡고 매 기말 회수 계획을 이사회에 보고하는 식으로 관리했더니 조사 때 큰 지적 없이 넘어갔습니다.'
+        ]},
+    ];
+    return {
+      nav: navItems.map(([label,on])=>({label,style:{display:'flex',alignItems:'center',height:'100%',padding:'0 12px',fontSize:'14px',whiteSpace:'nowrap',fontWeight:on?700:600,color:on?'#fff':'#9BA3AB',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),cursor:'pointer'}})),
+      answers: answers.map(a=>({...a,
+        wrapStyle:{padding:'22px '+(a.official?'20px':'2px'),borderBottom:'1px solid #E1E4E8',background:a.official?'#F5F7FE':'transparent',borderLeft:a.official?'2px solid #2348D6':'none'},
+        avatarStyle:{width:'36px',height:'36px',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:600,fontSize:a.official?'11px':'13px',flexShrink:0,background:a.official?'#EDF0FD':'#EEF0F2',color:a.official?'#2348D6':'#49505A'},
+        avatarClass:a.official?'mono':'bt',
+        role:a.role||'실무자'})),
+    };
+  }
+}
+</script>
+</body>
+</html>

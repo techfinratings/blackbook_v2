@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@1.3.9/dist/web/static/pretendard.css">
+<link href="https://fonts.googleapis.com/css2?family=Gowun+Batang:wght@400;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:"Pretendard Variable",Pretendard,sans-serif;background:#F7F8FA;color:#181B1E;-webkit-font-smoothing:antialiased;line-height:1.5;}
+  .bt{font-family:"Gowun Batang",serif;word-break:keep-all;}
+  .mono{font-family:"IBM Plex Mono",monospace;font-variant-numeric:tabular-nums;}
+  ::selection{background:#2348D6;color:#fff;}
+  a{color:inherit;text-decoration:none;}
+</style>
+</helmet>
+
+<div style="position:fixed;top:0;bottom:0;right:0;width:22px;z-index:5;background:#EEF0F2;border-left:1px solid #E1E4E8;background-image:repeating-linear-gradient(90deg,rgba(24,27,30,.045) 0 1px,transparent 1px 4px);"></div>
+
+<div data-screen-label="콘텐츠 목록" style="padding-right:22px;">
+  <div style="background:#181B1E;border-bottom:1.5px solid #2348D6;position:sticky;top:0;z-index:40;">
+    <div style="max-width:1180px;margin:0 auto;padding:0 40px;height:64px;display:flex;align-items:center;gap:30px;">
+      <img src="assets/logo_white.png" style="height:26px;display:block;" alt="BLACK BOOK"/>
+      <div style="display:flex;align-items:center;gap:3px;height:100%;">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6"><span style="{{ n.style }}">{{ n.label }}</span></sc-for>
+      </div>
+      <span style="margin-left:auto;font-size:13px;font-weight:600;color:#D2D7DD;cursor:pointer;">로그인</span>
+      <span style="font-size:13px;font-weight:700;color:#fff;background:#2348D6;padding:8px 16px;border-radius:3px;cursor:pointer;">회원가입</span>
+    </div>
+  </div>
+
+  <div style="max-width:1180px;margin:0 auto;padding:40px 40px 0;">
+    <div class="mono" style="font-size:11.5px;letter-spacing:.1em;color:#2348D6;">INDEX 01 — 콘텐츠</div>
+    <h1 class="bt" style="font-size:38px;font-weight:700;letter-spacing:-.01em;margin:12px 0 0;">콘텐츠</h1>
+    <p style="font-size:15px;color:#49505A;margin:9px 0 0;max-width:660px;line-height:1.65;word-break:keep-all;">크레디뷰가 직접 쓴 <b style="color:#181B1E;font-weight:700;">아티클</b>과, 현업 전문가가 매달 한 편씩 채우는 <b style="color:#181B1E;font-weight:700;">전문가 기고</b>.<br>실무에서 막힐 때 가장 먼저 펼치는 두 갈래의 기록.</p>
+
+    <div style="display:flex;align-items:flex-end;gap:0;border-bottom:1.5px solid #181B1E;margin-top:26px;">
+      <sc-for list="{{ segTabs }}" as="s" hint-placeholder-count="2">
+        <div onClick="{{ s.set }}" style="{{ s.style }}">{{ s.label }}<span class="mono" style="{{ s.countStyle }}">{{ s.count }}</span></div>
+      </sc-for>
+    </div>
+  </div>
+
+  <!-- ARTICLE -->
+  <sc-if value="{{ isArticle }}" hint-placeholder-val="{{ true }}">
+  <div style="max-width:1180px;margin:0 auto;padding:30px 40px 72px;">
+
+    <a href="2-2. 콘텐츠 상세.dc.html" style="display:grid;grid-template-columns:1.5fr .95fr;gap:34px;align-items:center;cursor:pointer;padding-bottom:34px;border-bottom:1px solid #E1E4E8;">
+      <div style="width:100%;aspect-ratio:16/9;border-radius:12px;background:#2348D6;position:relative;overflow:hidden;">
+        <svg viewBox="0 0 760 428" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%"><g stroke="rgba(255,255,255,.5)" stroke-width="3" fill="none"><path d="M40 340 L180 288 L320 306 L460 176 L600 224 L730 104"/></g><g fill="#fff"><circle cx="180" cy="288" r="6"/><circle cx="460" cy="176" r="6"/><circle cx="730" cy="104" r="6"/></g><g fill="rgba(255,255,255,.14)"><rect x="60" y="352" width="44" height="64" rx="4"/><rect x="126" y="326" width="44" height="90" rx="4"/><rect x="192" y="372" width="44" height="44" rx="4"/></g></svg>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="mono" style="font-size:9.5px;font-weight:600;letter-spacing:.06em;color:#181B1E;border:1px solid #181B1E;border-radius:3px;padding:3px 8px;">아티클</span>
+          <span class="mono" style="font-size:11px;letter-spacing:.06em;color:#C2611B;">세무 · 재무</span>
+        </div>
+        <h2 class="bt" style="font-size:29px;line-height:1.36;font-weight:700;margin:14px 0 0;">부채비율만 보던 여신 심사, 현금흐름까지 읽는 법</h2>
+        <p style="font-size:14.5px;color:#49505A;margin:12px 0 0;line-height:1.65;">재무제표 세 장으로 거래처의 상환 능력을 가늠하는 실무 체크포인트. 숫자 뒤에 숨은 신호를 읽는 크레디뷰 리서치의 관점.</p>
+        <div class="mono" style="font-size:11.5px;color:#7E868F;margin-top:16px;">크레디뷰 리서치 · 8분 읽기 · 조회 1,240</div>
+      </div>
+    </a>
+
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="7"><span onClick="{{ f.set }}" style="{{ f.style }}">{{ f.label }}</span></sc-for>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:28px 26px;margin-top:26px;">
+      <sc-for list="{{ articles }}" as="a" hint-placeholder-count="6">
+        <a href="2-2. 콘텐츠 상세.dc.html" style="cursor:pointer;display:block;">
+          <div style="width:100%;aspect-ratio:16/10;border-radius:10px;border:1px solid #E1E4E8;position:relative;overflow:hidden;background-image:repeating-linear-gradient(45deg,#EEF0F2 0 14px,#E4E8EC 14px 28px);">
+            <span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;letter-spacing:.12em;color:#9CA4AC;">COVER</span>
+          </div>
+          <div class="mono" style="font-size:10px;letter-spacing:.06em;margin-top:13px;color:{{ a.col }};">{{ a.cat }}</div>
+          <h3 class="bt" style="font-size:18px;line-height:1.44;font-weight:700;margin:7px 0 0;">{{ a.title }}</h3>
+          <div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:10px;">{{ a.meta }}</div>
+        </a>
+      </sc-for>
+    </div>
+
+    <div style="display:flex;justify-content:center;margin-top:44px;">
+      <span style="font-size:13px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:11px 26px;cursor:pointer;">더 펼치기 ↓</span>
+    </div>
+  </div>
+  </sc-if>
+
+  <!-- CONTRIBUTION -->
+  <sc-if value="{{ isContrib }}" hint-placeholder-val="{{ false }}">
+  <div style="max-width:1180px;margin:0 auto;padding:30px 40px 72px;">
+
+    <a href="2-2. 콘텐츠 상세.dc.html" style="display:grid;grid-template-columns:.62fr 1fr;gap:38px;align-items:center;cursor:pointer;padding-bottom:34px;border-bottom:1px solid #E1E4E8;">
+      <div style="width:100%;aspect-ratio:4/5;border-radius:12px;border:1px solid #E1E4E8;position:relative;overflow:hidden;background-image:repeating-linear-gradient(45deg,#EEF0F2 0 14px,#E4E8EC 14px 28px);">
+        <span class="mono" style="position:absolute;left:14px;top:14px;font-size:10px;font-weight:600;color:#2348D6;background:#F7F8FA;padding:4px 9px;border-radius:6px;">이달의 기고</span>
+        <span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;letter-spacing:.12em;color:#9CA4AC;">PORTRAIT</span>
+      </div>
+      <div>
+        <div class="mono" style="font-size:11px;letter-spacing:.1em;color:#2348D6;">VOL. 06 · 2025년 6월 · 전문가 기고</div>
+        <h2 class="bt" style="font-size:30px;line-height:1.4;font-weight:700;margin:14px 0 0;">"재무팀은 비용 센터가 아니라,<br>의사결정의 마지막 검산이다"</h2>
+        <p style="font-size:14.5px;color:#49505A;margin:14px 0 0;line-height:1.65;">숫자를 닫는 사람에서 판단을 여는 사람으로. 상장사 재무를 30년 지킨 현업이 본 재무 조직의 역할 변화.</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:20px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:#EDF0FD;color:#2348D6;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">김</div>
+          <div><div style="font-size:13.5px;font-weight:700;">김재무</div><div class="mono" style="font-size:11px;color:#7E868F;margin-top:1px;">前 상장사 CFO</div></div>
+        </div>
+      </div>
+    </a>
+
+    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #181B1E;padding-bottom:10px;margin-top:44px;">
+      <h3 class="bt" style="font-size:20px;font-weight:700;margin:0;">지난 기고</h3>
+      <span class="mono" style="font-size:11px;color:#7E868F;">매달 1회 · 한 편씩</span>
+    </div>
+    <div style="display:flex;flex-direction:column;">
+      <sc-for list="{{ contribs }}" as="c" hint-placeholder-count="4">
+        <a href="2-2. 콘텐츠 상세.dc.html" style="display:grid;grid-template-columns:96px 44px 1fr auto;gap:20px;align-items:center;padding:20px 2px;border-bottom:1px solid #E1E4E8;cursor:pointer;">
+          <div><div class="mono" style="font-size:12.5px;font-weight:600;color:#181B1E;">{{ c.vol }}</div><div class="mono" style="font-size:10px;color:#7E868F;margin-top:2px;">{{ c.month }}</div></div>
+          <div style="width:44px;height:44px;border-radius:50%;background:#EEF0F2;color:#7E868F;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;" class="bt">{{ c.initial }}</div>
+          <div style="min-width:0;"><h4 class="bt" style="font-size:18px;line-height:1.42;font-weight:700;margin:0;">{{ c.title }}</h4><div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:6px;">{{ c.expert }} · {{ c.role }}</div></div>
+          <span style="font-size:18px;color:#C2C9D0;">→</span>
+        </a>
+      </sc-for>
+    </div>
+  </div>
+  </sc-if>
+
+  <footer style="background:#0F1113;color:#8A929B;">
+    <div style="max-width:1180px;margin:0 auto;padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;">
+      <img src="assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"/>
+      <div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div>
+    </div>
+  </footer>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1180,&quot;height&quot;:1580}}">
+class Component extends DCLogic {
+  state = { seg:'article', filter:'전체' };
+  renderVals(){
+    const col={세무:'#C2611B',회계:'#1F8455',법령:'#6A3FC0',재무:'#2348D6',경영:'#181B1E',정책자금:'#2348D6',실무:'#181B1E'};
+    const navItems=[['홈',false],['콘텐츠',true],['실무 이야기',false],['자료실',false],['캘린더',false],['파인더',false]];
+    const seg=this.state.seg, filter=this.state.filter;
+
+    const articleData=[
+      {cat:'경영', title:'런웨이가 6개월 남았다는 신호를 재무팀이 먼저 잡는 5가지 지표', read:'6분', views:'870'},
+      {cat:'회계', title:'리스 회계처리, 사용권자산 감가 기준을 둘러싼 실무 쟁점', read:'7분', views:'640'},
+      {cat:'세무', title:'2025년 달라지는 법인세 신고, 놓치기 쉬운 항목', read:'5분', views:'1,510'},
+      {cat:'법령', title:'중대재해처벌법 개정, 재무·관리팀이 확인할 세 가지', read:'6분', views:'520'},
+      {cat:'재무', title:'운전자본을 30일 줄이면 이자비용은 얼마나 빠지나', read:'8분', views:'980'},
+      {cat:'정책자금', title:'2025년 하반기 정책자금 캘린더 — 놓치기 쉬운 신청 마감', read:'4분', views:'1,120'},
+    ];
+    const filters=['전체','세무','회계','법령','재무','경영','정책자금'];
+    const shown=articleData.filter(a=>filter==='전체'||a.cat===filter);
+
+    const contribData=[
+      {vol:'VOL. 05', month:'2025년 5월', expert:'이세정', role:'세무사 · 세정회계법인', initial:'이', title:'가업승계 증여특례, 요건 하나를 놓치면 세금이 세 배가 된다'},
+      {vol:'VOL. 04', month:'2025년 4월', expert:'박회계', role:'공인회계사', initial:'박', title:'중소기업 외부감사 대상 확대, 준비는 1년 전부터 시작한다'},
+      {vol:'VOL. 03', month:'2025년 3월', expert:'정법무', role:'변호사 · 노동전문', initial:'정', title:'주 52시간과 유연근무, 급여 설계에서 놓치는 지점'},
+      {vol:'VOL. 02', month:'2025년 2월', expert:'최여신', role:'前 은행 여신심사역', initial:'최', title:'심사역은 재무제표에서 무엇을 가장 먼저 의심하나'},
+    ];
+
+    const tab=(k,label,count)=>{ const on=seg===k; return {label,count:'· '+count, set:()=>this.setState({seg:k,filter:'전체'}),
+      style:{display:'flex',alignItems:'center',gap:'8px',padding:'0 4px 13px',marginRight:'30px',fontSize:'17px',fontWeight:on?700:600,fontFamily:'"Gowun Batang",serif',color:on?'#181B1E':'#9BA3AB',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),cursor:'pointer',marginBottom:'-1.5px'},
+      countStyle:{fontSize:'11px',fontWeight:500,color:on?'#2348D6':'#B4BBC2'} }; };
+
+    return {
+      nav: navItems.map(([label,on])=>({label,style:{display:'flex',alignItems:'center',height:'100%',padding:'0 12px',fontSize:'14px',whiteSpace:'nowrap',fontWeight:on?700:600,color:on?'#fff':'#9BA3AB',borderBottom:'2px solid '+(on?'#2348D6':'transparent'),cursor:'pointer'}})),
+      segTabs: [tab('article','아티클',7), tab('contrib','전문가 기고',5)],
+      isArticle: seg==='article',
+      isContrib: seg==='contrib',
+      filters: filters.map(f=>{ const on=filter===f; return {label:f,set:()=>this.setState({filter:f}),
+        style:{fontSize:'12.5px',fontWeight:on?700:600,color:on?'#fff':'#49505A',background:on?'#181B1E':'transparent',border:'1px solid '+(on?'#181B1E':'#D8DCE0'),borderRadius:'3px',padding:'7px 15px',cursor:'pointer',userSelect:'none'}}; }),
+      articles: shown.map(a=>({cat:a.cat, col:col[a.cat]||'#181B1E', title:a.title, meta:'크레디뷰 리서치 · '+a.read+' 읽기 · 조회 '+a.views})),
+      contribs: contribData,
+    };
+  }
+}
+</script>
+</body>
+</html>

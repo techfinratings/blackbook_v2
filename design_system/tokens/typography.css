@@ -1,0 +1,61 @@
+/* ============================================================
+   TYPOGRAPHY — BLACK BOOK / THE LEDGER
+   Three voices:
+     · Gowun Batang (batang serif) — display & editorial headlines
+     · Pretendard (sans)           — UI, body copy, labels
+     · IBM Plex Mono               — data, figures, eyebrows, meta
+   Tabular figures everywhere numbers appear (it is a ledger).
+   ============================================================ */
+:root {
+  /* — Families — */
+  --font-display: "Gowun Batang", serif;
+  --font-sans: "Pretendard Variable", Pretendard, -apple-system, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+
+  /* — Display / serif scale (Gowun Batang) — */
+  --type-display-xl: 50px;  /* hero cover line            */
+  --type-display-l:  34px;  /* banner / big statement     */
+  --type-h2:         23px;  /* section header             */
+  --type-h3:         22px;  /* ledger entry / article     */
+  --type-h4:         16px;  /* Q&A question               */
+
+  /* — Body / UI scale (Pretendard) — */
+  --type-body-lg: 16px;
+  --type-body:    14px;
+  --type-sm:      13px;
+  --type-xs:      12px;
+
+  /* — Data / mono scale (IBM Plex Mono) — */
+  --type-figure:  19px;     /* stat figures               */
+  --type-eyebrow: 12px;     /* INDEX 00 — eyebrow         */
+  --type-label:   10.5px;   /* meta · masthead · file size */
+
+  /* — Weights — */
+  --weight-display: 700;    /* Gowun Batang bold           */
+  --weight-display-reg: 400;
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  --weight-black: 800;      /* Pretendard heavy UI accents */
+
+  /* — Line-heights — */
+  --leading-display: 1.14;
+  --leading-heading: 1.34;
+  --leading-body: 1.7;
+  --leading-tight: 1.4;
+
+  /* — Tracking — */
+  --tracking-display: -0.01em;
+  --tracking-eyebrow: 0.14em;
+  --tracking-label: 0.1em;
+  --tracking-mono-wide: 0.18em;
+
+  /* — Numerics: always tabular — */
+  --font-feature-figures: "tnum";
+}
+
+/* Optional helper classes (consumers may use tokens directly instead) */
+.bb-display { font-family: var(--font-display); font-weight: var(--weight-display); line-height: var(--leading-display); letter-spacing: var(--tracking-display); }
+.bb-mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.bb-eyebrow { font-family: var(--font-mono); font-size: var(--type-eyebrow); letter-spacing: var(--tracking-eyebrow); color: var(--accent); }

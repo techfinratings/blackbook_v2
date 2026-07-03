@@ -1,0 +1,55 @@
+/* ============================================================
+   SPACING · RADII · BORDERS · TEXTURE · ELEVATION
+   The system is FLAT and SHARP: paper sits directly on paper,
+   separated by ink rules — not by shadowed floating cards.
+   Corners are near-square (2–3px); the folder index tab is the
+   one rounded form (9px top). Shadow appears only on the single
+   floating utility (the calculator slip).
+   ============================================================ */
+:root {
+  /* — Spacing scale (4px base) — */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+
+  /* — Layout — */
+  --container-max: 1180px;
+  --container-pad: 40px;
+  --fore-edge-w: 22px;     /* fixed book fore-edge strip (right) */
+
+  /* — Radii (sharp ledger) — */
+  --radius-xs: 2px;        /* tags · buttons · tabs-of-data     */
+  --radius-sm: 3px;        /* CTAs · floating slip              */
+  --radius-tab: 9px 9px 0 0; /* folder index tab                */
+  --radius-pill: 999px;    /* rarely used (status dots)         */
+
+  /* — Border widths — */
+  --border-hair-w: 1px;
+  --border-strong-w: 1.5px;
+
+  /* — Elevation (used sparingly) — */
+  --shadow-float: 0 16px 40px rgba(15, 17, 19, 0.26); /* calc slip, dialogs */
+  --shadow-none: none;
+
+  /* — Texture — */
+  /* Grain overlay: fixed full-bleed, multiply, ~7.5% opacity.       */
+  --grain-url: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.82' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+  --grain-opacity: 0.075;
+
+  /* Ledger ruling: faint horizontal lines on the page, every 36px.  */
+  --ledger-rule: repeating-linear-gradient(180deg, transparent 0 35px, rgba(24,27,30,0.045) 35px 36px);
+
+  /* Fore-edge: the stacked page edges down the right margin.         */
+  --fore-edge: repeating-linear-gradient(90deg, rgba(24,27,30,0.045) 0 1px, transparent 1px 4px);
+}
+
+/* Texture utilities (optional) */
+.bb-grain { position: fixed; inset: 0; pointer-events: none; z-index: 9990; opacity: var(--grain-opacity); mix-blend-mode: multiply; background-image: var(--grain-url); background-size: 150px; }
+.bb-ledger { background-color: var(--bg-page); background-image: var(--ledger-rule); }
