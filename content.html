@@ -84,6 +84,7 @@
 
 <script>
 (function () {
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); };
   var COL = { 세무:'#C2611B', 회계:'#1F8455', 법령:'#6A3FC0', 재무:'#2348D6', 경영:'#181B1E', 정책자금:'#2348D6' };
   var ARTICLES = [
     { cat:'경영', title:'런웨이가 6개월 남았다는 신호를 재무팀이 먼저 잡는 5가지 지표', read:'6분', views:'870' },
@@ -140,6 +141,21 @@
   });
 
   renderFilters(); renderGrid();
+
+  // 실데이터: Inblog 포스트로 아티클 그리드 교체 (INBLOG_API_KEY 없으면 샘플 유지)
+  fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d || !d.posts || !d.posts.length) return;
+    fWrap.style.display = 'none'; // 포스트에는 카테고리 필드가 없어 필터 숨김
+    grid.innerHTML = d.posts.map(function (p) {
+      var cover = p.image
+        ? '<div class="cover" style="aspect-ratio:16/10;background-image:none;"><img src="' + esc(p.image) + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>'
+        : '<div class="cover" style="aspect-ratio:16/10;"><span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;letter-spacing:.12em;color:#9CA4AC;">COVER</span></div>';
+      return '<a href="/content/detail?slug=' + encodeURIComponent(p.slug || p.id) + '" style="display:block;cursor:pointer;">' + cover +
+        '<div class="mono" style="font-size:10px;letter-spacing:.06em;margin-top:13px;color:#2348D6;">아티클</div>' +
+        '<h3 class="bt" style="font-size:18px;line-height:1.44;font-weight:700;margin:7px 0 0;">' + esc(p.title) + '</h3>' +
+        '<div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:10px;">크레디뷰 리서치 · ' + esc(p.date || '') + '</div></a>';
+    }).join('');
+  }).catch(function () {});
 })();
 </script>
 </body>

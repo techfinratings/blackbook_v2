@@ -173,9 +173,27 @@
     });
   }
 
+  /* ---------- live 자료실 module (top recent files) ---------- */
+  function initFiles() {
+    var wrap = document.querySelector('[data-home-files]');
+    if (!wrap || !window.BBArchive) return;
+    var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); };
+    wrap.innerHTML = '<div class="mono" style="font-size:11.5px;color:#7E868F;padding:10px 0;">자료 불러오는 중…</div>';
+    BBArchive.load().then(function (files) {
+      if (!files.length) { wrap.innerHTML = ''; return; }
+      var top = files.slice().sort(function (a, b) { return b._dk - a._dk || b.dl - a.dl; }).slice(0, 4);
+      wrap.innerHTML = top.map(function (f) {
+        return '<a class="file-row" href="/archive"><span class="file-chip mono" style="background:' + BBArchive.typeColor(f.type) + ';">' + esc(f.type || 'FILE') + '</span>' +
+          '<span style="font-size:13.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.name) + '</span>' +
+          '<span class="mono" style="font-size:11px;color:var(--ink-3);">' + esc(f.date || '') + '</span></a>';
+      }).join('');
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initContentTabs();
     initQA();
     initSchedule();
+    initFiles();
   });
 })();
