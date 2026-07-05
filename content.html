@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>콘텐츠 — BLACK BOOK</title>
+<meta name="description" content="크레디뷰가 직접 쓴 아티클과 현업 전문가가 매달 한 편씩 채우는 전문가 기고.">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+  .hero-article{display:grid;grid-template-columns:1.5fr .95fr;gap:34px;align-items:center;cursor:pointer;padding-bottom:34px;border-bottom:1px solid var(--rule-hair);}
+  .art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:28px 26px;margin-top:26px;}
+  .cover{width:100%;border-radius:10px;border:1px solid var(--rule-hair);position:relative;overflow:hidden;
+    background-image:repeating-linear-gradient(45deg,#EEF0F2 0 14px,#E4E8EC 14px 28px);}
+  .badge-ink{font-family:var(--font-mono);font-size:9.5px;font-weight:600;letter-spacing:.06em;color:var(--ink-1);border:1px solid var(--ink-1);border-radius:3px;padding:3px 8px;}
+  .contrib-row{display:grid;grid-template-columns:96px 44px 1fr auto;gap:20px;align-items:center;padding:20px 2px;border-bottom:1px solid var(--rule-hair);cursor:pointer;}
+  @media (max-width:820px){.hero-article,.contrib-row{grid-template-columns:1fr;}.art-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:560px){.art-grid{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="fore-edge"></div>
+<div class="page">
+  <header class="gnb"><div class="wrap gnb-inner">
+    <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
+    <nav class="gnb-nav"><a href="/">홈</a><a href="/content" class="active">콘텐츠</a><a href="/community/talk">실무 이야기</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder">파인더</a></nav>
+    <span class="gnb-login">로그인</span><span class="gnb-join">회원가입</span>
+  </div></header>
+
+  <div class="wrap" style="padding-top:40px;">
+    <div class="eyebrow">INDEX 01 — 콘텐츠</div>
+    <h1 class="page-title" style="font-size:38px;margin-top:12px;">콘텐츠</h1>
+    <p class="page-intro" style="max-width:660px;margin:9px 0 0;">크레디뷰가 직접 쓴 <b style="color:var(--ink-1);">아티클</b>과, 현업 전문가가 매달 한 편씩 채우는 <b style="color:var(--ink-1);">전문가 기고</b>.<br>실무에서 막힐 때 가장 먼저 펼치는 두 갈래의 기록.</p>
+    <div class="tabbar" id="seg" style="margin-top:26px;">
+      <button data-seg="article" class="on">아티클<span class="cnt">· 7</span></button>
+      <button data-seg="contrib">전문가 기고<span class="cnt">· 5</span></button>
+    </div>
+  </div>
+
+  <!-- ARTICLE -->
+  <div class="wrap" data-view="article" style="padding-top:30px;padding-bottom:72px;">
+    <a class="hero-article" href="/content/detail">
+      <div style="width:100%;aspect-ratio:16/9;border-radius:12px;background:var(--blue);position:relative;overflow:hidden;">
+        <svg viewBox="0 0 760 428" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%"><g stroke="rgba(255,255,255,.5)" stroke-width="3" fill="none"><path d="M40 340 L180 288 L320 306 L460 176 L600 224 L730 104"/></g><g fill="#fff"><circle cx="180" cy="288" r="6"/><circle cx="460" cy="176" r="6"/><circle cx="730" cy="104" r="6"/></g><g fill="rgba(255,255,255,.14)"><rect x="60" y="352" width="44" height="64" rx="4"/><rect x="126" y="326" width="44" height="90" rx="4"/><rect x="192" y="372" width="44" height="44" rx="4"/></g></svg>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge-ink">아티클</span>
+          <span class="mono" style="font-size:11px;letter-spacing:.06em;color:var(--cat-tax);">세무 · 재무</span>
+        </div>
+        <h2 class="bt" style="font-size:29px;line-height:1.36;font-weight:700;margin:14px 0 0;">부채비율만 보던 여신 심사, 현금흐름까지 읽는 법</h2>
+        <p style="font-size:14.5px;color:var(--ink-2);margin:12px 0 0;line-height:1.65;">재무제표 세 장으로 거래처의 상환 능력을 가늠하는 실무 체크포인트. 숫자 뒤에 숨은 신호를 읽는 크레디뷰 리서치의 관점.</p>
+        <div class="mono" style="font-size:11.5px;color:var(--ink-3);margin-top:16px;">크레디뷰 리서치 · 8분 읽기 · 조회 1,240</div>
+      </div>
+    </a>
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;" id="filters"></div>
+    <div class="art-grid" id="artGrid"></div>
+    <div style="display:flex;justify-content:center;margin-top:44px;"><button class="btn-outline">더 펼치기 ↓</button></div>
+  </div>
+
+  <!-- CONTRIBUTION -->
+  <div class="wrap" data-view="contrib" style="display:none;padding-top:30px;padding-bottom:72px;">
+    <a class="hero-article" href="/content/detail" style="grid-template-columns:.62fr 1fr;">
+      <div style="width:100%;aspect-ratio:4/5;border-radius:12px;border:1px solid var(--rule-hair);position:relative;overflow:hidden;background-image:repeating-linear-gradient(45deg,#EEF0F2 0 14px,#E4E8EC 14px 28px);">
+        <span class="mono" style="position:absolute;left:14px;top:14px;font-size:10px;font-weight:600;color:var(--blue);background:var(--paper-1);padding:4px 9px;border-radius:6px;">이달의 기고</span>
+        <span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;letter-spacing:.12em;color:#9CA4AC;">PORTRAIT</span>
+      </div>
+      <div>
+        <div class="mono" style="font-size:11px;letter-spacing:.1em;color:var(--blue);">VOL. 06 · 2025년 6월 · 전문가 기고</div>
+        <h2 class="bt" style="font-size:30px;line-height:1.4;font-weight:700;margin:14px 0 0;">"재무팀은 비용 센터가 아니라,<br>의사결정의 마지막 검산이다"</h2>
+        <p style="font-size:14.5px;color:var(--ink-2);margin:14px 0 0;line-height:1.65;">숫자를 닫는 사람에서 판단을 여는 사람으로. 상장사 재무를 30년 지킨 현업이 본 재무 조직의 역할 변화.</p>
+        <div style="display:flex;align-items:center;gap:12px;margin-top:20px;">
+          <div style="width:38px;height:38px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">김</div>
+          <div><div style="font-size:13.5px;font-weight:700;">김재무</div><div class="mono" style="font-size:11px;color:var(--ink-3);margin-top:1px;">前 상장사 CFO</div></div>
+        </div>
+      </div>
+    </a>
+    <div class="sec-head" style="margin-top:44px;padding-bottom:10px;"><h2 class="bt" style="font-size:20px;">지난 기고</h2><span class="mono" style="font-size:11px;color:var(--ink-3);">매달 1회 · 한 편씩</span></div>
+    <div id="contribList"></div>
+  </div>
+
+  <footer class="footer"><div class="wrap" style="padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;"><img src="/assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"><div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div></div></footer>
+</div>
+
+<script>
+(function () {
+  var COL = { 세무:'#C2611B', 회계:'#1F8455', 법령:'#6A3FC0', 재무:'#2348D6', 경영:'#181B1E', 정책자금:'#2348D6' };
+  var ARTICLES = [
+    { cat:'경영', title:'런웨이가 6개월 남았다는 신호를 재무팀이 먼저 잡는 5가지 지표', read:'6분', views:'870' },
+    { cat:'회계', title:'리스 회계처리, 사용권자산 감가 기준을 둘러싼 실무 쟁점', read:'7분', views:'640' },
+    { cat:'세무', title:'2025년 달라지는 법인세 신고, 놓치기 쉬운 항목', read:'5분', views:'1,510' },
+    { cat:'법령', title:'중대재해처벌법 개정, 재무·관리팀이 확인할 세 가지', read:'6분', views:'520' },
+    { cat:'재무', title:'운전자본을 30일 줄이면 이자비용은 얼마나 빠지나', read:'8분', views:'980' },
+    { cat:'정책자금', title:'2025년 하반기 정책자금 캘린더 — 놓치기 쉬운 신청 마감', read:'4분', views:'1,120' }
+  ];
+  var CONTRIBS = [
+    { vol:'VOL. 05', month:'2025년 5월', expert:'이세정', role:'세무사 · 세정회계법인', initial:'이', title:'가업승계 증여특례, 요건 하나를 놓치면 세금이 세 배가 된다' },
+    { vol:'VOL. 04', month:'2025년 4월', expert:'박회계', role:'공인회계사', initial:'박', title:'중소기업 외부감사 대상 확대, 준비는 1년 전부터 시작한다' },
+    { vol:'VOL. 03', month:'2025년 3월', expert:'정법무', role:'변호사 · 노동전문', initial:'정', title:'주 52시간과 유연근무, 급여 설계에서 놓치는 지점' },
+    { vol:'VOL. 02', month:'2025년 2월', expert:'최여신', role:'前 은행 여신심사역', initial:'최', title:'심사역은 재무제표에서 무엇을 가장 먼저 의심하나' }
+  ];
+  var FILTERS = ['전체','세무','회계','법령','재무','경영','정책자금'];
+  var filter = '전체';
+
+  var grid = document.getElementById('artGrid');
+  var fWrap = document.getElementById('filters');
+
+  function renderFilters() {
+    fWrap.innerHTML = FILTERS.map(function (f) {
+      return '<button class="filter' + (f === filter ? ' on' : '') + '" data-f="' + f + '">' + f + '</button>';
+    }).join('');
+  }
+  function renderGrid() {
+    var list = ARTICLES.filter(function (a) { return filter === '전체' || a.cat === filter; });
+    grid.innerHTML = list.map(function (a) {
+      return '<a href="/content/detail" style="display:block;cursor:pointer;">' +
+        '<div class="cover" style="aspect-ratio:16/10;"><span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;letter-spacing:.12em;color:#9CA4AC;">COVER</span></div>' +
+        '<div class="mono" style="font-size:10px;letter-spacing:.06em;margin-top:13px;color:' + (COL[a.cat] || '#181B1E') + ';">' + a.cat + '</div>' +
+        '<h3 class="bt" style="font-size:18px;line-height:1.44;font-weight:700;margin:7px 0 0;">' + a.title + '</h3>' +
+        '<div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:10px;">크레디뷰 리서치 · ' + a.read + ' 읽기 · 조회 ' + a.views + '</div></a>';
+    }).join('') || '<div class="mono" style="color:#7E868F;padding:20px 0;">해당 카테고리 글이 없습니다.</div>';
+  }
+  document.getElementById('contribList').innerHTML = CONTRIBS.map(function (c) {
+    return '<a class="contrib-row" href="/content/detail">' +
+      '<div><div class="mono" style="font-size:12.5px;font-weight:600;">' + c.vol + '</div><div class="mono" style="font-size:10px;color:#7E868F;margin-top:2px;">' + c.month + '</div></div>' +
+      '<div class="bt" style="width:44px;height:44px;border-radius:50%;background:#EEF0F2;color:#7E868F;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">' + c.initial + '</div>' +
+      '<div style="min-width:0;"><h4 class="bt" style="font-size:18px;line-height:1.42;font-weight:700;margin:0;">' + c.title + '</h4><div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:6px;">' + c.expert + ' · ' + c.role + '</div></div>' +
+      '<span style="font-size:18px;color:#C2C9D0;">→</span></a>';
+  }).join('');
+
+  fWrap.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-f]'); if (!b) return;
+    filter = b.getAttribute('data-f'); renderFilters(); renderGrid();
+  });
+  document.getElementById('seg').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-seg]'); if (!b) return;
+    var k = b.getAttribute('data-seg');
+    document.querySelectorAll('#seg button').forEach(function (x) { x.classList.toggle('on', x === b); });
+    document.querySelectorAll('[data-view]').forEach(function (v) { v.style.display = v.getAttribute('data-view') === k ? '' : 'none'; });
+  });
+
+  renderFilters(); renderGrid();
+})();
+</script>
+</body>
+</html>

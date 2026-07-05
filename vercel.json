@@ -12,6 +12,7 @@
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
     { "src": "/archive", "dest": "/archive.html" },
     { "src": "/calendar", "dest": "/calendar.html" },
+    { "src": "/content/detail", "dest": "/content-detail.html" },
     { "src": "/content", "dest": "/content.html" },
     { "src": "/community/talk", "dest": "/community-talk.html" },
     { "src": "/community/qna", "dest": "/community-qna.html" },

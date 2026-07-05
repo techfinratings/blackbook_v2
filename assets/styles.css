@@ -96,7 +96,47 @@ button{font-family:inherit;}
 /* — Utility — */
 .card{background:var(--paper-0);border:1px solid var(--rule-hair);border-radius:14px;box-shadow:var(--shadow-card);}
 
+/* — Page header (INDEX eyebrow + serif title) — */
+.eyebrow{font-family:var(--font-mono);font-size:11.5px;letter-spacing:.1em;color:var(--blue);}
+.page-title{font-family:var(--font-display);font-weight:700;letter-spacing:-.01em;margin:0;word-break:keep-all;}
+.page-intro{font-size:15px;color:var(--ink-2);line-height:1.65;word-break:keep-all;}
+
+/* — Serif underline tabs (아티클/전문가 기고, 최신/인기, 요즘 뜨는/새 기록) — */
+.tabbar{display:flex;align-items:flex-end;border-bottom:1.5px solid var(--ink-1);}
+.tabbar button{font-family:var(--font-display);font-size:16px;font-weight:600;color:#9BA3AB;
+  padding:0 2px 12px;margin-right:28px;margin-bottom:-1.5px;border:0;background:none;cursor:pointer;
+  border-bottom:2px solid transparent;display:flex;align-items:center;gap:8px;}
+.tabbar button.on{font-weight:700;color:var(--ink-1);border-bottom-color:var(--blue);}
+.tabbar button .cnt{font-family:var(--font-mono);font-size:11px;font-weight:500;color:#B4BBC2;}
+.tabbar button.on .cnt{color:var(--blue);}
+
+/* — Category filter chips (ink-fill when active) — */
+.filter{font-size:12.5px;font-weight:600;color:var(--ink-2);background:none;
+  border:1px solid #D8DCE0;border-radius:3px;padding:7px 15px;cursor:pointer;user-select:none;}
+.filter.on{font-weight:700;color:#fff;background:var(--ink-1);border-color:var(--ink-1);}
+
+/* — Sidebar cards — */
+.side-card{border:1px solid var(--rule-hair);background:#fff;}
+.side-cta{background:var(--ink-1);color:var(--paper-1);padding:22px 20px;}
+.side-cta .btn{display:block;text-align:center;background:var(--blue);color:#fff;font-size:13px;font-weight:700;padding:11px;cursor:pointer;}
+.side-cta .btn:hover{background:var(--blue-deep);}
+
+/* — Outline pill button — */
+.btn-outline{font-size:13px;font-weight:600;color:var(--ink-2);border:1px solid #D8DCE0;
+  border-radius:3px;padding:11px 26px;cursor:pointer;background:none;}
+.btn-outline:hover{border-color:var(--ink-3);}
+
+/* — Modal — */
+.modal-backdrop{position:fixed;inset:0;z-index:100;background:rgba(15,17,19,.55);
+  display:flex;align-items:flex-start;justify-content:center;padding:64px 20px;overflow-y:auto;}
+.modal-dialog{width:100%;max-width:620px;background:var(--paper-1);border:1px solid var(--ink-1);
+  border-radius:8px;overflow:hidden;box-shadow:0 24px 70px rgba(0,0,0,.32);}
+.field{width:100%;border:1px solid #D8DCE0;border-radius:3px;padding:13px 14px;font-family:inherit;
+  font-size:15px;color:var(--ink-1);outline:none;}
+.field:focus{border-color:var(--blue);}
+
 @media (max-width:820px){
   .wrap{padding:0 20px;}
   .gnb-nav{display:none;}
+  .split{grid-template-columns:1fr !important;}
 }
