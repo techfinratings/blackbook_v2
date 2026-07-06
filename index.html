@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BLACK BOOK — 재무·회계 실무자 커뮤니티</title>
+<meta name="description" content="재무·회계 실무자가 매일 한 줄씩 채워가는 장부이자 커뮤니티. 콘텐츠·문답·자료·일정을 한 화면에. 크레디뷰(CrediVue)가 펴냅니다.">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+  @keyframes rise{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:none;}}
+
+  .home-grid{display:grid;grid-template-columns:1.62fr .9fr;gap:24px;align-items:start;}
+  .col{min-width:0;display:flex;flex-direction:column;gap:20px;}
+  .module{position:relative;background:#fff;border:1px solid var(--rule-hair);border-radius:12px;
+    box-shadow:var(--shadow-card);padding:22px 24px;}
+
+  /* segmented tabs (아티클 / 전문가 기고) */
+  .seg{display:flex;gap:7px;margin:16px 0 2px;}
+  .seg button{font-size:12px;font-weight:700;padding:6px 13px;border-radius:7px;cursor:pointer;
+    white-space:nowrap;border:0;color:var(--ink-3);background:var(--paper-2);}
+  .seg button.on{color:#fff;background:var(--ink-1);}
+
+  .ledger-row{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;
+    padding:16px 0;border-bottom:1px solid var(--rule-hair);cursor:pointer;}
+  .ledger-row:last-child{border-bottom:0;}
+  .ledger-no{font-size:24px;font-weight:400;color:#C2C9D0;line-height:1;width:32px;}
+
+  /* Q&A modes */
+  .qmodes{display:flex;gap:8px;margin-top:12px;}
+  .qmodes button{font-size:12px;font-weight:700;padding:5px 11px;cursor:pointer;border:0;background:none;
+    color:var(--ink-3);border-bottom:2px solid transparent;}
+  .qmodes button.on{color:var(--ink-1);border-bottom-color:var(--blue);}
+  .q-viewport{overflow:hidden;}
+  .q-track{display:flex;transition:transform .5s cubic-bezier(.4,0,.2,1);}
+  .q-slide{min-width:100%;box-sizing:border-box;padding:14px 0 4px;cursor:pointer;}
+  .q-dots{display:flex;gap:6px;margin-top:8px;}
+  .q-dots span{width:6px;height:6px;border-radius:3px;background:var(--paper-4);cursor:pointer;transition:all .2s;}
+  .q-dots span.on{width:16px;background:var(--blue);}
+
+  .chip{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:600;color:var(--ink-1);
+    border:1px solid var(--ink-1);padding:5px 10px;cursor:pointer;user-select:none;border-radius:2px;background:none;}
+  .chip.off{color:var(--ink-3);border-color:var(--rule-hair);opacity:.5;}
+  .chip i{width:7px;height:7px;border-radius:50%;}
+
+  .mini-cal{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;}
+  .mini-wd{font-size:9.5px;font-weight:600;color:var(--ink-3);text-align:center;padding:2px 0 6px;}
+  .mini-cell{aspect-ratio:1;display:flex;flex-direction:column;align-items:center;padding-top:5px;
+    font-size:11px;font-weight:600;position:relative;gap:3px;border:1px solid transparent;border-radius:2px;}
+  .mini-cell.has{border-color:var(--paper-4);cursor:pointer;}
+  .mini-cell.dim{color:var(--ink-4);opacity:.5;}
+  .mini-cell.today{background:var(--ink-1);color:var(--paper-1);border:0;}
+  .mini-dots{display:flex;gap:2px;}
+  .mini-dots i{width:5px;height:5px;border-radius:50%;}
+
+  .ev-row{display:flex;gap:11px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--rule-hair);cursor:pointer;}
+  .ev-row:last-child{border-bottom:0;}
+
+  .file-row{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid var(--rule-hair);cursor:pointer;}
+  .file-row:last-child{border-bottom:0;}
+  .file-chip{font-size:9.5px;font-weight:600;color:#fff;padding:4px 7px;border-radius:6px;}
+
+  /* loan calculator slip */
+  .calc-fab{position:fixed;right:40px;bottom:26px;z-index:9995;width:58px;height:58px;border-radius:50%;
+    background:var(--blue);box-shadow:0 12px 30px rgba(35,72,214,.42);display:flex;align-items:center;
+    justify-content:center;cursor:pointer;border:0;}
+  .calc-panel{position:fixed;right:40px;bottom:26px;z-index:9995;width:286px;background:var(--ink-1);
+    border-radius:20px;box-shadow:var(--shadow-float);overflow:hidden;display:none;animation:rise .25s ease;}
+  .calc-slip{margin:0 12px;background:#C7D0C3;border-radius:9px;padding:11px 13px 12px;
+    box-shadow:inset 0 1px 4px rgba(0,0,0,.28);}
+  .calc-slip input{border:0;outline:0;background:transparent;font-weight:500;color:#1B1F17;width:132px;
+    text-align:right;font-size:12px;font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
+  .calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:12px;}
+  .calc-keys button{height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-mono);border:0;
+    background:#262A2F;color:#E7EAED;}
+  .calc-keys button.op{background:#2E333A;color:#9FB4FF;}
+  .calc-keys button.eq{background:var(--blue);color:#fff;}
+
+  .coming{background:var(--ink-1);color:var(--paper-1);}
+  .coming-inner{display:flex;align-items:center;justify-content:space-between;gap:34px;position:relative;overflow:hidden;padding:48px 0;}
+
+  @media (max-width:900px){
+    .home-grid{grid-template-columns:1fr;}
+    .calc-fab,.calc-panel{right:16px;}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<div class="fore-edge"></div>
+
+<div class="page">
+  <!-- GNB -->
+  <header class="gnb">
+    <div class="wrap gnb-inner">
+      <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
+      <nav class="gnb-nav">
+        <a href="/" class="active">홈</a>
+        <a href="/content">콘텐츠</a>
+        <a href="/community/talk">실무 이야기</a>
+        <a href="/archive">자료실</a>
+        <a href="/calendar">캘린더</a>
+        <a href="/finder">파인더</a>
+      </nav>
+      <span class="gnb-login">로그인</span>
+      <span class="gnb-join">회원가입</span>
+    </div>
+  </header>
+
+  <!-- BODY -->
+  <main class="wrap" style="padding-top:30px;padding-bottom:64px;">
+    <div class="home-grid">
+
+      <!-- LEFT COLUMN -->
+      <div class="col">
+
+        <!-- 콘텐츠 모듈 -->
+        <section class="module">
+          <div class="sec-head">
+            <h2 class="bt" style="font-size:23px;">콘텐츠</h2>
+            <a class="sec-more" href="/content">전체 →</a>
+          </div>
+          <div class="seg" id="contentSeg">
+            <button data-seg="article" class="on">아티클</button>
+            <button data-seg="contrib">전문가 기고</button>
+          </div>
+
+          <!-- 아티클 view -->
+          <div data-view="article">
+            <a href="/content" style="display:block;margin-top:16px;cursor:pointer;">
+              <div style="width:100%;aspect-ratio:16/8.5;border-radius:10px;background:var(--blue);position:relative;overflow:hidden;">
+                <span class="mono" style="position:absolute;left:13px;top:13px;font-size:10px;font-weight:600;color:var(--blue);background:var(--paper-1);padding:4px 9px;border-radius:6px;">재무</span>
+                <svg viewBox="0 0 600 240" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+                  <g stroke="rgba(255,255,255,.55)" stroke-width="2.5" fill="none"><path d="M30 188 L150 150 L270 166 L390 86 L500 118 L580 50"/></g>
+                  <g fill="#fff"><circle cx="150" cy="150" r="5"/><circle cx="390" cy="86" r="5"/><circle cx="580" cy="50" r="5"/></g>
+                </svg>
+              </div>
+              <span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:var(--cat-tax);display:block;margin-top:14px;">세무 · 재무</span>
+              <h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;color:var(--ink-1);">부채비율만 보던 여신 심사, 현금흐름까지 읽는 법</h3>
+              <p style="font-size:14px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;">재무제표 세 장으로 거래처의 상환 능력을 가늠하는 실무 체크포인트.</p>
+              <div class="mono" style="font-size:11px;color:var(--ink-3);margin-top:11px;">크레디뷰 리서치 · 8분 읽기 · 조회 1,240</div>
+            </a>
+            <div style="margin-top:10px;border-top:1px solid var(--rule-hair);">
+              <a class="ledger-row" href="/content">
+                <span class="bt ledger-no">02</span>
+                <div style="min-width:0;"><span class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--cat-biz);">경영</span><h3 class="bt" style="font-size:17px;line-height:1.42;font-weight:700;margin:4px 0 0;">런웨이가 6개월 남았다는 신호를 재무팀이 먼저 잡는 5가지 지표</h3></div>
+                <div style="text-align:right;white-space:nowrap;"><div class="mono" style="font-size:12.5px;font-weight:600;">870</div><div class="mono" style="font-size:9.5px;color:var(--ink-3);margin-top:2px;">조회</div></div>
+              </a>
+              <a class="ledger-row" href="/content">
+                <span class="bt ledger-no">03</span>
+                <div style="min-width:0;"><span class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--cat-acc);">회계</span><h3 class="bt" style="font-size:17px;line-height:1.42;font-weight:700;margin:4px 0 0;">리스 회계처리, 사용권자산 감가 기준을 둘러싼 실무 쟁점</h3></div>
+                <div style="text-align:right;white-space:nowrap;"><div class="mono" style="font-size:12.5px;font-weight:600;">640</div><div class="mono" style="font-size:9.5px;color:var(--ink-3);margin-top:2px;">조회</div></div>
+              </a>
+            </div>
+          </div>
+
+          <!-- 전문가 기고 view -->
+          <div data-view="contrib" style="display:none;">
+            <a href="/content" style="display:block;margin-top:16px;cursor:pointer;">
+              <div style="width:100%;aspect-ratio:16/8.5;border-radius:10px;border:1px solid var(--rule-hair);position:relative;overflow:hidden;background-image:repeating-linear-gradient(45deg,#EEF0F2 0 16px,#E4E8EC 16px 32px);">
+                <span class="mono" style="position:absolute;left:13px;top:13px;font-size:10px;font-weight:600;color:var(--blue);background:var(--paper-1);padding:4px 9px;border-radius:6px;">이달의 기고</span>
+                <span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:11px;letter-spacing:.12em;color:#9CA4AC;">PORTRAIT</span>
+              </div>
+              <span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:var(--blue);display:block;margin-top:14px;">전문가 기고 · 김재무 前 상장사 CFO</span>
+              <h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;color:var(--ink-1);">"재무팀은 비용 센터가 아니라, 의사결정의 마지막 검산이다"</h3>
+              <p style="font-size:14px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;">숫자를 닫는 사람에서 판단을 여는 사람으로. 30년 현업이 본 재무 조직의 역할 변화.</p>
+              <div class="mono" style="font-size:11px;color:var(--ink-3);margin-top:11px;">김재무 · 매달 1회 발행 · 6분 읽기</div>
+            </a>
+          </div>
+        </section>
+
+        <!-- 실무 이야기 모듈 -->
+        <section class="module">
+          <div class="sec-head">
+            <h2 class="bt" style="font-size:23px;">실무 이야기</h2>
+            <a class="sec-more" href="/community/talk">전체 →</a>
+          </div>
+          <div class="qmodes" data-qmodes>
+            <button data-qmode="hot" class="on">분주한</button>
+            <button data-qmode="new">새 기록</button>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;margin-top:10px;">
+            <div>
+              <div class="q-viewport"><div class="q-track" data-qtrack></div></div>
+              <div class="q-dots" data-qdots></div>
+            </div>
+            <div style="display:flex;flex-direction:column;border-left:1px solid var(--rule-hair);padding-left:26px;">
+              <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);margin-bottom:4px;">최근 올라온 이야기</div>
+              <div data-qrecent></div>
+            </div>
+          </div>
+          <a href="/community/talk" class="btn-ink" style="display:block;margin-top:16px;font-size:13px;padding:12px;border-radius:2px;">문답 기입하기</a>
+        </section>
+      </div>
+
+      <!-- RIGHT COLUMN -->
+      <div class="col">
+
+        <!-- 일정 모듈 (라이브 API) -->
+        <section class="module" data-schedule>
+          <div class="sec-head" style="padding-bottom:9px;">
+            <div style="display:flex;align-items:baseline;gap:9px;">
+              <h2 class="bt" style="font-size:19px;">일정</h2>
+              <span class="mono" style="font-size:11.5px;color:var(--ink-2);" data-cal-month></span>
+            </div>
+            <a class="sec-more" href="/calendar">전체 →</a>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:6px;margin:14px 0;" data-cal-chips></div>
+          <div class="mini-cal" data-cal-grid></div>
+          <div style="margin-top:16px;">
+            <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);margin-bottom:6px;">이달의 일정</div>
+            <div data-cal-events></div>
+          </div>
+        </section>
+
+        <!-- 자료실 모듈 -->
+        <section class="module">
+          <div class="sec-head" style="padding-bottom:9px;margin-bottom:2px;">
+            <h2 class="bt" style="font-size:19px;">자료실</h2>
+            <a class="sec-more" href="/archive">전체 →</a>
+          </div>
+          <div data-home-files></div>
+        </section>
+
+        <!-- 의견 모듈 -->
+        <section class="module" style="text-align:center;">
+          <div style="border:1.5px dashed #C6CCD2;border-radius:12px;padding:26px 20px;">
+            <div style="width:40px;height:40px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:24px;font-weight:600;line-height:1;">+</div>
+            <h3 class="bt" style="font-size:18px;font-weight:700;margin:14px 0 0;">이 자리는 아직 비어 있어요</h3>
+            <p style="font-size:13px;color:var(--ink-2);line-height:1.6;margin:9px 0 0;">어떤 내용이 있으면 좋을까요? 이 공간은 <b style="color:var(--ink-1);">여러분의 의견</b>으로 채워집니다.</p>
+            <a href="/finder" class="btn-blue" style="margin-top:16px;font-size:12.5px;padding:10px 18px;display:inline-block;">의견 보내기</a>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- COMING SOON: 파인더 -->
+  <section class="coming">
+    <div class="wrap coming-inner">
+      <div class="bt" style="position:absolute;right:24px;top:-58px;font-size:178px;line-height:1;color:var(--paper-1);opacity:.045;pointer-events:none;">06</div>
+      <div style="position:relative;">
+        <span class="mono" style="font-size:11px;letter-spacing:.14em;color:var(--blue);">INDEX 05 — COMING SOON</span>
+        <h3 class="bt" style="font-size:30px;font-weight:700;margin:13px 0 9px;">우리 회사가 받을 수 있는 정책자금, 한 번에</h3>
+        <p style="color:var(--ink-4);font-size:14.5px;margin:0;max-width:520px;line-height:1.65;">업종·규모·재무 상태로 맞는 정책자금을 추려주는 파인더가 곧 펼쳐집니다. 사전예약하면 가장 먼저 알려드릴게요.</p>
+      </div>
+      <a href="/finder" class="btn-blue" style="position:relative;flex-shrink:0;border-radius:0;font-size:14px;padding:15px 28px;display:flex;align-items:center;gap:9px;white-space:nowrap;">사전예약 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:16px;height:16px;"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="wrap" style="padding-top:48px;padding-bottom:36px;">
+      <div style="display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;">
+        <div style="max-width:320px;">
+          <img src="/assets/logo_white.png" style="height:20px;margin-bottom:15px;" alt="BLACK BOOK">
+          <p style="font-size:12.5px;line-height:1.75;margin:0;">재무·회계 실무자가 매일 한 줄씩 채워가는 장부이자 커뮤니티. <b style="color:#D2D7DD;white-space:nowrap;">크레디뷰</b>가 펴냅니다.</p>
+        </div>
+        <div style="display:flex;gap:54px;flex-wrap:wrap;">
+          <div style="display:flex;flex-direction:column;gap:11px;"><span class="mono" style="font-size:10px;letter-spacing:.08em;color:#6A7079;margin-bottom:3px;">커뮤니티</span><a href="/content">콘텐츠</a><a href="/community/talk">Q&amp;A</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a></div>
+          <div style="display:flex;flex-direction:column;gap:11px;"><span class="mono" style="font-size:10px;letter-spacing:.08em;color:#6A7079;margin-bottom:3px;">크레디뷰 서비스</span><a href="#">기업신용평가등급</a><a href="#">AI 경영진단보고서</a><a href="#">기업모니터링</a><a href="#">DB조회</a></div>
+        </div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:40px;padding-top:22px;border-top:1px solid #2A2E33;">
+        <div class="mono" style="font-size:10.5px;color:#6A7079;line-height:1.8;">(주)테크핀레이팅스 · 크레디뷰 · help@blackbook.co.kr</div>
+        <div style="display:flex;gap:18px;"><a class="mono" style="font-size:10.5px;color:#6A7079;" href="#">이용약관</a><a class="mono" style="font-size:10.5px;color:#6A7079;" href="#">개인정보처리방침</a><span class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK</span></div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- 대출 가능성 계산기 (floating slip) -->
+<div data-calc-root>
+  <button class="calc-fab" data-calc-fab title="대출 가능성 계산기" aria-label="대출 가능성 계산기 열기">
+    <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.8" style="width:24px;height:24px;"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M8 11h.01M12 11h.01M16 11h.01M8 15h.01M12 15h.01M16 15h.01M8 18h4" stroke-linecap="round"/></svg>
+  </button>
+  <div class="calc-panel" data-calc-panel>
+    <div style="display:flex;align-items:center;gap:9px;padding:12px 14px 11px;">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#2348D6" stroke-width="1.8" style="width:16px;height:16px;flex-shrink:0;"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M8 11h.01M16 11h.01M8 15h.01M16 15h.01" stroke-linecap="round"/></svg>
+      <span class="mono" style="font-size:10px;letter-spacing:.08em;color:#D2D7DD;">대출 가능성 계산기</span>
+      <button data-calc-close aria-label="닫기" style="margin-left:auto;width:24px;height:24px;border-radius:7px;background:#2A2E33;color:#D2D7DD;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;line-height:1;border:0;">–</button>
+    </div>
+    <div class="calc-slip">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;"><span class="mono" style="font-size:9px;color:#5C6356;letter-spacing:.04em;">연 매출</span><input class="mono" data-calc="revenue" inputmode="numeric" value="1,200,000,000" aria-label="연 매출"></div>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:5px;"><span class="mono" style="font-size:9px;color:#5C6356;letter-spacing:.04em;">자기자본</span><input class="mono" data-calc="equity" inputmode="numeric" value="350,000,000" aria-label="자기자본"></div>
+      <div style="border-top:1px solid rgba(27,31,23,.22);margin-top:9px;padding-top:8px;display:flex;align-items:flex-end;justify-content:space-between;">
+        <span class="mono" style="font-size:9px;color:#5C6356;letter-spacing:.06em;padding-bottom:4px;">예상 한도</span>
+        <span class="mono" style="font-size:24px;font-weight:600;color:#1B1F17;letter-spacing:-.01em;line-height:1;"><span data-calc-out-num>≈ 4.2</span><span data-calc-out-unit style="font-size:12px;">억 원</span></span>
+      </div>
+    </div>
+    <div class="calc-keys">
+      <button data-key="7">7</button><button data-key="8">8</button><button data-key="9">9</button><button class="op" data-key="÷">÷</button>
+      <button data-key="4">4</button><button data-key="5">5</button><button data-key="6">6</button><button class="op" data-key="×">×</button>
+      <button data-key="1">1</button><button data-key="2">2</button><button data-key="3">3</button><button class="op" data-key="−">−</button>
+      <button data-key="0">0</button><button data-key=".">.</button><button class="eq" data-key="=">=</button><button class="op" data-key="+">+</button>
+    </div>
+    <div style="padding:0 12px 10px;"><p class="mono" style="font-size:8.5px;line-height:1.5;color:#6A7079;margin:0;">* 연매출·자기자본 기반 대략적 추정치이며 실제 승인 한도가 아닙니다.</p></div>
+    <a href="#" class="btn-blue" style="margin:2px 12px 12px;font-size:12px;padding:11px;border-radius:9px;text-align:center;display:block;">정확한 진단 — AI 경영진단보고서</a>
+  </div>
+</div>
+
+<script src="/assets/calendar-data.js"></script>
+<script src="/assets/archive-data.js"></script>
+<script src="/assets/calculator.js"></script>
+<script src="/assets/home.js"></script>
+</body>
+</html>

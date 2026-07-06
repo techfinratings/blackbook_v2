@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>파인더 — 정책자금 매칭 · Coming Soon · BLACK BOOK</title>
+<meta name="description" content="크레디뷰의 기업 데이터가 우리 회사에 맞는 정책자금을 대신 찾아 마감 전에 알려 드립니다. 오픈 소식을 가장 먼저 받아보세요.">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+  /* Finder is fully dark — overrides the paper theme */
+  body.finder{background:#0F1113;color:#F4F5F6;}
+  .finder .fore-edge{background:#17191C;border-left:1px solid #26292E;background-image:repeating-linear-gradient(90deg,rgba(255,255,255,.04) 0 1px,transparent 1px 4px);}
+  .finder .wrap{max-width:1180px;}
+  .pain-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#24282D;border:1px solid #24282D;margin-top:26px;}
+  .pain-cell{background:#141619;padding:30px 26px 34px;}
+  .signup{background:#181B1E;border:1px solid #2A2E33;border-top:2px solid #2348D6;padding:44px 40px;display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;}
+  .finder-input{flex:1;min-width:200px;background:#0F1113;border:1px solid #33383E;border-radius:3px;padding:14px 15px;font-family:inherit;font-size:15px;color:#F4F5F6;outline:none;}
+  .finder-input::placeholder{color:#6A7079;}
+  .finder-input:focus{border-color:#2348D6;}
+  @media (max-width:820px){.pain-grid{grid-template-columns:1fr;}.signup{grid-template-columns:1fr;}}
+</style>
+</head>
+<body class="finder">
+<div class="fore-edge"></div>
+<div class="page">
+  <header class="gnb"><div class="wrap gnb-inner">
+    <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
+    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/community/talk">실무 이야기</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder" class="active">파인더</a></nav>
+    <span class="gnb-login">로그인</span><span class="gnb-join">회원가입</span>
+  </div></header>
+
+  <!-- HERO -->
+  <div style="position:relative;overflow:hidden;border-bottom:1px solid #24282D;">
+    <div class="bt" style="position:absolute;right:-10px;top:-40px;font-size:300px;line-height:1;font-weight:700;color:#fff;opacity:.035;pointer-events:none;user-select:none;">30조</div>
+    <div class="wrap" style="padding:72px 40px 66px;position:relative;">
+      <div class="mono" style="font-size:11.5px;letter-spacing:.16em;color:#2348D6;">COMING SOON · 파인더</div>
+      <h1 class="bt" style="font-size:52px;line-height:1.28;font-weight:700;letter-spacing:-.01em;margin:20px 0 0;max-width:820px;">정책자금 연 <span style="color:#2348D6;">30조 원</span>,<br>우리 기업만 못 받고 있다?</h1>
+      <p class="bt" style="font-size:22px;line-height:1.5;color:#C7CDD3;margin:22px 0 0;max-width:680px;">우리 기업에 맞는 정책자금, 더 쉽고 정확하게 찾을 수는 없을까?</p>
+      <p style="font-size:15px;line-height:1.75;color:#8A929B;margin:24px 0 0;max-width:600px;">수백 개 기관에 흩어진 공고, 복잡한 자격 요건. 놓친 사이 마감된 지원사업. 크레디뷰의 기업 데이터가 우리 회사에 맞는 정책자금을 대신 찾아 드립니다.</p>
+    </div>
+  </div>
+
+  <!-- PAIN POINTS -->
+  <div class="wrap" style="padding:60px 40px 20px;">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:1.5px solid #33383E;padding-bottom:12px;">
+      <h2 class="bt" style="font-size:24px;font-weight:700;margin:0;color:#F4F5F6;">지금, 이런 게 어렵습니다</h2>
+      <span class="mono" style="font-size:11px;color:#6A7079;">실무자의 목소리</span>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-cell"><div class="mono" style="font-size:12px;color:#2348D6;">01</div><h3 class="bt" style="font-size:21px;font-weight:700;margin:14px 0 0;color:#F4F5F6;">흩어진 공고</h3><p style="font-size:14px;line-height:1.7;color:#8A929B;margin:12px 0 0;">중앙부처·지자체·유관기관마다 따로 올라오는 공고를 일일이 찾아 헤맵니다.</p></div>
+      <div class="pain-cell"><div class="mono" style="font-size:12px;color:#2348D6;">02</div><h3 class="bt" style="font-size:21px;font-weight:700;margin:14px 0 0;color:#F4F5F6;">애매한 자격</h3><p style="font-size:14px;line-height:1.7;color:#8A929B;margin:12px 0 0;">우리 기업이 대상인지, 요건을 충족하는지 스스로 판단하기 어렵습니다.</p></div>
+      <div class="pain-cell"><div class="mono" style="font-size:12px;color:#2348D6;">03</div><h3 class="bt" style="font-size:21px;font-weight:700;margin:14px 0 0;color:#F4F5F6;">놓치는 마감</h3><p style="font-size:14px;line-height:1.7;color:#8A929B;margin:12px 0 0;">알게 됐을 땐 이미 접수가 끝난 경우가 많습니다.</p></div>
+    </div>
+  </div>
+
+  <!-- SOLUTION -->
+  <div class="wrap" style="padding:44px 40px 60px;">
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:start;padding:34px 0;border-top:1px solid #24282D;border-bottom:1px solid #24282D;">
+      <div class="mono" style="font-size:11px;letter-spacing:.14em;color:#6A7079;white-space:nowrap;padding-top:6px;">파인더가 하는 일</div>
+      <p class="bt" style="font-size:26px;line-height:1.55;font-weight:400;color:#DDE2E6;margin:0;">파인더는 크레디뷰가 보유한 <b style="font-weight:700;color:#fff;">기업 정보 — 업종·규모·재무·신용등급</b>을 기준으로, 우리 기업이 신청 가능한 정책자금만 골라 <b style="font-weight:700;color:#fff;">마감 전에 알려</b> 드립니다.</p>
+    </div>
+  </div>
+
+  <!-- ALARM SIGNUP -->
+  <div class="wrap" style="padding:0 40px 80px;">
+    <div class="signup">
+      <div>
+        <div class="mono" style="font-size:11px;letter-spacing:.12em;color:#2348D6;">EARLY ACCESS</div>
+        <h2 class="bt" style="font-size:30px;font-weight:700;line-height:1.4;margin:12px 0 0;color:#F4F5F6;">가장 먼저, 파인더 오픈 소식 받기</h2>
+        <p style="font-size:14.5px;line-height:1.7;color:#8A929B;margin:12px 0 0;max-width:420px;">서비스가 열리면 우리 기업이 신청 가능한 정책자금과 함께 알림을 보내 드립니다. 지금은 이메일만 남겨 주세요.</p>
+      </div>
+      <div id="signupArea">
+        <div class="mono" style="font-size:10.5px;letter-spacing:.06em;color:#6A7079;margin-bottom:10px;">이메일</div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
+          <input id="email" class="finder-input" placeholder="name@company.co.kr" inputmode="email">
+          <button id="submit" style="font-size:15px;font-weight:700;color:#fff;background:#2A2E33;padding:14px 26px;border-radius:3px;cursor:default;white-space:nowrap;border:0;transition:background .2s;">알림 신청</button>
+        </div>
+        <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#7E868F;margin-top:14px;cursor:pointer;"><input id="agree" type="checkbox" style="accent-color:#2348D6;width:14px;height:14px;">오픈·정책자금 소식 수신에 동의합니다.</label>
+      </div>
+    </div>
+  </div>
+
+  <footer style="background:#0B0D0E;color:#8A929B;border-top:1px solid #24282D;">
+    <div class="wrap" style="padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;"><img src="/assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"><div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div></div>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var email = document.getElementById('email');
+  var submit = document.getElementById('submit');
+  var agree = document.getElementById('agree');
+  var re = /.+@.+\..+/;
+  function valid() { return re.test(email.value.trim()) && agree.checked; }
+  function refresh() {
+    var ok = valid();
+    submit.style.background = ok ? '#2348D6' : '#2A2E33';
+    submit.style.cursor = ok ? 'pointer' : 'default';
+  }
+  email.addEventListener('input', refresh);
+  agree.addEventListener('change', refresh);
+  submit.addEventListener('click', function () {
+    if (!valid()) return;
+    document.getElementById('signupArea').innerHTML =
+      '<div style="border:1px solid #2A2E33;background:#141619;padding:26px;">' +
+      '<div class="mono" style="font-size:11px;letter-spacing:.1em;color:#2348D6;">신청 완료</div>' +
+      '<div class="bt" style="font-size:20px;font-weight:700;color:#F4F5F6;margin-top:10px;line-height:1.5;">오픈 소식을 가장 먼저 보내 드릴게요.</div>' +
+      '<div class="mono" style="font-size:12px;color:#8A929B;margin-top:10px;">' + email.value.trim().replace(/[<>&]/g, '') + '</div></div>';
+  });
+  refresh();
+})();
+</script>
+</body>
+</html>
