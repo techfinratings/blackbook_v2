@@ -180,11 +180,11 @@
             <button data-qmode="new">새 기록</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:28px;align-items:start;margin-top:10px;">
-            <div>
+            <div style="min-width:0;">
               <div class="q-viewport"><div class="q-track" data-qtrack></div></div>
               <div class="q-dots" data-qdots></div>
             </div>
-            <div style="display:flex;flex-direction:column;border-left:1px solid var(--rule-hair);padding-left:26px;">
+            <div style="min-width:0;display:flex;flex-direction:column;border-left:1px solid var(--rule-hair);padding-left:26px;">
               <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);margin-bottom:4px;">최근 올라온 이야기</div>
               <div data-qrecent></div>
             </div>
@@ -208,7 +208,10 @@
           <div style="display:flex;flex-wrap:wrap;gap:6px;margin:14px 0;" data-cal-chips></div>
           <div class="mini-cal" data-cal-grid></div>
           <div style="margin-top:16px;">
-            <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);margin-bottom:6px;">이달의 일정</div>
+            <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;margin-bottom:6px;">
+              <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);" data-cal-events-head>이달의 일정</div>
+              <span class="mono" data-cal-events-reset style="font-size:10px;color:var(--blue);cursor:pointer;display:none;">← 이달 전체</span>
+            </div>
             <div data-cal-events></div>
           </div>
         </section>
@@ -227,7 +230,7 @@
           <div style="border:1.5px dashed #C6CCD2;border-radius:12px;padding:26px 20px;">
             <div style="width:40px;height:40px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:24px;font-weight:600;line-height:1;">+</div>
             <h3 class="bt" style="font-size:18px;font-weight:700;margin:14px 0 0;">이 자리는 아직 비어 있어요</h3>
-            <p style="font-size:13px;color:var(--ink-2);line-height:1.6;margin:9px 0 0;">어떤 내용이 있으면 좋을까요? 이 공간은 <b style="color:var(--ink-1);">여러분의 의견</b>으로 채워집니다.</p>
+            <p style="font-size:13px;color:var(--ink-2);line-height:1.6;margin:9px 0 0;">어떤 내용이 있으면 더 좋을까요? 이 공간은 <b style="color:var(--ink-1);">여러분의 의견</b>으로 채워집니다.</p>
             <a href="/finder" class="btn-blue" style="margin-top:16px;font-size:12.5px;padding:10px 18px;display:inline-block;">의견 보내기</a>
           </div>
         </section>
@@ -301,6 +304,7 @@
 
 <script src="/assets/calendar-data.js"></script>
 <script src="/assets/archive-data.js"></script>
+<script src="/assets/notice.js"></script>
 <script src="/assets/calculator.js"></script>
 <script src="/assets/home.js"></script>
 </body>

@@ -101,9 +101,13 @@
     var chipsEl = root.querySelector('[data-cal-chips]');
     var gridEl = root.querySelector('[data-cal-grid]');
     var eventsEl = root.querySelector('[data-cal-events]');
+    var headEl = root.querySelector('[data-cal-events-head]');
+    var resetEl = root.querySelector('[data-cal-events-reset]');
     monthEl.textContent = year + '. ' + month;
 
     var events = [];
+    var selDay = null;   // 선택한 날짜(null=이달 전체)
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); }
 
     function counts() {
       var c = { fund: 0, tax: 0, acc: 0, law: 0 };
@@ -132,44 +136,75 @@
       for (var i = 0; i < firstDow; i++) html += '<div class="mini-cell dim"></div>';
       for (var d = 1; d <= lastDay; d++) {
         var isToday = d === todayD;
+        var isSel = d === selDay;
         var dots = (byDay[d] || []).slice(0, 3);
-        var cls = 'mini-cell' + (isToday ? ' today' : (dots.length ? ' has' : ''));
-        html += '<div class="' + cls + '">' + d +
+        var hasEv = dots.length > 0;
+        var cls = 'mini-cell' + (isToday ? ' today' : (hasEv ? ' has' : ''));
+        var selStyle = isSel && !isToday ? ' style="outline:1.5px solid var(--blue);outline-offset:-1px;"' : '';
+        html += '<div class="' + cls + '"' + (hasEv ? ' data-day="' + d + '"' : '') + selStyle + '>' + d +
           '<div class="mini-dots">' + dots.map(function (c) {
             return '<i style="background:' + (isToday ? '#fff' : c) + ';"></i>';
           }).join('') + '</div></div>';
       }
       gridEl.innerHTML = html;
     }
+    function pad(n) { return String(n).padStart(2, '0'); }
     function renderList() {
-      var pad = function (n) { return String(n).padStart(2, '0'); };
       var vis = visible().slice().sort(function (a, b) { return a.day - b.day; });
-      var upcoming = vis.filter(function (e) { return e.day >= todayD; });
-      var list = (upcoming.length ? upcoming : vis).slice(0, 4);
+      var list;
+      if (selDay != null) {
+        list = vis.filter(function (e) { return e.day === selDay; });
+        headEl.textContent = month + '월 ' + selDay + '일 일정';
+        resetEl.style.display = '';
+      } else {
+        var upcoming = vis.filter(function (e) { return e.day >= todayD; });
+        list = (upcoming.length ? upcoming : vis).slice(0, 4);
+        headEl.textContent = '이달의 일정';
+        resetEl.style.display = 'none';
+      }
       if (!list.length) {
-        eventsEl.innerHTML = '<div class="mono" style="font-size:12px;color:#7E868F;padding:8px 0;">이달 등록된 일정이 없습니다.</div>';
+        eventsEl.innerHTML = '<div class="mono" style="font-size:12px;color:#7E868F;padding:8px 0;">' + (selDay != null ? '이 날은 등록된 공고가 없어요.' : '이달 등록된 일정이 없습니다.') + '</div>';
         return;
       }
       eventsEl.innerHTML = list.map(function (e) {
         var cat = CATS[e.cat];
-        return '<a class="ev-row"' + (e.link ? ' href="' + e.link + '" target="_blank" rel="noopener"' : '') + '>' +
+        return '<div class="ev-row" data-ev="' + e._idx + '" style="cursor:pointer;">' +
           '<span class="mono" style="font-size:11px;font-weight:600;color:#181B1E;width:40px;flex-shrink:0;">' + pad(month) + '.' + pad(e.day) + '</span>' +
           '<span style="width:7px;height:7px;border-radius:50%;background:' + cat.color + ';margin-top:5px;flex-shrink:0;"></span>' +
-          '<div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;line-height:1.4;">' + e.title + '</div>' +
-          '<span class="mono" style="font-size:10px;color:#7E868F;">' + cat.label + '</span></div></a>';
+          '<div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;line-height:1.4;">' + esc(e.title) + '</div>' +
+          '<span class="mono" style="font-size:10px;color:#7E868F;">' + cat.label + '</span></div></div>';
       }).join('');
     }
     function renderAll() { renderChips(); renderGrid(); renderList(); }
 
     chipsEl.addEventListener('click', function (e) {
       var b = e.target.closest('[data-cat]'); if (!b) return;
-      var k = b.getAttribute('data-cat'); off[k] = !off[k]; renderAll();
+      var k = b.getAttribute('data-cat'); off[k] = !off[k];
+      if (selDay != null && !visible().some(function (x) { return x.day === selDay; })) selDay = null;
+      renderAll();
     });
+    // 미니 캘린더 날짜 클릭 → 하단 일정을 그 날짜로 (동적)
+    gridEl.addEventListener('click', function (e) {
+      var c = e.target.closest('[data-day]'); if (!c) return;
+      var d = parseInt(c.getAttribute('data-day'), 10);
+      selDay = (selDay === d) ? null : d;
+      renderGrid(); renderList();
+    });
+    // 일정(공고) 클릭 → 기업마당 직접 X, 설명 페이지 먼저
+    eventsEl.addEventListener('click', function (e) {
+      var r = e.target.closest('[data-ev]'); if (!r) return;
+      var ev = events[parseInt(r.getAttribute('data-ev'), 10)];
+      if (window.BBNotice) window.BBNotice.open(ev, year, month);
+      else if (ev && ev.link) window.open(ev.link, '_blank', 'noopener');
+    });
+    if (resetEl) resetEl.addEventListener('click', function () { selDay = null; renderGrid(); renderList(); });
 
     // initial paint (grid skeleton) then live data
     renderAll();
     window.BBCalendar.load(year, month).then(function (evs) {
-      events = evs; renderAll();
+      events = evs;
+      events.forEach(function (e, i) { e._idx = i; });
+      renderAll();
     });
   }
 
