@@ -99,13 +99,23 @@
   }
   email.addEventListener('input', refresh);
   agree.addEventListener('change', refresh);
-  submit.addEventListener('click', function () {
-    if (!valid()) return;
+  function done(mail) {
     document.getElementById('signupArea').innerHTML =
       '<div style="border:1px solid #2A2E33;background:#141619;padding:26px;">' +
       '<div class="mono" style="font-size:11px;letter-spacing:.1em;color:#2348D6;">신청 완료</div>' +
       '<div class="bt" style="font-size:20px;font-weight:700;color:#F4F5F6;margin-top:10px;line-height:1.5;">오픈 소식을 가장 먼저 보내 드릴게요.</div>' +
-      '<div class="mono" style="font-size:12px;color:#8A929B;margin-top:10px;">' + email.value.trim().replace(/[<>&]/g, '') + '</div></div>';
+      '<div class="mono" style="font-size:12px;color:#8A929B;margin-top:10px;">' + mail.replace(/[<>&]/g, '') + '</div></div>';
+  }
+  submit.addEventListener('click', function () {
+    if (!valid()) return;
+    var mail = email.value.trim();
+    submit.disabled = true; submit.textContent = '신청 중…';
+    fetch('/api/lead', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ type: 'finder', email: mail, consent: agree.checked, source: 'finder' })
+    }).then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function () { done(mail); })   // 적재 성공/실패와 무관하게 사용자에겐 완료 안내
+      .catch(function () { done(mail); });
   });
   refresh();
 })();

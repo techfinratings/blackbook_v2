@@ -39,7 +39,7 @@
 
   <!-- ARTICLE -->
   <div class="wrap" data-view="article" style="padding-top:30px;padding-bottom:72px;">
-    <a class="hero-article" href="/content-detail">
+    <a class="hero-article" id="artHero" href="/content-detail">
       <div style="width:100%;aspect-ratio:16/9;border-radius:12px;background:var(--blue);position:relative;overflow:hidden;">
         <svg viewBox="0 0 760 428" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%"><g stroke="rgba(255,255,255,.5)" stroke-width="3" fill="none"><path d="M40 340 L180 288 L320 306 L460 176 L600 224 L730 104"/></g><g fill="#fff"><circle cx="180" cy="288" r="6"/><circle cx="460" cy="176" r="6"/><circle cx="730" cy="104" r="6"/></g><g fill="rgba(255,255,255,.14)"><rect x="60" y="352" width="44" height="64" rx="4"/><rect x="126" y="326" width="44" height="90" rx="4"/><rect x="192" y="372" width="44" height="44" rx="4"/></g></svg>
       </div>
@@ -142,11 +142,33 @@
 
   renderFilters(); renderGrid();
 
-  // 실데이터: Inblog 포스트로 아티클 그리드 교체 (INBLOG_API_KEY 없으면 샘플 유지)
+  // 실데이터: Inblog 포스트 (INBLOG_API_KEY 없으면 샘플 유지)
+  // 최상단 히어로 = 가장 최근 글(posts[0]), 그리드 = 나머지
   fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
     if (!d || !d.posts || !d.posts.length) return;
     fWrap.style.display = 'none'; // 포스트에는 카테고리 필드가 없어 필터 숨김
-    grid.innerHTML = d.posts.map(function (p) {
+
+    var posts = d.posts;
+    var top = posts[0];
+    var hero = document.getElementById('artHero');
+    if (hero) {
+      hero.setAttribute('href', '/p/' + encodeURIComponent(top.slug || top.id));
+      var heroCover = top.image
+        ? '<div style="width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:var(--paper-2);"><img src="' + esc(top.image) + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"></div>'
+        : '<div style="width:100%;aspect-ratio:16/9;border-radius:12px;background:var(--blue);"></div>';
+      hero.innerHTML = heroCover +
+        '<div>' +
+          '<div style="display:flex;align-items:center;gap:10px;">' +
+            '<span class="badge-ink">아티클</span>' +
+            '<span class="mono" style="font-size:11px;letter-spacing:.06em;color:var(--cat-tax);">최신 발행</span>' +
+          '</div>' +
+          '<h2 class="bt" style="font-size:29px;line-height:1.36;font-weight:700;margin:14px 0 0;">' + esc(top.title) + '</h2>' +
+          (top.description ? '<p style="font-size:14.5px;color:var(--ink-2);margin:12px 0 0;line-height:1.65;">' + esc(top.description) + '</p>' : '') +
+          '<div class="mono" style="font-size:11.5px;color:var(--ink-3);margin-top:16px;">크레디뷰 리서치 · ' + esc(top.date || '') + '</div>' +
+        '</div>';
+    }
+
+    grid.innerHTML = posts.slice(1).map(function (p) {
       var cover = p.image
         ? '<div class="cover" style="aspect-ratio:16/10;background-image:none;"><img src="' + esc(p.image) + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>'
         : '<div class="cover" style="aspect-ratio:16/10;"><span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;letter-spacing:.12em;color:#9CA4AC;">COVER</span></div>';
