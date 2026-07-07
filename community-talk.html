@@ -150,8 +150,11 @@
   var feed = DATA.slice();
 
   function renderFeed() {
-    var list = feed.slice();
-    if (sort === 'new') list.sort(function (a, b) { return a.mins - b.mins; });
+    // 실제 기입글(_real)은 샘플보다 항상 상단(요즘 뜨는·새 기록 공통)
+    var reals = feed.filter(function (q) { return q._real; });
+    var samples = feed.filter(function (q) { return !q._real; });
+    if (sort === 'new') { reals.sort(function (a, b) { return a.mins - b.mins; }); samples.sort(function (a, b) { return a.mins - b.mins; }); }
+    var list = reals.concat(samples);
     if (filter !== '전체') list = list.filter(function (q) { return q.cat === filter; });
     document.getElementById('count').textContent = list.length + '건';
     document.getElementById('feed').innerHTML = list.map(function (q) {
@@ -235,8 +238,8 @@
 
   renderFilters(); renderFeed(); renderCcats();
 
-  // 실제 기입된 문답 불러오기 → 피드 최상단에 병합(최신순)
-  fetch('/api/qna').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+  // 실제 기입된 문답 불러오기 → 피드 최상단에 병합(최신순). 캐시 무시로 방금 글도 즉시 반영.
+  fetch('/api/qna?_=' + new Date().getTime(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
     if (!d || !d.items || !d.items.length) return;
     var now = Date.now();
     var real = d.items.map(function (it) {
@@ -245,7 +248,8 @@
         cat: it.category || '실무', official: false, ans: 0, views: '0', mins: mins,
         author: it.anonymous ? '익명' : '회원',
         title: it.title, snippet: it.content,
-        tags: it.tags ? it.tags.split(/[\s,]+/).filter(Boolean).slice(0, 3) : []
+        tags: it.tags ? it.tags.split(/[\s,]+/).map(function (t) { return t.replace(/^#/, ''); }).filter(Boolean).slice(0, 3) : [],
+        _real: true
       };
     });
     feed = real.concat(DATA);   // 실데이터가 최신 → 앞에

@@ -1,6 +1,6 @@
-/* 이메일 리드 적재 — 파인더/자료실 공용
+/* 이메일 리드 적재 — 파인더/자료실 공용, 단일 '리드' 탭에 구분 컬럼으로 통합
    POST { type:'finder'|'download', email, consent, source?, item?, row? }
-   → Google Sheets: 파인더리드 / 자료리드 탭에 append */
+   → Google Sheets '리드' 탭: [일시, 구분, 이메일, 마케팅동의, 상세, User-Agent] */
 const { appendRow } = require('../lib/sheets');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -23,12 +23,13 @@ module.exports = async (req, res) => {
 
   if (!EMAIL_RE.test(email)) { res.status(400).json({ error: '유효한 이메일이 아닙니다.' }); return; }
 
+  // 유입 출처 구분
+  const isDownload = body.type === 'download';
+  const source = isDownload ? '자료실' : '정책자금 파인더';
+  const detail = isDownload ? String(body.item || '') : String(body.source || '파인더 사전신청');
+
   try {
-    if (body.type === 'download') {
-      await appendRow('자료리드', [now, email, consent, String(body.item || ''), String(body.row || ''), ua]);
-    } else {
-      await appendRow('파인더리드', [now, email, consent, String(body.source || 'finder'), ua]);
-    }
+    await appendRow('리드', [now, source, email, consent, detail, ua]);
     res.status(200).json({ ok: true });
   } catch (e) {
     console.error('lead append error:', e.message);
