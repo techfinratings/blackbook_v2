@@ -125,9 +125,9 @@
             <button data-seg="contrib">전문가 기고</button>
           </div>
 
-          <!-- 아티클 view -->
+          <!-- 아티클 view (인블로그 최신 글로 동적 렌더) -->
           <div data-view="article">
-            <a href="/content" style="display:block;margin-top:16px;cursor:pointer;">
+            <a href="/content" id="homeHero" style="display:block;margin-top:16px;cursor:pointer;">
               <div style="width:100%;aspect-ratio:16/8.5;border-radius:10px;background:var(--blue);position:relative;overflow:hidden;">
                 <span class="mono" style="position:absolute;left:13px;top:13px;font-size:10px;font-weight:600;color:var(--blue);background:var(--paper-1);padding:4px 9px;border-radius:6px;">재무</span>
                 <svg viewBox="0 0 600 240" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
@@ -140,7 +140,7 @@
               <p style="font-size:14px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;">재무제표 세 장으로 거래처의 상환 능력을 가늠하는 실무 체크포인트.</p>
               <div class="mono" style="font-size:11px;color:var(--ink-3);margin-top:11px;">크레디뷰 리서치 · 8분 읽기 · 조회 1,240</div>
             </a>
-            <div style="margin-top:10px;border-top:1px solid var(--rule-hair);">
+            <div id="homeLedger" style="margin-top:10px;border-top:1px solid var(--rule-hair);">
               <a class="ledger-row" href="/content">
                 <span class="bt ledger-no">02</span>
                 <div style="min-width:0;"><span class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--cat-biz);">경영</span><h3 class="bt" style="font-size:17px;line-height:1.42;font-weight:700;margin:4px 0 0;">런웨이가 6개월 남았다는 신호를 재무팀이 먼저 잡는 5가지 지표</h3></div>
