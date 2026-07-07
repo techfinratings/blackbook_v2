@@ -149,12 +149,20 @@
   // 실제 기입된 문답(시트) + 샘플. 실데이터가 최신이므로 앞에 옵니다.
   var feed = DATA.slice();
 
+  // 인기 점수: 답변 수 우선 + 조회 수
+  function popScore(q) { var v = parseInt(String(q.views || '0').replace(/[^0-9]/g, ''), 10) || 0; return (q.ans || 0) * 100 + v; }
+
   function renderFeed() {
-    // 실제 기입글(_real)은 샘플보다 항상 상단(요즘 뜨는·새 기록 공통)
-    var reals = feed.filter(function (q) { return q._real; });
-    var samples = feed.filter(function (q) { return !q._real; });
-    if (sort === 'new') { reals.sort(function (a, b) { return a.mins - b.mins; }); samples.sort(function (a, b) { return a.mins - b.mins; }); }
-    var list = reals.concat(samples);
+    var list;
+    if (sort === 'new') {
+      // 새 기록: 새로 쓴 글이 위. 실제 기입글(최신) → 샘플 순, 각각 최신순.
+      var reals = feed.filter(function (q) { return q._real; }).sort(function (a, b) { return a.mins - b.mins; });
+      var samples = feed.filter(function (q) { return !q._real; }).sort(function (a, b) { return a.mins - b.mins; });
+      list = reals.concat(samples);
+    } else {
+      // 요즘 뜨는: 답변·조회 많은 글이 위. 새 글(0답변·0조회)은 자연히 하단.
+      list = feed.slice().sort(function (a, b) { return popScore(b) - popScore(a); });
+    }
     if (filter !== '전체') list = list.filter(function (q) { return q.cat === filter; });
     document.getElementById('count').textContent = list.length + '건';
     document.getElementById('feed').innerHTML = list.map(function (q) {
