@@ -38,7 +38,7 @@ module.exports = async function (req, res) {
 
   try {
     const token   = await getAccessToken();
-    const range   = `시트1!I${row}`;
+    const range   = `자료실!I${row}`;
     const baseUrl = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${encodeURIComponent(range)}`;
 
     const readData = await (await fetch(baseUrl, {
