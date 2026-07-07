@@ -62,12 +62,23 @@ async function fetchPolicyEvents(y, m) {
         return { y: parseInt(p[0]), m: parseInt(p[1]), d: parseInt(p[2]) };
       };
 
+      // 설명 페이지용 부가 정보(기업마당 공고 분석 요약)
+      const meta = {
+        id:      item.pblancId || '',
+        summary: item.bsnsSumryCn || '',
+        agency:  item.jrsdInsttNm || item.excInsttNm || '',
+        target:  item.trgetNm || '',
+        field:   item.pldirSportRealmLclasCodeNm || '',
+        apply:   item.reqstMthPapersCn || '',
+        period:  reqstDt,
+      };
+
       const start = parseDate(parts[0]);
       const end   = parseDate(parts[1]);
       if (start && start.y === y && start.m === m)
-        events.push({ day: start.d, title, link, type: 'policy', tag: 'start' });
+        events.push({ day: start.d, title, link, type: 'policy', tag: 'start', ...meta });
       if (end && end.y === y && end.m === m)
-        events.push({ day: end.d, title, link, type: 'policy', tag: 'end' });
+        events.push({ day: end.d, title, link, type: 'policy', tag: 'end', ...meta });
     });
 
     return events;
@@ -117,7 +128,7 @@ async function fetchLawEvents(y, m, startDate, endDate) {
       const eD = parseInt(efDate.slice(6, 8));
       if (eY !== y || eM !== m) return;
 
-      events.push({ day: eD, title, link, type: 'update', tag: 'start' });
+      events.push({ day: eD, title, link, type: 'update', tag: 'start', agency: dept, effDate: efDate });
     });
 
     return events;

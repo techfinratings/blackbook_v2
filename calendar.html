@@ -38,6 +38,29 @@
     display:flex;align-items:center;justify-content:center;color:var(--ink-2);cursor:pointer;font-size:14px;}
   .month-nav .today-btn{width:auto;font-size:12.5px;font-weight:700;padding:0 13px;}
 
+  /* 날짜 클릭 시 좌 2/3 · 우 1/3 분할 */
+  .cal-body{display:flex;gap:22px;align-items:flex-start;}
+  .cal-left{flex:1;min-width:0;display:flex;flex-direction:column;gap:22px;}
+  .cal-side{display:none;flex:0 0 34%;max-width:380px;}
+  .cal-body.split .cal-left{flex:2;}
+  .cal-body.split .cal-side{display:block;position:sticky;top:88px;}
+  .day-ev{display:flex;gap:10px;align-items:flex-start;padding:13px 2px;border-bottom:1px solid var(--rule-soft);cursor:pointer;}
+  .day-ev:last-child{border-bottom:0;}
+  .day-ev:hover{background:var(--paper-1);}
+
+  /* 공고 설명(요약) 페이지 오버레이 */
+  .notice-overlay{position:fixed;inset:0;z-index:120;background:var(--paper-1);overflow-y:auto;display:none;}
+  .notice-overlay.open{display:block;}
+  .notice-meta{display:grid;grid-template-columns:104px 1fr;gap:12px 18px;margin:24px 0;padding:22px 0;border-top:1px solid var(--rule-hair);border-bottom:1px solid var(--rule-hair);}
+  .notice-meta dt{font-family:var(--font-mono);font-size:11px;color:var(--ink-3);letter-spacing:.04em;}
+  .notice-meta dd{margin:0;font-size:14.5px;color:var(--ink-1);line-height:1.6;}
+  .notice-summary{font-size:15.5px;line-height:1.85;color:#2C313A;white-space:pre-line;}
+
+  @media (max-width:900px){
+    .cal-body{flex-direction:column;}
+    .cal-side{max-width:none;width:100%;}
+    .cal-body.split .cal-side{position:static;}
+  }
   @media (max-width:640px){
     .cal-cell{min-height:64px;}
     .cal-ev{display:none;}
@@ -77,8 +100,8 @@
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:22px;" data-chips></div>
   </div>
 
-  <div class="wrap" style="padding-top:8px;padding-bottom:64px;display:flex;flex-direction:column;gap:22px;">
-
+  <div class="wrap cal-body" id="calBody" style="padding-top:8px;padding-bottom:64px;">
+   <div class="cal-left">
     <!-- 월 캘린더 카드 -->
     <div class="card" style="padding:24px 26px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;">
@@ -92,6 +115,7 @@
       <div class="cal-grid" data-grid>
         <div style="grid-column:1/-1;text-align:center;padding:40px 0;color:var(--ink-3);" class="mono">일정을 불러오는 중…</div>
       </div>
+      <p class="mono" style="font-size:10.5px;color:var(--ink-4);margin:14px 0 0;">날짜를 클릭하면 그날의 공고를 오른쪽에서 볼 수 있어요.</p>
     </div>
 
     <!-- 전체 일정 카드 -->
@@ -103,6 +127,21 @@
       <div data-list></div>
       <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:20px;" data-pager></div>
     </div>
+   </div>
+
+   <!-- 선택 날짜의 공고 패널 (우측 1/3) -->
+   <aside class="cal-side" id="calSide">
+     <div class="card" style="padding:20px 22px;">
+       <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;">
+         <div>
+           <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--blue);">선택한 날짜</div>
+           <h3 class="bt" style="font-size:20px;font-weight:700;margin:5px 0 0;" data-day-title></h3>
+         </div>
+         <span data-day-close style="cursor:pointer;color:var(--ink-3);font-size:22px;line-height:1;">×</span>
+       </div>
+       <div data-day-list style="margin-top:14px;"></div>
+     </div>
+   </aside>
   </div>
 
   <footer class="footer">
@@ -111,6 +150,19 @@
       <div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div>
     </div>
   </footer>
+</div>
+
+<!-- 공고 설명(요약) 페이지 -->
+<div class="notice-overlay" id="noticeOverlay">
+  <div class="fore-edge"></div>
+  <div class="page">
+    <div class="gnb" style="position:static;"><div class="wrap gnb-inner">
+      <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
+      <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/community/talk">실무 이야기</a><a href="/archive">자료실</a><a href="/calendar" class="active">캘린더</a><a href="/finder">파인더</a></nav>
+      <span class="gnb-login">로그인</span><span class="gnb-join">회원가입</span>
+    </div></div>
+    <div class="wrap" style="max-width:800px;padding-top:32px;padding-bottom:72px;" data-notice-body></div>
+  </div>
 </div>
 
 <script src="/assets/calendar-data.js"></script>
@@ -140,6 +192,12 @@
     list: document.querySelector('[data-list]'),
     pager: document.querySelector('[data-pager]')
   };
+  var calBody = document.getElementById('calBody');
+  var calSide = document.getElementById('calSide');
+  var dayTitleEl = document.querySelector('[data-day-title]');
+  var dayListEl = document.querySelector('[data-day-list]');
+  var overlay = document.getElementById('noticeOverlay');
+  var noticeBody = document.querySelector('[data-notice-body]');
 
   function isCurrentMonth() {
     var t = new Date();
@@ -228,15 +286,14 @@
         else if (e.day < td) tag = '마감';
         else if (e.day === td) tag = '오늘';
         else tag = 'D-' + (e.day - td);
-        var open = e.link ? ' href="' + e.link + '" target="_blank" rel="noopener"' : '';
-        return '<a class="list-row"' + open + '>' +
+        return '<div class="list-row" data-ev="' + e._idx + '">' +
           '<div style="width:74px;flex-shrink:0;text-align:center;">' +
           '<div class="mono" style="font-size:15px;font-weight:600;color:#181B1E;">' + pad(state.month) + '.' + pad(e.day) + '</div>' +
           '<div class="mono" style="font-size:10px;color:#7E868F;margin-top:1px;">(' + dow + ')</div></div>' +
           '<span style="width:3px;height:34px;border-radius:2px;background:' + cat.color + ';flex-shrink:0;"></span>' +
           '<span class="list-cat" style="color:' + cat.color + ';background:' + cat.soft + ';">' + cat.label + '</span>' +
           '<div style="font-size:14.5px;font-weight:600;flex:1;min-width:0;line-height:1.4;">' + esc(e.title) + '</div>' +
-          '<span class="mono" style="font-size:11px;color:#7E868F;flex-shrink:0;">' + tag + '</span></a>';
+          '<span class="mono" style="font-size:11px;color:#7E868F;flex-shrink:0;">' + tag + '</span></div>';
       }).join('');
     }
 
@@ -258,8 +315,11 @@
 
   function load() {
     el.grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:40px 0;color:#7E868F;" class="mono">일정을 불러오는 중…</div>';
+    calBody.classList.remove('split');
+    closeDetail();
     window.BBCalendar.load(state.year, state.month).then(function (evs) {
       state.events = evs;
+      state.events.forEach(function (e, i) { e._idx = i; });
       state.page = 0;
       state.sel = todayDate() > 0 ? todayDate() : null;
       renderAll();
@@ -273,8 +333,102 @@
   });
   el.grid.addEventListener('click', function (e) {
     var c = e.target.closest('[data-day]'); if (!c) return;
-    state.sel = parseInt(c.getAttribute('data-day'), 10); renderGrid();
+    openDay(parseInt(c.getAttribute('data-day'), 10));
   });
+  // 전체 일정 리스트 클릭 → 설명 페이지 (직접 링크 X)
+  el.list.addEventListener('click', function (e) {
+    var r = e.target.closest('[data-ev]'); if (!r) return;
+    openDetail(state.events[parseInt(r.getAttribute('data-ev'), 10)]);
+  });
+  // 우측 날짜 패널의 공고 클릭 → 설명 페이지
+  dayListEl.addEventListener('click', function (e) {
+    var r = e.target.closest('[data-ev]'); if (!r) return;
+    openDetail(state.events[parseInt(r.getAttribute('data-ev'), 10)]);
+  });
+  document.querySelector('[data-day-close]').addEventListener('click', closeDay);
+  noticeBody.addEventListener('click', function (e) {
+    if (e.target.closest('[data-notice-back]')) closeDetail();
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key !== 'Escape') return;
+    if (overlay.classList.contains('open')) closeDetail();
+    else if (calBody.classList.contains('split')) closeDay();
+  });
+
+  // ── 날짜 클릭 → 우측 공고 패널 (좌 2/3 · 우 1/3) ──
+  function eventsOfDay(day) { return visible().filter(function (e) { return e.day === day; }); }
+  function openDay(day) {
+    state.sel = day; renderGrid();
+    var dow = WD[new Date(state.year, state.month - 1, day).getDay()];
+    dayTitleEl.textContent = state.month + '월 ' + day + '일 (' + dow + ')';
+    var evs = eventsOfDay(day);
+    if (!evs.length) {
+      dayListEl.innerHTML = '<div class="mono" style="font-size:12px;color:#7E868F;padding:10px 0;">이 날은 등록된 공고가 없어요.</div>';
+    } else {
+      dayListEl.innerHTML = evs.map(function (e) {
+        var cat = CATS[e.cat];
+        var sub = e.agency || (e.source === 'statutory' ? '국세청' : '');
+        return '<div class="day-ev" data-ev="' + e._idx + '">' +
+          '<span style="width:3px;align-self:stretch;border-radius:2px;background:' + cat.color + ';flex-shrink:0;"></span>' +
+          '<div style="min-width:0;">' +
+          '<span class="mono" style="font-size:9.5px;color:' + cat.color + ';">' + cat.label + '</span>' +
+          '<div style="font-size:13.5px;font-weight:600;line-height:1.45;margin:2px 0 3px;">' + esc(e.title) + '</div>' +
+          '<span class="mono" style="font-size:10px;color:#7E868F;">' + (sub ? esc(sub) + ' · ' : '') + '자세히 보기 →</span></div></div>';
+      }).join('');
+    }
+    calBody.classList.add('split');
+    if (window.innerWidth <= 900) calSide.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  function closeDay() { calBody.classList.remove('split'); state.sel = null; renderGrid(); }
+
+  // ── 공고 설명(요약) 페이지 ──
+  function fmtEff(s) { s = String(s || ''); return s.length >= 8 ? s.slice(0, 4) + '.' + s.slice(4, 6) + '.' + s.slice(6, 8) : s; }
+  function openDetail(e) {
+    if (!e) return;
+    var cat = CATS[e.cat];
+    var dow = WD[new Date(state.year, state.month - 1, e.day).getDay()];
+    var dateStr = state.year + '.' + pad(state.month) + '.' + pad(e.day) + ' (' + dow + ')';
+    var kindLabel = e.kind === 'policy' ? '정책자금 공고' : (e.kind === 'update' ? '법령 개정' : '세무 법정기한');
+    var tagLabel = e.kind === 'policy' ? (e.tag === 'end' ? '신청 마감일' : '접수 시작일') : (e.kind === 'update' ? '시행일' : '신고·납부 기한');
+
+    var rows = '';
+    var addRow = function (k, v) { if (v) rows += '<dt>' + k + '</dt><dd>' + esc(v) + '</dd>'; };
+    addRow('구분', kindLabel);
+    addRow(tagLabel, dateStr);
+    if (e.kind === 'policy') { addRow('소관기관', e.agency); addRow('지원대상', e.target); addRow('지원분야', e.field); addRow('신청기간', e.period); }
+    else if (e.kind === 'update') { addRow('소관부처', e.agency); addRow('시행일자', fmtEff(e.effDate)); }
+    else { addRow('관할', '국세청 · 홈택스'); }
+
+    var summary;
+    if (e.kind === 'policy' && e.summary) {
+      summary = '<div class="notice-summary">' + esc(e.summary) + '</div>';
+      if (e.apply) summary += '<div style="margin-top:22px;"><div class="mono" style="font-size:11px;color:#7E868F;margin-bottom:6px;">신청 방법</div><div style="font-size:14px;line-height:1.7;color:#2C313A;white-space:pre-line;">' + esc(e.apply) + '</div></div>';
+    } else if (e.kind === 'policy') {
+      summary = '<div class="notice-summary">기업마당에 공고된 정책자금 사업입니다. 상세 자격요건·제출서류는 아래 원문에서 확인하세요.</div>';
+    } else if (e.kind === 'update') {
+      summary = '<div class="notice-summary">법제처에 고시된 재무·세무 관련 개정 법령입니다. 시행일 기준으로 실무에 반영되며, 상세 조문은 아래 법제처 원문에서 확인하세요.</div>';
+    } else {
+      summary = '<div class="notice-summary">국세청이 정한 법정 신고·납부 기한입니다. 기한을 넘기면 가산세가 발생할 수 있으니 홈택스에서 대상 여부와 서식을 확인하세요.</div>';
+    }
+
+    var linkLabel = e.kind === 'policy' ? '기업마당 원문 보기' : (e.kind === 'update' ? '법제처에서 보기' : '홈택스에서 보기');
+    var linkBtn = e.link ? '<div><a href="' + esc(e.link) + '" target="_blank" rel="noopener" class="btn-blue" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;padding:12px 22px;border-radius:3px;margin-top:28px;">' + linkLabel + ' <span style="font-size:15px;">↗</span></a></div>' : '';
+
+    noticeBody.innerHTML =
+      '<button data-notice-back style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);background:none;border:0;cursor:pointer;padding:0;">← 캘린더로</button>' +
+      '<div style="display:flex;align-items:center;gap:10px;margin-top:22px;">' +
+        '<span class="list-cat" style="color:' + cat.color + ';background:' + cat.soft + ';font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;">' + cat.label + '</span>' +
+        '<span class="mono" style="font-size:11px;color:#7E868F;">' + dateStr + '</span></div>' +
+      '<h1 class="bt" style="font-size:30px;line-height:1.4;font-weight:700;margin:14px 0 0;">' + esc(e.rawTitle || e.title) + '</h1>' +
+      '<dl class="notice-meta">' + rows + '</dl>' +
+      summary + linkBtn +
+      '<p class="mono" style="font-size:10px;color:var(--ink-4);margin-top:30px;line-height:1.6;">* 본 요약은 공공 API(기업마당·법제처) 데이터를 바탕으로 정리한 참고용 정보입니다. 정확한 신청 자격·서류는 원문을 확인하세요.</p>';
+
+    overlay.classList.add('open');
+    overlay.scrollTop = 0;
+    document.body.style.overflow = 'hidden';
+  }
+  function closeDetail() { overlay.classList.remove('open'); document.body.style.overflow = ''; }
   el.pager.addEventListener('click', function (e) {
     var b = e.target.closest('[data-nav]'); if (!b) return;
     var v = b.getAttribute('data-nav');

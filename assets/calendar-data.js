@@ -34,9 +34,21 @@
       return {
         day: e.day,
         title: (e.title || '') + suffix,
+        rawTitle: e.title || '',
         link: e.link || null,
         cat: cat,
-        source: 'live'
+        source: 'live',
+        kind: e.type,           // 'policy' | 'update'
+        tag: e.tag || '',
+        // 설명 페이지용 부가 정보
+        id: e.id || '',
+        summary: e.summary || '',
+        agency: e.agency || '',
+        target: e.target || '',
+        field: e.field || '',
+        apply: e.apply || '',
+        period: e.period || '',
+        effDate: e.effDate || ''
       };
     }).filter(function (e) { return e.day >= 1 && e.day <= 31 && e.title; });
   }
