@@ -190,10 +190,48 @@
     });
   }
 
+  /* ---------- 홈 콘텐츠 모듈: 인블로그 최신 글 ---------- */
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); }
+  function initContentPosts() {
+    var hero = document.getElementById('homeHero');
+    var ledger = document.getElementById('homeLedger');
+    if (!hero) return;
+    fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+      if (!d || !d.posts || !d.posts.length) return;   // 실패 시 정적 샘플 유지
+      var posts = d.posts;
+      var top = posts[0];
+
+      // 대표(최신) 인사이트 히어로
+      hero.setAttribute('href', '/p/' + encodeURIComponent(top.slug || top.id));
+      var cover = top.image
+        ? '<div style="width:100%;aspect-ratio:16/8.5;border-radius:10px;overflow:hidden;background:var(--paper-2);"><img src="' + esc(top.image) + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;"></div>'
+        : '<div style="width:100%;aspect-ratio:16/8.5;border-radius:10px;background:var(--blue);"></div>';
+      hero.innerHTML = cover +
+        '<span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:var(--cat-tax);display:block;margin-top:14px;">최신 발행</span>' +
+        '<h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;color:var(--ink-1);">' + esc(top.title) + '</h3>' +
+        (top.description ? '<p style="font-size:14px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + esc(top.description) + '</p>' : '') +
+        '<div class="mono" style="font-size:11px;color:var(--ink-3);margin-top:11px;">크레디뷰 리서치 · ' + esc(top.date || '') + '</div>';
+
+      // 02·03 원장 리스트 = 다음 최신 글
+      if (ledger) {
+        var rest = posts.slice(1, 3);
+        if (!rest.length) { ledger.innerHTML = ''; return; }
+        ledger.innerHTML = rest.map(function (p, i) {
+          return '<a class="ledger-row" href="/p/' + encodeURIComponent(p.slug || p.id) + '">' +
+            '<span class="bt ledger-no">' + ('0' + (i + 2)) + '</span>' +
+            '<div style="min-width:0;"><span class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--ink-3);">' + esc(p.date || '') + '</span>' +
+            '<h3 class="bt" style="font-size:17px;line-height:1.42;font-weight:700;margin:4px 0 0;">' + esc(p.title) + '</h3></div>' +
+            '<span style="font-size:16px;color:#C2C9D0;align-self:center;">→</span></a>';
+        }).join('');
+      }
+    }).catch(function () {});
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initContentTabs();
     initQA();
     initSchedule();
     initFiles();
+    initContentPosts();
   });
 })();
