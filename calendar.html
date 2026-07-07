@@ -383,6 +383,19 @@
 
   // ── 공고 설명(요약) 페이지 ──
   function fmtEff(s) { s = String(s || ''); return s.length >= 8 ? s.slice(0, 4) + '.' + s.slice(4, 6) + '.' + s.slice(6, 8) : s; }
+  // 기업마당 요약(bsnsSumryCn)은 HTML 문자열 → 정리된 텍스트로 변환
+  function htmlToText(html) {
+    return String(html || '')
+      .replace(/<\s*br\s*\/?>/gi, '\n')
+      .replace(/<\/(p|div|li|tr)>/gi, '\n')
+      .replace(/<[^>]+>/g, '')                 // 남은 태그 제거
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&').replace(/&lt;/gi, '<').replace(/&gt;/gi, '>')
+      .replace(/&quot;/gi, '"').replace(/&#0?39;|&apos;/gi, "'")
+      .replace(/[ \t]+\n/g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
   function openDetail(e) {
     if (!e) return;
     var cat = CATS[e.cat];
@@ -401,8 +414,9 @@
 
     var summary;
     if (e.kind === 'policy' && e.summary) {
-      summary = '<div class="notice-summary">' + esc(e.summary) + '</div>';
-      if (e.apply) summary += '<div style="margin-top:22px;"><div class="mono" style="font-size:11px;color:#7E868F;margin-bottom:6px;">신청 방법</div><div style="font-size:14px;line-height:1.7;color:#2C313A;white-space:pre-line;">' + esc(e.apply) + '</div></div>';
+      summary = '<div class="notice-summary">' + esc(htmlToText(e.summary)) + '</div>';
+      var applyText = htmlToText(e.apply);
+      if (applyText) summary += '<div style="margin-top:22px;"><div class="mono" style="font-size:11px;color:#7E868F;margin-bottom:6px;">신청 방법</div><div style="font-size:14px;line-height:1.7;color:#2C313A;white-space:pre-line;">' + esc(applyText) + '</div></div>';
     } else if (e.kind === 'policy') {
       summary = '<div class="notice-summary">기업마당에 공고된 정책자금 사업입니다. 상세 자격요건·제출서류는 아래 원문에서 확인하세요.</div>';
     } else if (e.kind === 'update') {
