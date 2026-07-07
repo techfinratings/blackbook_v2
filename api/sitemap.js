@@ -1,5 +1,5 @@
-/* /sitemap.xml — 정적 라우트 + Inblog 콘텐츠 상세(URL) 자동 수집 */
-const BLOG_ID = '10195';
+/* /sitemap.xml — 정적 라우트 + Inblog 발행 콘텐츠 상세(URL) 자동 수집 */
+const { fetchPublished } = require('../lib/inblog');
 const STATIC = ['/', '/content', '/community/talk', '/archive', '/calendar', '/finder'];
 
 module.exports = async (req, res) => {
@@ -12,17 +12,10 @@ module.exports = async (req, res) => {
   const key = process.env.INBLOG_API_KEY;
   if (key) {
     try {
-      const r = await fetch(
-        `https://inblog.ai/api/v1/posts?blog_id=${BLOG_ID}&per_page=100&sort=published_at`,
-        { headers: { Authorization: `Bearer ${key}` }, signal: AbortSignal.timeout(8000) });
-      if (r.ok) {
-        const data = await r.json();
-        (data.data || []).forEach(p => {
-          const slug = p.attributes?.slug || p.id;
-          const lastmod = (p.attributes?.published_at || '').slice(0, 10);
-          urls.push({ loc: `${base}/p/${encodeURIComponent(slug)}`, priority: '0.8', lastmod });
-        });
-      }
+      const posts = await fetchPublished(key);
+      posts.forEach(p => {
+        urls.push({ loc: `${base}/p/${encodeURIComponent(p.slug)}`, priority: '0.8', lastmod: p.date });
+      });
     } catch (e) { /* 정적 라우트만이라도 반환 */ }
   }
 

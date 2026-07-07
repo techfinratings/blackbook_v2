@@ -1,5 +1,6 @@
-// Inblog 포스트 프록시 — API 키를 서버에서만 사용
+// Inblog 포스트 프록시 — 발행(published)건만 반환
 // Vercel 환경변수: INBLOG_API_KEY
+const { fetchPublished, rawSample } = require('../lib/inblog');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,26 +15,17 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const r = await fetch(
-      'https://inblog.ai/api/v1/posts?blog_id=10195&per_page=9&sort=published_at',
-      { headers: { Authorization: `Bearer ${key}` } }
-    );
+    // ?debug=1 → 발행 판별 필드 확인용(원본 attributes 노출)
+    if (req.query && req.query.debug) {
+      const sample = await rawSample(key, 4);
+      return res.status(200).json({ debug: true, sample });
+    }
 
-    if (!r.ok) throw new Error(`Inblog API ${r.status}`);
-    const data = await r.json();
-
-    const posts = (data.data || [])
-      .filter(p => p.attributes.published_at) // 발행된 글만
-      .sort((a, b) => (b.attributes.published_at || '').localeCompare(a.attributes.published_at || '')) // 최신순
-      .map(p => ({
-        id:          p.id,
-        title:       p.attributes.title || '',
-        slug:        p.attributes.slug  || p.id,
-        description: p.attributes.description || '',
-        date:        (p.attributes.published_at || '').slice(0, 10),
-        image:       p.attributes.image?.url || null,
-      }));
-
+    const list = await fetchPublished(key);
+    const posts = list.map(p => ({
+      id: p.id, title: p.title, slug: p.slug,
+      description: p.description, date: p.date, image: p.image,
+    }));
     res.status(200).json({ posts });
   } catch (err) {
     console.error('Inblog API error:', err.message);

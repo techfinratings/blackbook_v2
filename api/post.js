@@ -5,6 +5,7 @@
    클라이언트 렌더 대비 SEO가 강합니다. (THE LEDGER 스타일 재사용)
    라우트: /p/:slug  또는  /content/detail?slug=
    ============================================================ */
+const { fetchPublished } = require('../lib/inblog');
 const BLOG_ID = '10195';
 const SITE_NAME = 'BLACK BOOK';
 const PUBLISHER = '크레디뷰';
@@ -28,19 +29,8 @@ async function fetchJSON(url, key) {
   return r.json();
 }
 
-async function getPosts(key) {
-  const data = await fetchJSON(
-    `https://inblog.ai/api/v1/posts?blog_id=${BLOG_ID}&per_page=100&sort=published_at`, key);
-  return (data.data || []).map(p => ({
-    id: p.id,
-    slug: p.attributes?.slug || String(p.id),
-    title: p.attributes?.title || '',
-    description: p.attributes?.description || '',
-    date: (p.attributes?.published_at || '').slice(0, 10),
-    image: p.attributes?.image?.url || null,
-    attributes: p.attributes || {},
-  }));
-}
+// 발행건만 반환(초안 상세 페이지 노출 방지)
+function getPosts(key) { return fetchPublished(key); }
 
 // 본문 후보 필드를 여러 이름으로 탐색(Inblog 응답 스키마 변동 대비).
 const BODY_FIELDS = ['content_html', 'contentHtml', 'body_html', 'html', 'content', 'body', 'markdown'];

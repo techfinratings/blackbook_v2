@@ -138,23 +138,32 @@
   var FILTERS = ['전체','세무','회계','법령','실무','경영'];
   var sort = 'hot', filter = '전체', ccat = '세무';
 
-  function timeLabel(m) { return m < 60 ? m + '분 전' : (m < 1440 ? Math.round(m / 60) + '시간 전' : '어제'); }
+  function timeLabel(m) {
+    if (m < 1) return '방금 전';
+    if (m < 60) return Math.round(m) + '분 전';
+    if (m < 1440) return Math.round(m / 60) + '시간 전';
+    return Math.floor(m / 1440) + '일 전';
+  }
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); }
+
+  // 실제 기입된 문답(시트) + 샘플. 실데이터가 최신이므로 앞에 옵니다.
+  var feed = DATA.slice();
 
   function renderFeed() {
-    var list = DATA.slice();
+    var list = feed.slice();
     if (sort === 'new') list.sort(function (a, b) { return a.mins - b.mins; });
     if (filter !== '전체') list = list.filter(function (q) { return q.cat === filter; });
     document.getElementById('count').textContent = list.length + '건';
     document.getElementById('feed').innerHTML = list.map(function (q) {
       var ansCol = q.official ? '#2348D6' : (q.ans > 0 ? '#181B1E' : '#C2C9D0');
       var badge = q.official ? '<span class="mono" style="font-size:9.5px;font-weight:600;color:#2348D6;background:#EDF0FD;border-radius:3px;padding:2px 7px;">크레디뷰 답변</span>' : '';
-      var tags = q.tags.map(function (t) { return '<span class="mono" style="font-size:10px;color:#49505A;background:#EEF0F2;padding:3px 8px;border-radius:3px;">#' + t + '</span>'; }).join('');
+      var tags = q.tags.map(function (t) { return '<span class="mono" style="font-size:10px;color:#49505A;background:#EEF0F2;padding:3px 8px;border-radius:3px;">#' + esc(t) + '</span>'; }).join('');
       return '<a class="q-row" href="/community/qna">' +
         '<div style="width:60px;flex-shrink:0;text-align:center;padding-top:2px;"><div class="mono" style="font-size:23px;font-weight:600;line-height:1;color:' + ansCol + ';">' + q.ans + '</div><div class="mono" style="font-size:10px;color:#7E868F;margin-top:3px;">답변</div></div>' +
-        '<div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:10px;"><span class="mono" style="font-size:10px;letter-spacing:.05em;color:' + (COL[q.cat] || '#181B1E') + ';">' + q.cat + '</span>' + badge + '<span class="mono" style="font-size:10px;color:#9BA3AB;margin-left:auto;">' + timeLabel(q.mins) + '</span></div>' +
-        '<h3 class="bt" style="font-size:19px;line-height:1.45;font-weight:700;margin:8px 0 0;">' + q.title + '</h3>' +
-        '<p style="font-size:13.5px;color:#6A7079;line-height:1.6;margin:7px 0 0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + q.snippet + '</p>' +
-        '<div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;"><span class="mono" style="font-size:10.5px;color:#7E868F;">' + q.author + '</span><span style="color:#D8DCE0;">·</span><span class="mono" style="font-size:10.5px;color:#7E868F;">조회 ' + q.views + '</span><div style="display:flex;gap:6px;margin-left:6px;">' + tags + '</div></div></div></a>';
+        '<div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:10px;"><span class="mono" style="font-size:10px;letter-spacing:.05em;color:' + (COL[q.cat] || '#181B1E') + ';">' + esc(q.cat) + '</span>' + badge + '<span class="mono" style="font-size:10px;color:#9BA3AB;margin-left:auto;">' + timeLabel(q.mins) + '</span></div>' +
+        '<h3 class="bt" style="font-size:19px;line-height:1.45;font-weight:700;margin:8px 0 0;">' + esc(q.title) + '</h3>' +
+        '<p style="font-size:13.5px;color:#6A7079;line-height:1.6;margin:7px 0 0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + esc(q.snippet) + '</p>' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;"><span class="mono" style="font-size:10.5px;color:#7E868F;">' + esc(q.author) + '</span><span style="color:#D8DCE0;">·</span><span class="mono" style="font-size:10.5px;color:#7E868F;">조회 ' + q.views + '</span><div style="display:flex;gap:6px;margin-left:6px;">' + tags + '</div></div></div></a>';
     }).join('');
   }
   function renderFilters() {
@@ -225,6 +234,23 @@
   });
 
   renderFilters(); renderFeed(); renderCcats();
+
+  // 실제 기입된 문답 불러오기 → 피드 최상단에 병합(최신순)
+  fetch('/api/qna').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    if (!d || !d.items || !d.items.length) return;
+    var now = Date.now();
+    var real = d.items.map(function (it) {
+      var t = Date.parse(it.ts); var mins = isNaN(t) ? 0 : Math.max(0, (now - t) / 60000);
+      return {
+        cat: it.category || '실무', official: false, ans: 0, views: '0', mins: mins,
+        author: it.anonymous ? '익명' : '회원',
+        title: it.title, snippet: it.content,
+        tags: it.tags ? it.tags.split(/[\s,]+/).filter(Boolean).slice(0, 3) : []
+      };
+    });
+    feed = real.concat(DATA);   // 실데이터가 최신 → 앞에
+    renderFeed();
+  }).catch(function () {});
 })();
 </script>
 </body>

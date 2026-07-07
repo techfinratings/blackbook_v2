@@ -1,6 +1,7 @@
 const SHEET_ID = '1gsjz9DXDHaFgGTOrx42i6_XEgqETq_n1db3zO6ZMH6Y';
 const API_KEY  = 'AIzaSyBpaRMklAo95BOau2BcebuZv5kMsWV6zik';
-const RANGE    = '시트1!A2:I';
+// 시트명 미지정 → 항상 '첫 번째 시트'를 읽음(탭 이름을 바꿔도 안 깨짐).
+const RANGE    = 'A2:I';
 
 module.exports = async function (req, res) {
   const url = 'https://sheets.googleapis.com/v4/spreadsheets/' + SHEET_ID
