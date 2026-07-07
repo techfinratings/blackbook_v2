@@ -44,6 +44,21 @@ img{display:block;}
 button{font-family:inherit;}
 ::selection{background:var(--blue);color:var(--paper-1);}
 
+/* ============================================================
+   한국어 줄바꿈 — 전역
+   · word-break:keep-all  → 어절(단어) 중간에서 줄이 끊기지 않음
+   · overflow-wrap:break-word → 너무 긴 단어·URL은 예외적으로 끊김
+   · h1~h6 text-wrap:balance → 제목 줄 길이 균형
+   · p text-wrap:pretty → 본문 마지막 줄에 단어 하나만 남지 않게
+   white-space:nowrap(탭·칩·말줄임)은 그대로 유지되어 레이아웃 영향 없음.
+   ============================================================ */
+*, *::before, *::after {
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+h1, h2, h3, h4, h5, h6 { text-wrap: balance; }
+p { text-wrap: pretty; }
+
 .bt{font-family:var(--font-display);word-break:keep-all;}
 .mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
 .wrap{max-width:1180px;margin:0 auto;padding:0 40px;}
