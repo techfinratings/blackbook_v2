@@ -1,6 +1,7 @@
 /* /sitemap.xml — 정적 라우트 + Inblog 발행 콘텐츠 상세(URL) 자동 수집 */
 const { fetchPublished } = require('../lib/inblog');
-const STATIC = ['/', '/content', '/community/talk', '/archive', '/calendar', '/finder'];
+const { GUIDES } = require('../lib/guides');
+const STATIC = ['/', '/content', '/guide', '/community/talk', '/archive', '/calendar', '/finder'];
 
 module.exports = async (req, res) => {
   const host = req.headers['x-forwarded-host'] || req.headers.host || 'blackbook-red.vercel.app';
@@ -8,6 +9,7 @@ module.exports = async (req, res) => {
   const base = `${proto}://${host}`;
 
   const urls = STATIC.map(p => ({ loc: base + p, priority: p === '/' ? '1.0' : '0.7' }));
+  GUIDES.forEach(g => urls.push({ loc: `${base}/guide/${g.slug}`, priority: '0.8' }));
 
   const key = process.env.INBLOG_API_KEY;
   if (key) {
