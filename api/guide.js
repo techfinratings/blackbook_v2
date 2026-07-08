@@ -1,6 +1,8 @@
 /* ============================================================
-   세금 신고 안내 가이드 — 서버 렌더(SSR) + SEO
-   /guide            → 허브(5개 주제 목록)
+   실무 노트 — 서버 렌더(SSR) + SEO
+   정보성(코드처리 완료) 콘텐츠를 한곳에 모으는 허브. 현재는 세무
+   신고 주제로 채워져 있고, 앞으로 실무 정보 글이 계속 쌓인다.
+   /guide            → 허브(주제 목록)
    /guide/:slug      → 상세(안내 + 신고기한 + FAQ)
    각 상세는 Article·FAQPage·BreadcrumbList JSON-LD를 실어 검색
    노출을 강화하고, 신고기한은 /calendar 의 실제 일정과 연결한다.
@@ -66,7 +68,7 @@ ${jsonld.map(o => `<script type="application/ld+json">${JSON.stringify(o)}</scri
 <div class="page">
   <header class="gnb"><div class="wrap gnb-inner">
     <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
-    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide" class="active">세금가이드</a><a href="/community/talk">실무 이야기</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder">파인더</a></nav>
+    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide" class="active">실무 노트</a><a href="/community/talk">실무 이야기</a><a href="/archive">실무자료 아카이브</a><a href="/calendar">캘린더</a><a href="/finder">파인더</a></nav>
     <span class="gnb-login">로그인</span><span class="gnb-join">회원가입</span>
   </div></header>`;
 }
@@ -83,13 +85,13 @@ function renderHub(base) {
   const desc = '원천징수·부가가치세·법인세·종합소득세·연말정산 — 세무·회계 실무자가 챙겨야 할 세금 신고를 누가·언제·무엇을 기준으로 정리했습니다.';
   const ld = [{
     '@context': 'https://schema.org', '@type': 'CollectionPage',
-    name: '세금 신고 안내', description: desc, url: canonical,
+    name: '실무 노트', description: desc, url: canonical,
     publisher: { '@type': 'Organization', name: PUBLISHER }
   }, {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: '홈', item: base + '/' },
-      { '@type': 'ListItem', position: 2, name: '세금가이드', item: canonical }
+      { '@type': 'ListItem', position: 2, name: '실무 노트', item: canonical }
     ]
   }];
   const cards = GUIDES.map(g => `
@@ -103,11 +105,11 @@ function renderHub(base) {
       <div class="mono" style="font-size:11px;color:var(--blue);font-weight:600;">안내 보기 →</div>
     </a>`).join('');
 
-  return head('세금 신고 안내', desc, canonical, ld) + `
+  return head('실무 노트', desc, canonical, ld) + `
   <div class="wrap" style="max-width:960px;padding-top:44px;">
-    <div class="eyebrow">INDEX 06 — 세금 신고 안내</div>
-    <h1 class="page-title" style="font-size:38px;margin-top:12px;">세금 신고, 언제 무엇을 하나</h1>
-    <p class="page-intro" style="max-width:620px;margin:10px 0 0;">주기마다 돌아오는 세금 신고를 주제별로 정리했습니다. 각 안내에는 <b>실제 신고기한</b>이 함께 있어, 오늘 챙길 일을 바로 확인할 수 있습니다.</p>
+    <div class="eyebrow">INDEX 06 — 실무 노트</div>
+    <h1 class="page-title" style="font-size:38px;margin-top:12px;">찾아보는 실무 노트</h1>
+    <p class="page-intro" style="max-width:620px;margin:10px 0 0;">세무 신고처럼 주기가 있는 일부터 실무에서 자주 막히는 지점까지, 필요할 때 꺼내 보도록 정리했습니다. 신고가 있는 주제에는 <b>실제 기한</b>을 함께 담았습니다.</p>
     <div class="grid-guides" style="margin:34px 0 20px;">${cards}</div>
     <div class="callout" style="margin:12px 0 64px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
       <div><div style="font-weight:700;font-size:15px;">이번 달 신고 일정이 궁금하다면</div><div style="font-size:13px;color:var(--ink-2);margin-top:3px;">세무·회계·정책자금 일정을 한눈에.</div></div>
@@ -155,14 +157,14 @@ function renderDetail(g, base) {
     '@context': 'https://schema.org', '@type': 'BreadcrumbList',
     itemListElement: [
       { '@type': 'ListItem', position: 1, name: '홈', item: base + '/' },
-      { '@type': 'ListItem', position: 2, name: '세금가이드', item: base + '/guide' },
+      { '@type': 'ListItem', position: 2, name: '실무 노트', item: base + '/guide' },
       { '@type': 'ListItem', position: 3, name: g.title, item: canonical }
     ]
   }];
 
   return head(g.title, desc, canonical, ld) + `
   <article class="read" style="padding-top:44px;padding-bottom:64px;">
-    <a href="/guide" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);">← 세금 신고 안내</a>
+    <a href="/guide" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);">← 실무 노트</a>
     <div style="display:flex;align-items:center;gap:10px;margin-top:22px;flex-wrap:wrap;">
       <span class="mono" style="font-size:10px;color:var(--ink-3);">GUIDE ${esc(g.no)}</span>
       <span class="mono" style="font-size:10px;font-weight:600;color:${catColor(g.cat)};border:1px solid ${catColor(g.cat)};border-radius:3px;padding:3px 8px;">${esc(g.cat)}</span>
@@ -184,14 +186,14 @@ function renderDetail(g, base) {
     ${faqBlocks}
 
     <div style="margin-top:40px;padding-top:26px;border-top:1px solid var(--rule-hair);">
-      <div class="mono" style="font-size:10px;letter-spacing:.08em;color:var(--ink-3);margin-bottom:12px;">다른 세금 안내</div>
+      <div class="mono" style="font-size:10px;letter-spacing:.08em;color:var(--ink-3);margin-bottom:12px;">다른 노트</div>
       <div style="display:flex;flex-wrap:wrap;gap:8px;">${others}</div>
     </div>
 
     <div class="side-cta" style="margin-top:34px;border-radius:12px;">
       <div class="bt" style="font-size:17px;font-weight:700;line-height:1.5;">관련 서식이 필요하신가요?</div>
-      <p style="font-size:12.5px;color:var(--ink-4);line-height:1.65;margin:8px 0 16px;">신고에 바로 쓰는 엑셀·서식 자료를 자료실에서 받아보세요.</p>
-      <a href="/archive" class="btn" style="display:inline-block;padding:11px 22px;">자료실 가기 →</a>
+      <p style="font-size:12.5px;color:var(--ink-4);line-height:1.65;margin:8px 0 16px;">신고에 바로 쓰는 엑셀·서식 자료를 실무자료 아카이브에서 받아보세요.</p>
+      <a href="/archive" class="btn" style="display:inline-block;padding:11px 22px;">실무자료 아카이브 가기 →</a>
     </div>
   </article>` + FOOT;
 }

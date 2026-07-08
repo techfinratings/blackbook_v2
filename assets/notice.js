@@ -47,7 +47,7 @@
       '<div class="fore-edge"></div><div class="page">' +
       '<div class="gnb" style="position:static;"><div class="wrap gnb-inner">' +
       '<a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>' +
-      '<nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide">세금가이드</a><a href="/community/talk">실무 이야기</a><a href="/archive">자료실</a><a href="/calendar" class="active">캘린더</a><a href="/finder">파인더</a></nav>' +
+      '<nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide">실무 노트</a><a href="/community/talk">실무 이야기</a><a href="/archive">실무자료 아카이브</a><a href="/calendar" class="active">캘린더</a><a href="/finder">파인더</a></nav>' +
       '<span class="gnb-login">로그인</span><span class="gnb-join">회원가입</span></div></div>' +
       '<div class="wrap" style="max-width:800px;padding-top:32px;padding-bottom:72px;" data-notice-body></div></div>';
     document.body.appendChild(overlay);
