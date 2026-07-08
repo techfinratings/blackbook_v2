@@ -49,8 +49,15 @@
         </div>
         <span class="mono" style="font-size:11px;color:var(--ink-3);padding-bottom:11px;" id="count"></span>
       </div>
-      <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:16px;" id="filters"></div>
-      <div id="files" style="margin-top:8px;"></div>
+      <div style="display:flex;align-items:baseline;gap:12px;margin-top:16px;">
+        <span class="mono" style="font-size:9.5px;letter-spacing:.08em;color:var(--ink-3);flex-shrink:0;padding-top:8px;">분야</span>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;flex:1;" id="filters"></div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:12px;margin-top:9px;">
+        <span class="mono" style="font-size:9.5px;letter-spacing:.08em;color:var(--ink-3);flex-shrink:0;padding-top:8px;">형태</span>
+        <div style="display:flex;flex-wrap:wrap;gap:7px;flex:1;" id="typeFilters"></div>
+      </div>
+      <div id="files" style="margin-top:12px;"></div>
       <div style="display:flex;justify-content:center;margin-top:40px;"><button class="btn-outline">더 펼치기 ↓</button></div>
     </div>
 
@@ -58,9 +65,9 @@
       <div class="side-card">
         <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);padding:15px 18px 0;">오늘의 장부</div>
         <div style="padding:6px 18px 14px;">
-          <div class="stat-line"><span style="font-size:13px;color:var(--ink-2);">누적 자료</span><span class="mono" style="font-size:15px;font-weight:600;">1,240</span></div>
-          <div class="stat-line"><span style="font-size:13px;color:var(--ink-2);">이번 달 추가</span><span class="mono" style="font-size:15px;font-weight:600;">38</span></div>
-          <div class="stat-line" style="border-bottom:0;"><span style="font-size:13px;color:var(--ink-2);">총 내려받기</span><span class="mono" style="font-size:15px;font-weight:600;">24,800</span></div>
+          <div class="stat-line"><span style="font-size:13px;color:var(--ink-2);">누적 자료</span><span class="mono" id="statTotal" style="font-size:15px;font-weight:600;">–</span></div>
+          <div class="stat-line"><span style="font-size:13px;color:var(--ink-2);">이번 달 추가</span><span class="mono" id="statMonth" style="font-size:15px;font-weight:600;">–</span></div>
+          <div class="stat-line" style="border-bottom:0;"><span style="font-size:13px;color:var(--ink-2);">총 내려받기</span><span class="mono" id="statDl" style="font-size:15px;font-weight:600;">–</span></div>
         </div>
       </div>
       <div>
@@ -110,11 +117,12 @@
   var EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   var fmt = function (n) { return Number(n).toLocaleString('en-US'); };
   var RANKCOL = ['#2348D6','#2348D6','#2348D6','#C2C9D0'];
-  var DATA = [], seg = 'new', filter = '전체', query = '';
+  var DATA = [], seg = 'new', filter = '전체', typeFilter = '전체', query = '';
 
   var elCount = document.getElementById('count');
   var elFiles = document.getElementById('files');
   var elFilters = document.getElementById('filters');
+  var elTypeFilters = document.getElementById('typeFilters');
   var elPopular = document.getElementById('popular');
 
   function categories() {
@@ -122,9 +130,20 @@
     DATA.forEach(function (f) { if (f.cat && !seen[f.cat]) { seen[f.cat] = 1; out.push(f.cat); } });
     return out;
   }
+  // 데이터에 실제 존재하는 파일형태 그룹만, 정해진 순서로 노출
+  function typeGroups() {
+    var seen = {};
+    DATA.forEach(function (f) { seen[BBArchive.typeGroup(f.type)] = 1; });
+    var out = ['전체'];
+    BBArchive.TYPE_ORDER.forEach(function (g) { if (seen[g]) out.push(g); });
+    return out;
+  }
   function renderFilters() {
     elFilters.innerHTML = categories().map(function (f) {
       return '<button class="filter' + (f === filter ? ' on' : '') + '" data-f="' + esc(f) + '">' + esc(f) + '</button>';
+    }).join('');
+    elTypeFilters.innerHTML = typeGroups().map(function (g) {
+      return '<button class="filter' + (g === typeFilter ? ' on' : '') + '" data-t="' + esc(g) + '">' + esc(g) + '</button>';
     }).join('');
   }
   function renderFiles() {
@@ -132,6 +151,7 @@
     if (seg === 'hot') list.sort(function (a, b) { return b.dl - a.dl; });
     else list.sort(function (a, b) { return b._dk - a._dk || b.dl - a.dl; });
     if (filter !== '전체') list = list.filter(function (f) { return f.cat === filter; });
+    if (typeFilter !== '전체') list = list.filter(function (f) { return BBArchive.typeGroup(f.type) === typeFilter; });
     if (query) list = list.filter(function (f) { return (f.name + f.desc).toLowerCase().indexOf(query.toLowerCase()) >= 0; });
     elCount.textContent = list.length + '건';
     if (!list.length) { elFiles.innerHTML = '<div class="mono" style="color:#7E868F;padding:24px 0;">' + (DATA.length ? '검색 결과가 없습니다.' : '자료를 불러오는 중…') + '</div>'; return; }
@@ -147,6 +167,15 @@
         '<button class="dl-btn" style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:#49505A;border:1px solid #D8DCE0;border-radius:3px;padding:9px 15px;cursor:pointer;white-space:nowrap;background:#fff;">↓ 내려받기</button></div>';
     }).join('');
   }
+  function renderStats() {
+    var now = new Date();
+    var thisMonth = now.getFullYear() * 100 + (now.getMonth() + 1);
+    var added = 0, dl = 0;
+    DATA.forEach(function (f) { if (f._dk === thisMonth) added++; dl += f.dl; });
+    document.getElementById('statTotal').textContent = fmt(DATA.length);
+    document.getElementById('statMonth').textContent = fmt(added);
+    document.getElementById('statDl').textContent = fmt(dl);
+  }
   function renderPopular() {
     var top = DATA.slice().sort(function (a, b) { return b.dl - a.dl; }).slice(0, 4);
     elPopular.innerHTML = top.map(function (p, i) {
@@ -159,6 +188,9 @@
 
   elFilters.addEventListener('click', function (e) {
     var b = e.target.closest('[data-f]'); if (!b) return; filter = b.getAttribute('data-f'); renderFilters(); renderFiles();
+  });
+  elTypeFilters.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-t]'); if (!b) return; typeFilter = b.getAttribute('data-t'); renderFilters(); renderFiles();
   });
   document.getElementById('segs').addEventListener('click', function (e) {
     var b = e.target.closest('[data-seg]'); if (!b) return; seg = b.getAttribute('data-seg');
@@ -237,7 +269,7 @@
   renderFiles(); // loading state
   BBArchive.load(function (files) {   // 캐시 즉시 + 최신 갱신
     DATA = files;
-    renderFilters(); renderFiles(); renderPopular();
+    renderFilters(); renderFiles(); renderPopular(); renderStats();
   });
 })();
 </script>

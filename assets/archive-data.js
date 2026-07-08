@@ -22,8 +22,22 @@
     '경영': '#181B1E', '재무': '#2348D6', '정책자금': '#2348D6'
   };
 
+  // 파일형태 → 대표 그룹(필터·라벨). 확장자 흩어짐을 실무자 언어로 묶음.
+  //   엑셀서식/PPT서식 등 "형태로 찾는" 습관(경리코리아 벤치마킹)을 지원.
+  var TYPE_GROUP = {
+    XLS: '엑셀', XLSX: '엑셀', CSV: '엑셀',
+    PPT: 'PPT', PPTX: 'PPT',
+    PDF: 'PDF',
+    HWP: '한글', HWPX: '한글',
+    DOC: '워드', DOCX: '워드',
+    ZIP: '기타', MD: '기타', TXT: '기타'
+  };
+  // 그룹 노출 순서(필터 칩 정렬용)
+  var TYPE_ORDER = ['엑셀', 'PPT', '한글', 'PDF', '워드', '기타'];
+
   function typeColor(t) { return FILE_COL[String(t || '').toLowerCase()] || '#49505A'; }
   function catColor(c) { return CAT_COL[String(c || '').trim()] || '#181B1E'; }
+  function typeGroup(t) { return TYPE_GROUP[String(t || '').toUpperCase()] || '기타'; }
 
   // yyyy.mm → 정렬용 정수(202605). 파싱 실패 시 0.
   function dateKey(s) {
@@ -76,6 +90,7 @@
 
   global.BBArchive = {
     load: load, parse: parse, download: download,
-    typeColor: typeColor, catColor: catColor, dateKey: dateKey
+    typeColor: typeColor, catColor: catColor, dateKey: dateKey,
+    typeGroup: typeGroup, TYPE_ORDER: TYPE_ORDER
   };
 })(window);
