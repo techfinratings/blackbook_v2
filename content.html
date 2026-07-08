@@ -82,6 +82,7 @@
   <footer class="footer"><div class="wrap" style="padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;"><img src="/assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"><div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div></div></footer>
 </div>
 
+<script src="/assets/cache.js"></script>
 <script>
 (function () {
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); };
@@ -142,9 +143,10 @@
 
   renderFilters(); renderGrid();
 
-  // 실데이터: Inblog 포스트 (INBLOG_API_KEY 없으면 샘플 유지)
+  // 실데이터: Inblog 포스트 (INBLOG_API_KEY 없으면 샘플 유지). 캐시 즉시 + 최신 갱신.
   // 최상단 히어로 = 가장 최근 글(posts[0]), 그리드 = 나머지
-  fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+  var fetchPosts = function () { return fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }); };
+  var applyPosts = function (d) {
     if (!d || !d.posts || !d.posts.length) return;
     fWrap.style.display = 'none'; // 포스트에는 카테고리 필드가 없어 필터 숨김
 
@@ -177,7 +179,9 @@
         '<h3 class="bt" style="font-size:18px;line-height:1.44;font-weight:700;margin:7px 0 0;">' + esc(p.title) + '</h3>' +
         '<div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:10px;">크레디뷰 리서치 · ' + esc(p.date || '') + '</div></a>';
     }).join('');
-  }).catch(function () {});
+  };
+  if (window.bbSWR) window.bbSWR.swr('bb_posts_v1', fetchPosts, applyPosts);
+  else fetchPosts().then(applyPosts).catch(function () {});
 })();
 </script>
 </body>

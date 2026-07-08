@@ -28,8 +28,7 @@ module.exports = async (req, res) => {
   if (req.method === 'GET') {
     res.setHeader('Cache-Control', 's-maxage=15, stale-while-revalidate=60');
     try {
-      const rows = await readRows('문답');
-      const stat = await answerStats();
+      const [rows, stat] = await Promise.all([readRows('문답'), answerStats()]);
       const items = rows.slice(1)                 // 헤더 제외
         .map((r, i) => {
           const ts = r[0] || '';

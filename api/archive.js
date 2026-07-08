@@ -9,7 +9,7 @@ module.exports = async function (req, res) {
   try {
     const r    = await fetch(url);
     const data = await r.json();
-    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=60');
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=86400');
     res.status(200).json(data);
   } catch (err) {
     res.status(500).json({ error: err.message });

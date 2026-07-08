@@ -102,6 +102,7 @@
   </div>
 </div>
 
+<script src="/assets/cache.js"></script>
 <script src="/assets/archive-data.js"></script>
 <script>
 (function () {
@@ -234,7 +235,7 @@
   });
 
   renderFiles(); // loading state
-  BBArchive.load().then(function (files) {
+  BBArchive.load(function (files) {   // 캐시 즉시 + 최신 갱신
     DATA = files;
     renderFilters(); renderFiles(); renderPopular();
   });

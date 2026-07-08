@@ -199,10 +199,10 @@
     });
     if (resetEl) resetEl.addEventListener('click', function () { selDay = null; renderGrid(); renderList(); });
 
-    // initial paint (grid skeleton) then live data
+    // initial paint (grid skeleton) then 캐시/법정기한 즉시 + 라이브 갱신
     renderAll();
-    window.BBCalendar.load(year, month).then(function (evs) {
-      events = evs;
+    window.BBCalendar.load(year, month, function (evs) {
+      events = evs || [];
       events.forEach(function (e, i) { e._idx = i; });
       renderAll();
     });
@@ -214,8 +214,8 @@
     if (!wrap || !window.BBArchive) return;
     var esc = function (s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); };
     wrap.innerHTML = '<div class="mono" style="font-size:11.5px;color:#7E868F;padding:10px 0;">자료 불러오는 중…</div>';
-    BBArchive.load().then(function (files) {
-      if (!files.length) { wrap.innerHTML = ''; return; }
+    BBArchive.load(function (files) {   // 캐시 즉시 + 최신 갱신
+      if (!files || !files.length) { wrap.innerHTML = ''; return; }
       var top = files.slice().sort(function (a, b) { return b._dk - a._dk || b.dl - a.dl; }).slice(0, 4);
       wrap.innerHTML = top.map(function (f) {
         return '<a class="file-row" href="/archive"><span class="file-chip mono" style="background:' + BBArchive.typeColor(f.type) + ';">' + esc(f.type || 'FILE') + '</span>' +
@@ -231,7 +231,8 @@
     var hero = document.getElementById('homeHero');
     var ledger = document.getElementById('homeLedger');
     if (!hero) return;
-    fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    var fetchPosts = function () { return fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }); };
+    var applyPosts = function (d) {
       if (!d || !d.posts || !d.posts.length) return;   // 실패 시 정적 샘플 유지
       var posts = d.posts;
       var top = posts[0];
@@ -259,7 +260,9 @@
             '<span style="font-size:16px;color:#C2C9D0;align-self:center;">→</span></a>';
         }).join('');
       }
-    }).catch(function () {});
+    };
+    if (window.bbSWR) window.bbSWR.swr('bb_posts_v1', fetchPosts, applyPosts);
+    else fetchPosts().then(applyPosts).catch(function () {});
   }
 
   /* ---------- 의견 보내기 모달 → /api/feedback 적재 ---------- */
