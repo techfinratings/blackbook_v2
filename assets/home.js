@@ -262,11 +262,51 @@
     }).catch(function () {});
   }
 
+  /* ---------- 의견 보내기 모달 → /api/feedback 적재 ---------- */
+  function initFeedback() {
+    var modal = document.getElementById('fbModal');
+    if (!modal) return;
+    var fbText = document.getElementById('fbText');
+    var fbEmail = document.getElementById('fbEmail');
+    var fbMsg = document.getElementById('fbMsg');
+    var fbSubmit = document.getElementById('fbSubmit');
+    var dialog = modal.querySelector('[data-dialog]');
+
+    function open() { modal.style.display = 'flex'; document.body.style.overflow = 'hidden'; setTimeout(function () { fbText.focus(); }, 30); }
+    function close() { modal.style.display = 'none'; document.body.style.overflow = ''; }
+    document.querySelectorAll('[data-open-feedback]').forEach(function (b) { b.addEventListener('click', open); });
+    document.querySelectorAll('[data-fb-close]').forEach(function (b) { b.addEventListener('click', close); });
+    modal.addEventListener('click', function (e) { if (e.target === modal) close(); });
+    dialog.addEventListener('click', function (e) { e.stopPropagation(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && modal.style.display !== 'none') close(); });
+
+    fbSubmit.addEventListener('click', function () {
+      var text = fbText.value.trim();
+      if (!text) { fbMsg.style.color = '#B4322B'; fbMsg.textContent = '의견 내용을 입력해 주세요.'; fbText.focus(); return; }
+      fbSubmit.disabled = true; fbMsg.style.color = '#7E868F'; fbMsg.textContent = '보내는 중…';
+      fetch('/api/feedback', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text: text, email: fbEmail.value.trim() })
+      }).then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+        .then(function () {
+          dialog.innerHTML =
+            '<div style="padding:48px 32px;text-align:center;">' +
+            '<div style="width:44px;height:44px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:22px;">✓</div>' +
+            '<h3 class="bt" style="font-size:22px;font-weight:700;margin:16px 0 0;">의견 고맙습니다</h3>' +
+            '<p style="font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:10px 0 20px;">소중한 의견이 접수되었습니다. 더 나은 블랙북으로 채워 나가겠습니다.</p>' +
+            '<button class="btn-ink" data-fb-close style="font-size:13px;padding:11px 24px;border-radius:3px;border:0;cursor:pointer;">확인</button></div>';
+          dialog.querySelector('[data-fb-close]').addEventListener('click', close);
+        })
+        .catch(function () { fbSubmit.disabled = false; fbMsg.style.color = '#B4322B'; fbMsg.textContent = '전송에 실패했어요. 잠시 후 다시 시도해 주세요.'; });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     initContentTabs();
     initQA();
     initSchedule();
     initFiles();
     initContentPosts();
+    initFeedback();
   });
 })();
