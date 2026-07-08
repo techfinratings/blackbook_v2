@@ -4,12 +4,15 @@
     "api/calendar.js": { "regions": ["icn1"] },
     "api/law-debug.js": { "regions": ["icn1"] },
     "api/post.js": { "regions": ["icn1"] },
+    "api/guide.js": { "regions": ["icn1"] },
     "api/sitemap.js": { "regions": ["icn1"] }
   },
   "routes": [
     { "src": "/sitemap.xml", "dest": "/api/sitemap.js" },
     { "src": "/p/(.*)", "dest": "/api/post.js?slug=$1" },
     { "src": "/content/detail", "dest": "/api/post.js" },
+    { "src": "/guide/(.+)", "dest": "/api/guide.js?slug=$1" },
+    { "src": "/guide", "dest": "/api/guide.js" },
     { "src": "/api/(.*)", "dest": "/api/$1.js" },
     { "src": "/archive", "dest": "/archive.html" },
     { "src": "/calendar", "dest": "/calendar.html" },
