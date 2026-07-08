@@ -209,7 +209,7 @@ module.exports = async (req, res) => {
       if (raw) bodyHtml = looksHtml(raw) ? raw : mdToHtml(raw);
     } catch (e) { /* 본문 실패 시 설명만 렌더 */ }
 
-    res.setHeader('Cache-Control', 's-maxage=300, stale-while-revalidate=600');
+    res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=86400');
     res.statusCode = 200;
     return res.end(renderPage(post, bodyHtml, canonical));
   } catch (e) {

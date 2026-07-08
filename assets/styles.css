@@ -79,7 +79,7 @@ p { text-wrap: pretty; }
 /* — GNB — */
 .gnb{background:var(--ink-1);border-bottom:1.5px solid var(--blue);position:sticky;top:0;z-index:40;}
 .gnb-inner{display:flex;align-items:center;gap:30px;height:64px;}
-.gnb-logo{height:26px;}
+.gnb-logo{height:34px;}
 .gnb-nav{display:flex;align-items:center;gap:3px;height:100%;}
 .gnb-nav a{
   display:flex;align-items:center;height:100%;padding:0 12px;font-size:14px;white-space:nowrap;

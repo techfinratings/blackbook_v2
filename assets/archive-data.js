@@ -50,11 +50,16 @@
     }).filter(function (f) { return f.name; });
   }
 
-  function load() {
+  function fetchArchive() {
     return fetch('/api/archive')
       .then(function (r) { return r.ok ? r.json() : {}; })
       .then(function (d) { return parse(d && d.values); })
       .catch(function () { return []; });
+  }
+  // load(onData): 캐시 즉시 렌더 + 백그라운드 갱신. onData 없으면 기존처럼 Promise 반환.
+  function load(onData) {
+    if (onData && global.bbSWR) return global.bbSWR.swr('bb_archive_v1', fetchArchive, onData);
+    return fetchArchive().then(function (d) { if (onData) onData(d); return d; });
   }
 
   // 다운로드: drive 링크 열고, 카운트 증가는 fire-and-forget.

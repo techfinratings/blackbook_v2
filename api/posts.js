@@ -5,7 +5,7 @@ const { fetchPublished, rawSample } = require('../lib/inblog');
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-  res.setHeader('Cache-Control', 's-maxage=300'); // 5분 캐시
+  res.setHeader('Cache-Control', 's-maxage=600, stale-while-revalidate=86400');
 
   if (req.method === 'OPTIONS') { res.status(200).end(); return; }
 

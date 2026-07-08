@@ -100,19 +100,28 @@
     }).sort(function (a, b) { return a.day - b.day; });
   }
 
-  // Public: fetch merged, normalized events for a year/month.
-  function load(year, month) {
+  function fetchMerged(year, month) {
     var url = '/api/calendar?year=' + year + '&month=' + month;
     return fetch(url)
       .then(function (r) { return r.ok ? r.json() : { events: [] }; })
       .catch(function () { return { events: [] }; })
-      .then(function (data) {
-        var live = normalizeLive(data && data.events);
-        return merge(live, statutory(year, month));
-      })
-      .catch(function () {
-        return merge([], statutory(year, month));
-      });
+      .then(function (data) { return merge(normalizeLive(data && data.events), statutory(year, month)); })
+      .catch(function () { return merge([], statutory(year, month)); });
+  }
+
+  // Public: load(year, month, onData)
+  //  · onData 제공 시: 세션 캐시(또는 법정기한)를 즉시 렌더 → 라이브 도착 시 갱신
+  //  · onData 미제공 시: 기존처럼 병합 결과 Promise 반환
+  function load(year, month, onData) {
+    if (!onData) return fetchMerged(year, month);
+    if (global.bbSWR) {
+      var key = 'bb_cal_' + year + '_' + month;
+      var cached = global.bbSWR.get(key);
+      // 캐시 없으면 최소한 법정기한이라도 즉시 표시(빈 화면 방지)
+      if (!(cached && cached.data)) { try { onData(merge([], statutory(year, month)), true); } catch (e) {} }
+      return global.bbSWR.swr(key, function () { return fetchMerged(year, month); }, onData);
+    }
+    return fetchMerged(year, month).then(function (d) { onData(d); return d; });
   }
 
   global.BBCalendar = { CATS: CATS, load: load, statutory: statutory, classifyLaw: classifyLaw };

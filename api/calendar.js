@@ -3,7 +3,7 @@ const LAW_OC      = 'blackbook2026';
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Cache-Control', 's-maxage=3600');
+  res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
 
   const { year, month } = req.query;
   const y = parseInt(year)  || new Date().getFullYear();
