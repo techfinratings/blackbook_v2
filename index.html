@@ -231,7 +231,7 @@
             <div style="width:40px;height:40px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:24px;font-weight:600;line-height:1;">+</div>
             <h3 class="bt" style="font-size:18px;font-weight:700;margin:14px 0 0;">이 자리는 아직 비어 있어요</h3>
             <p style="font-size:13px;color:var(--ink-2);line-height:1.6;margin:9px 0 0;">어떤 내용이 있으면 더 좋을까요?<br>이 공간은 <b style="color:var(--ink-1);">여러분의 의견</b>으로 채워집니다.</p>
-            <a href="/finder" class="btn-blue" style="margin-top:16px;font-size:12.5px;padding:10px 18px;display:inline-block;">의견 보내기</a>
+            <button class="btn-blue" data-open-feedback style="margin-top:16px;font-size:12.5px;padding:10px 18px;display:inline-block;border:0;cursor:pointer;">의견 보내기</button>
           </div>
         </section>
       </div>
@@ -299,6 +299,28 @@
     </div>
     <div style="padding:0 12px 10px;"><p class="mono" style="font-size:8.5px;line-height:1.5;color:#6A7079;margin:0;">* 연매출·자기자본 기반 대략적 추정치이며 실제 승인 한도가 아닙니다.</p></div>
     <a href="#" class="btn-blue" style="margin:2px 12px 12px;font-size:12px;padding:11px;border-radius:9px;text-align:center;display:block;">정확한 진단 — AI 경영진단보고서</a>
+  </div>
+</div>
+
+<!-- 의견 보내기 모달 -->
+<div class="modal-backdrop" id="fbModal" style="display:none;">
+  <div class="modal-dialog" data-dialog style="max-width:480px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1.5px solid var(--ink-1);">
+      <div><div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--blue);">BLACK BOOK · 의견</div><h3 class="bt" style="font-size:20px;font-weight:700;margin:5px 0 0;">의견 보내기</h3></div>
+      <span data-fb-close style="font-size:24px;color:#9BA3AB;cursor:pointer;line-height:1;">×</span>
+    </div>
+    <div style="padding:22px 24px 24px;">
+      <p style="font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:0 0 14px;">어떤 콘텐츠·기능이 있으면 좋을지, 불편한 점은 없는지 편하게 남겨 주세요. 여러분의 의견으로 이 공간을 채웁니다.</p>
+      <textarea id="fbText" class="field" placeholder="의견을 자유롭게 적어 주세요." style="min-height:120px;line-height:1.7;resize:vertical;"></textarea>
+      <input id="fbEmail" class="field mono" type="email" inputmode="email" placeholder="이메일 (선택 · 답변 받을 주소)" style="margin-top:10px;font-size:13px;">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;">
+        <span class="mono" id="fbMsg" style="font-size:10.5px;color:var(--ink-3);"></span>
+        <div style="display:flex;gap:10px;">
+          <span data-fb-close class="btn-outline" style="padding:10px 18px;">취소</span>
+          <button id="fbSubmit" class="btn-blue" style="font-size:13px;padding:10px 22px;border-radius:3px;border:0;">보내기</button>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 
