@@ -169,7 +169,8 @@
       var ansCol = q.official ? '#2348D6' : (q.ans > 0 ? '#181B1E' : '#C2C9D0');
       var badge = q.official ? '<span class="mono" style="font-size:9.5px;font-weight:600;color:#2348D6;background:#EDF0FD;border-radius:3px;padding:2px 7px;">크레디뷰 답변</span>' : '';
       var tags = q.tags.map(function (t) { return '<span class="mono" style="font-size:10px;color:#49505A;background:#EEF0F2;padding:3px 8px;border-radius:3px;">#' + esc(t) + '</span>'; }).join('');
-      return '<a class="q-row" href="/community/qna">' +
+      var href = q.id ? '/community/qna?id=' + encodeURIComponent(q.id) : '/community/qna';
+      return '<a class="q-row" href="' + href + '">' +
         '<div style="width:60px;flex-shrink:0;text-align:center;padding-top:2px;"><div class="mono" style="font-size:23px;font-weight:600;line-height:1;color:' + ansCol + ';">' + q.ans + '</div><div class="mono" style="font-size:10px;color:#7E868F;margin-top:3px;">답변</div></div>' +
         '<div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:10px;"><span class="mono" style="font-size:10px;letter-spacing:.05em;color:' + (COL[q.cat] || '#181B1E') + ';">' + esc(q.cat) + '</span>' + badge + '<span class="mono" style="font-size:10px;color:#9BA3AB;margin-left:auto;">' + timeLabel(q.mins) + '</span></div>' +
         '<h3 class="bt" style="font-size:19px;line-height:1.45;font-weight:700;margin:8px 0 0;">' + esc(q.title) + '</h3>' +
@@ -253,7 +254,8 @@
     var real = d.items.map(function (it) {
       var t = Date.parse(it.ts); var mins = isNaN(t) ? 0 : Math.max(0, (now - t) / 60000);
       return {
-        cat: it.category || '실무', official: false, ans: 0, views: '0', mins: mins,
+        id: it.id,
+        cat: it.category || '실무', official: !!it.official, ans: it.ans || 0, views: '0', mins: mins,
         author: it.anonymous ? '익명' : '회원',
         title: it.title, snippet: it.content,
         tags: it.tags ? it.tags.split(/[\s,]+/).map(function (t) { return t.replace(/^#/, ''); }).filter(Boolean).slice(0, 3) : [],

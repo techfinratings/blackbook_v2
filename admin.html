@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>관리자 — BLACK BOOK</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="/assets/styles.css">
+<style>
+  .admin-wrap{max-width:1020px;margin:0 auto;padding:32px 24px 80px;}
+  .a-tabs{display:flex;gap:6px;border-bottom:1.5px solid var(--ink-1);margin:24px 0;}
+  .a-tabs button{font-family:var(--font-display);font-size:16px;font-weight:600;color:#9BA3AB;background:none;border:0;padding:0 4px 12px;margin-right:24px;margin-bottom:-1.5px;border-bottom:2px solid transparent;cursor:pointer;}
+  .a-tabs button.on{font-weight:700;color:var(--ink-1);border-bottom-color:var(--blue);}
+  .a-card{background:#fff;border:1px solid var(--rule-hair);border-radius:10px;padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow-card);}
+  .a-btn{font-size:12px;font-weight:700;padding:7px 13px;border-radius:3px;border:0;cursor:pointer;}
+  .a-btn.ink{background:var(--ink-1);color:#fff;} .a-btn.blue{background:var(--blue);color:#fff;}
+  .a-btn.ghost{background:none;border:1px solid #D8DCE0;color:var(--ink-2);}
+  .a-btn.danger{background:none;border:1px solid #E4B4B0;color:#B4322B;}
+  table.a-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+  table.a-tbl th{text-align:left;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);padding:8px 10px;border-bottom:1px solid var(--rule-hair);white-space:nowrap;}
+  table.a-tbl td{padding:9px 10px;border-bottom:1px solid var(--rule-soft);vertical-align:top;}
+  .a-field{width:100%;border:1px solid #D8DCE0;border-radius:3px;padding:10px 12px;font-family:inherit;font-size:14px;outline:none;}
+  .a-field:focus{border-color:var(--blue);}
+  .pill{font-family:var(--font-mono);font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:3px;}
+</style>
+</head>
+<body>
+<div class="fore-edge"></div>
+<div class="page">
+  <header class="gnb"><div class="wrap gnb-inner">
+    <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
+    <span class="mono" style="color:#9BA3AB;font-size:12px;letter-spacing:.1em;">ADMIN</span>
+    <span style="margin-left:auto;"></span>
+    <span class="gnb-login" id="logoutBtn" style="display:none;">로그아웃</span>
+  </div></header>
+
+  <!-- 로그인 -->
+  <div class="admin-wrap" id="login">
+    <div class="eyebrow">BLACK BOOK · 관리자</div>
+    <h1 class="page-title" style="font-size:30px;margin-top:10px;">관리자 로그인</h1>
+    <p class="page-intro" style="margin:8px 0 20px;">문답·답변·리드·의견을 관리합니다.</p>
+    <div class="a-card" style="max-width:400px;">
+      <div class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--ink-3);margin-bottom:8px;">비밀번호</div>
+      <input id="pw" class="a-field mono" type="password" placeholder="관리자 비밀번호" autocomplete="current-password">
+      <button class="a-btn ink" id="loginBtn" style="margin-top:14px;width:100%;padding:11px;">로그인</button>
+      <p class="mono" id="loginMsg" style="font-size:10.5px;color:#B4322B;margin:10px 0 0;min-height:14px;"></p>
+    </div>
+  </div>
+
+  <!-- 대시보드 -->
+  <div class="admin-wrap" id="dash" style="display:none;">
+    <div class="eyebrow">BLACK BOOK · 관리자</div>
+    <h1 class="page-title" style="font-size:30px;margin-top:10px;">관리 대시보드</h1>
+    <div class="a-tabs" id="aTabs">
+      <button data-tab="qna" class="on">실무 이야기</button>
+      <button data-tab="lead">리드</button>
+      <button data-tab="fb">의견</button>
+    </div>
+    <div id="panel"></div>
+  </div>
+
+  <footer class="footer"><div class="wrap" style="padding:32px 40px;display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;"><img src="/assets/logo_white.png" style="height:18px;" alt="BLACK BOOK"><div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 관리자</div></div></footer>
+</div>
+
+<script>
+(function () {
+  var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); };
+  var KEY = sessionStorage.getItem('bb_admin_key') || '';
+  var DATA = null, tab = 'qna';
+  var loginEl = document.getElementById('login'), dashEl = document.getElementById('dash'), panel = document.getElementById('panel');
+
+  function api(action, extra) {
+    return fetch('/api/admin', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(Object.assign({ key: KEY, action: action }, extra || {})) })
+      .then(function (r) { if (r.status === 401 || r.status === 503) return r.json().then(function (j) { throw { code:r.status, msg:j.error }; }); return r.ok ? r.json() : Promise.reject({ msg:'오류' }); });
+  }
+  function fmtTime(ts) { var t = Date.parse(ts); if (isNaN(t)) return ts || ''; var d = new Date(t); return d.getFullYear() + '.' + ('0'+(d.getMonth()+1)).slice(-2) + '.' + ('0'+d.getDate()).slice(-2) + ' ' + ('0'+d.getHours()).slice(-2) + ':' + ('0'+d.getMinutes()).slice(-2); }
+
+  function load() { return api('overview').then(function (d) { DATA = d; renderPanel(); }); }
+
+  /* ---- 로그인 ---- */
+  function showDash() { loginEl.style.display = 'none'; dashEl.style.display = ''; document.getElementById('logoutBtn').style.display = ''; }
+  function doLogin(pw) {
+    KEY = pw;
+    document.getElementById('loginMsg').textContent = '확인 중…';
+    document.getElementById('loginMsg').style.color = '#7E868F';
+    load().then(function () { sessionStorage.setItem('bb_admin_key', KEY); showDash(); })
+      .catch(function (e) { KEY = ''; document.getElementById('loginMsg').style.color = '#B4322B'; document.getElementById('loginMsg').textContent = (e && e.msg) || '로그인 실패'; });
+  }
+  document.getElementById('loginBtn').addEventListener('click', function () { doLogin(document.getElementById('pw').value); });
+  document.getElementById('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(this.value); });
+  document.getElementById('logoutBtn').addEventListener('click', function () { sessionStorage.removeItem('bb_admin_key'); location.reload(); });
+
+  document.getElementById('aTabs').addEventListener('click', function (e) {
+    var b = e.target.closest('[data-tab]'); if (!b) return; tab = b.getAttribute('data-tab');
+    document.querySelectorAll('#aTabs button').forEach(function (x) { x.classList.toggle('on', x === b); }); renderPanel();
+  });
+
+  /* ---- 액션 ---- */
+  function act(action, extra) { return api(action, extra).then(load); }
+  function csv(rows, filename) {
+    var body = rows.map(function (r) { return r.map(function (c) { return '"' + String(c == null ? '' : c).replace(/"/g, '""') + '"'; }).join(','); }).join('\n');
+    var blob = new Blob(['﻿' + body], { type:'text/csv;charset=utf-8;' });
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+  }
+
+  /* ---- 패널 렌더 ---- */
+  function renderPanel() {
+    if (tab === 'qna') return renderQna();
+    if (tab === 'lead') return renderLeads();
+    if (tab === 'fb') return renderFeedback();
+  }
+
+  function renderQna() {
+    var qs = DATA.questions || [], ans = DATA.answers || [];
+    if (!qs.length) { panel.innerHTML = '<div class="mono" style="color:#7E868F;padding:30px 0;">등록된 문답이 없습니다.</div>'; return; }
+    panel.innerHTML = qs.map(function (q) {
+      var mine = ans.filter(function (a) { return a.qid === q.ts; });
+      var ansHtml = mine.map(function (a) {
+        return '<div style="border-top:1px solid var(--rule-soft);padding:10px 0;display:flex;gap:10px;align-items:flex-start;">' +
+          '<span class="pill" style="background:' + (a.official ? '#EDF0FD' : '#EEF0F2') + ';color:' + (a.official ? '#2348D6' : '#49505A') + ';">' + (a.official ? '운영사' : esc(a.author)) + '</span>' +
+          '<div style="flex:1;min-width:0;font-size:13px;line-height:1.6;color:#2C313A;white-space:pre-line;' + (a.hidden ? 'opacity:.5;text-decoration:line-through;' : '') + '">' + esc(a.content) + '</div>' +
+          '<button class="a-btn ghost" data-a-hide="' + a.row + '" data-v="' + (a.hidden ? '' : 'N') + '">' + (a.hidden ? '표시' : '숨김') + '</button>' +
+          '<button class="a-btn danger" data-a-del="' + a.row + '">삭제</button></div>';
+      }).join('');
+      return '<div class="a-card">' +
+        '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">' +
+          '<span class="pill" style="background:#EEF0F2;color:#49505A;">' + esc(q.category || '-') + '</span>' +
+          (q.hidden ? '<span class="pill" style="background:#FBE9E7;color:#B4322B;">숨김</span>' : '') +
+          '<span class="mono" style="font-size:10.5px;color:#9BA3AB;">' + fmtTime(q.ts) + ' · 답변 ' + mine.length + '</span>' +
+          '<span style="margin-left:auto;"></span>' +
+          '<button class="a-btn ghost" data-q-hide="' + q.row + '" data-v="' + (q.hidden ? '' : 'N') + '">' + (q.hidden ? '표시' : '숨김') + '</button>' +
+          '<button class="a-btn danger" data-q-del="' + q.row + '">삭제</button>' +
+        '</div>' +
+        '<h3 class="bt" style="font-size:18px;font-weight:700;margin:10px 0 6px;">' + esc(q.title) + '</h3>' +
+        '<div style="font-size:13.5px;color:#49505A;line-height:1.6;white-space:pre-line;">' + esc(q.content) + '</div>' +
+        (ansHtml ? '<div style="margin-top:10px;">' + ansHtml + '</div>' : '') +
+        '<div style="margin-top:14px;border-top:1.5px solid var(--rule-hair);padding-top:14px;">' +
+          '<div class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--blue);margin-bottom:6px;">크레디뷰 공식 답변 작성</div>' +
+          '<textarea class="a-field" data-ans-for="' + q.ts + '" placeholder="운영사(크레디뷰) 공식 답변을 입력하세요." style="min-height:80px;line-height:1.6;resize:vertical;"></textarea>' +
+          '<div style="display:flex;justify-content:flex-end;margin-top:8px;"><button class="a-btn blue" data-ans-submit="' + q.ts + '">공식 답변 등록</button></div>' +
+        '</div></div>';
+    }).join('');
+  }
+
+  function renderLeads() {
+    var rows = DATA.leads || [];
+    panel.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div class="mono" style="font-size:12px;color:var(--ink-3);">총 ' + rows.length + '건</div><button class="a-btn ink" id="leadCsv">CSV 다운로드</button></div>' +
+      '<div class="a-card" style="overflow-x:auto;"><table class="a-tbl"><thead><tr><th>일시</th><th>구분</th><th>이메일</th><th>동의</th><th>상세</th><th></th></tr></thead><tbody>' +
+      (rows.length ? rows.map(function (r) {
+        return '<tr><td class="mono" style="white-space:nowrap;">' + fmtTime(r.ts) + '</td><td>' + esc(r.source) + '</td><td class="mono">' + esc(r.email) + '</td><td>' + esc(r.consent) + '</td><td>' + esc(r.detail) + '</td>' +
+          '<td><button class="a-btn danger" data-lead-del="' + r.row + '">삭제</button></td></tr>';
+      }).join('') : '<tr><td colspan="6" class="mono" style="color:#7E868F;padding:20px;">리드가 없습니다.</td></tr>') +
+      '</tbody></table></div>';
+    var b = document.getElementById('leadCsv');
+    if (b) b.addEventListener('click', function () { csv([['일시','구분','이메일','동의','상세']].concat(rows.map(function (r) { return [r.ts, r.source, r.email, r.consent, r.detail]; })), 'blackbook-leads.csv'); });
+  }
+
+  function renderFeedback() {
+    var rows = DATA.feedback || [];
+    panel.innerHTML =
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;"><div class="mono" style="font-size:12px;color:var(--ink-3);">총 ' + rows.length + '건</div><button class="a-btn ink" id="fbCsv">CSV 다운로드</button></div>' +
+      '<div class="a-card" style="overflow-x:auto;"><table class="a-tbl"><thead><tr><th>일시</th><th>의견</th><th>이메일</th><th></th></tr></thead><tbody>' +
+      (rows.length ? rows.map(function (r) {
+        return '<tr><td class="mono" style="white-space:nowrap;">' + fmtTime(r.ts) + '</td><td style="white-space:pre-line;">' + esc(r.text) + '</td><td class="mono">' + esc(r.email) + '</td>' +
+          '<td><button class="a-btn danger" data-fb-del="' + r.row + '">삭제</button></td></tr>';
+      }).join('') : '<tr><td colspan="4" class="mono" style="color:#7E868F;padding:20px;">의견이 없습니다.</td></tr>') +
+      '</tbody></table></div>';
+    var b = document.getElementById('fbCsv');
+    if (b) b.addEventListener('click', function () { csv([['일시','의견','이메일']].concat(rows.map(function (r) { return [r.ts, r.text, r.email]; })), 'blackbook-feedback.csv'); });
+  }
+
+  /* ---- 위임 이벤트 ---- */
+  panel.addEventListener('click', function (e) {
+    var t = e.target.closest('button'); if (!t) return;
+    if (t.hasAttribute('data-ans-submit')) {
+      var qid = t.getAttribute('data-ans-submit');
+      var ta = panel.querySelector('[data-ans-for="' + qid + '"]');
+      var content = (ta.value || '').trim(); if (!content) { ta.focus(); return; }
+      t.disabled = true; t.textContent = '등록 중…';
+      act('answer', { qid: qid, content: content }).catch(function () { t.disabled = false; t.textContent = '공식 답변 등록'; alert('등록 실패'); });
+    } else if (t.hasAttribute('data-q-hide')) { act('hideQuestion', { row: t.getAttribute('data-q-hide'), value: t.getAttribute('data-v') });
+    } else if (t.hasAttribute('data-q-del')) { if (confirm('이 문답을 삭제할까요?')) act('delete', { tab:'question', row: t.getAttribute('data-q-del') });
+    } else if (t.hasAttribute('data-a-hide')) { act('hideAnswer', { row: t.getAttribute('data-a-hide'), value: t.getAttribute('data-v') });
+    } else if (t.hasAttribute('data-a-del')) { if (confirm('이 답변을 삭제할까요?')) act('delete', { tab:'answer', row: t.getAttribute('data-a-del') });
+    } else if (t.hasAttribute('data-lead-del')) { if (confirm('이 리드를 삭제할까요?')) act('delete', { tab:'lead', row: t.getAttribute('data-lead-del') });
+    } else if (t.hasAttribute('data-fb-del')) { if (confirm('이 의견을 삭제할까요?')) act('delete', { tab:'feedback', row: t.getAttribute('data-fb-del') });
+    }
+  });
+
+  // 세션에 키가 있으면 자동 로그인 시도
+  if (KEY) { load().then(showDash).catch(function () { KEY=''; sessionStorage.removeItem('bb_admin_key'); }); }
+})();
+</script>
+</body>
+</html>
