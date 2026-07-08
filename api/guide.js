@@ -68,7 +68,7 @@ ${jsonld.map(o => `<script type="application/ld+json">${JSON.stringify(o)}</scri
 <div class="page">
   <header class="gnb"><div class="wrap gnb-inner">
     <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
-    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide" class="active">실무 노트</a><a href="/community/talk">실무 이야기</a><a href="/archive">실무자료 아카이브</a><a href="/calendar">캘린더</a><a href="/finder">파인더</a></nav>
+    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><span class="has-sub"><a class="hb-toggle active">실무 핸드북<i>▾</i></a><span class="gnb-sub"><a href="/guide">실무 노트</a><a href="/community/talk">실무 이야기</a></span></span><a href="/archive">실무자료 아카이브</a><a href="/calendar">캘린더</a><a href="/finder">파인더</a></nav>
     <span class="gnb-login">로그인</span><span class="gnb-join">회원가입</span>
   </div></header>`;
 }
