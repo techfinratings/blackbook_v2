@@ -85,12 +85,15 @@ function mdToHtml(md) {
 
 /* ── 전체 HTML 문서 렌더 ── */
 function renderPage(post, bodyHtml, canonical) {
-  const title = post.title || '콘텐츠';
-  const desc = clamp(post.description || stripTags(bodyHtml) || '재무·회계 실무자를 위한 크레디뷰 아티클', 155);
-  const img = post.image || '';
+  const displayTitle = post.title || '콘텐츠';              // 본문 헤드라인(화면 표시)
+  const title = post.seoTitle || displayTitle;             // SEO 타이틀(인블로그 설정 우선)
+  const desc = clamp(post.seoDescription || post.description || stripTags(bodyHtml) || '재무·회계 실무자를 위한 크레디뷰 아티클', 155);
+  const img = post.ogImage || post.image || '';            // OG 이미지(인블로그 설정 우선)
+  const keywords = post.keywords || '';
   const ld = {
     '@context': 'https://schema.org', '@type': 'Article',
-    headline: title, description: desc,
+    headline: displayTitle, description: desc,
+    keywords: keywords || undefined,
     datePublished: post.date || undefined, dateModified: post.date || undefined,
     image: img ? [img] : undefined,
     author: { '@type': 'Organization', name: '크레디뷰 리서치' },
@@ -98,7 +101,7 @@ function renderPage(post, bodyHtml, canonical) {
     mainEntityOfPage: { '@type': 'WebPage', '@id': canonical },
   };
   const hero = img
-    ? `<img src="${esc(img)}" alt="${esc(title)}" style="width:100%;border-radius:12px;margin:30px 0 36px;display:block;">`
+    ? `<img src="${esc(img)}" alt="${esc(displayTitle)}" style="width:100%;border-radius:12px;margin:30px 0 36px;display:block;">`
     : `<div style="width:100%;aspect-ratio:16/8;border-radius:12px;background:var(--blue);margin:30px 0 36px;"></div>`;
   const body = bodyHtml || `<p>${esc(post.description || '본문을 준비 중입니다.')}</p>`;
 
@@ -109,6 +112,7 @@ function renderPage(post, bodyHtml, canonical) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)} — ${SITE_NAME}</title>
 <meta name="description" content="${esc(desc)}">
+${keywords ? `<meta name="keywords" content="${esc(keywords)}">` : ''}
 <link rel="canonical" href="${esc(canonical)}">
 <meta name="robots" content="index,follow,max-image-preview:large">
 <meta property="og:type" content="article">
@@ -154,7 +158,7 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
       <span class="mono" style="font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--ink-1);border:1px solid var(--ink-1);border-radius:3px;padding:4px 9px;">아티클</span>
       <span class="mono" style="font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);">크레디뷰 리서치</span>
     </div>
-    <h1 class="bt" style="font-size:42px;line-height:1.28;font-weight:700;letter-spacing:-.01em;margin:12px 0 0;">${esc(title)}</h1>
+    <h1 class="bt" style="font-size:42px;line-height:1.28;font-weight:700;letter-spacing:-.01em;margin:12px 0 0;">${esc(displayTitle)}</h1>
     ${post.description ? `<p style="font-size:18px;color:var(--ink-2);line-height:1.6;margin:20px 0 0;">${esc(post.description)}</p>` : ''}
     <div style="display:flex;align-items:center;gap:14px;margin-top:26px;padding:18px 0;border-top:1px solid var(--rule-hair);border-bottom:1px solid var(--rule-hair);">
       <div style="width:40px;height:40px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">CR</div>
