@@ -2,7 +2,6 @@
   "version": 2,
   "functions": {
     "api/calendar.js": { "regions": ["icn1"] },
-    "api/law-debug.js": { "regions": ["icn1"] },
     "api/post.js": { "regions": ["icn1"] },
     "api/guide.js": { "regions": ["icn1"] },
     "api/sitemap.js": { "regions": ["icn1"] }
