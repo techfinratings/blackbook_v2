@@ -17,6 +17,7 @@
     { "src": "/community/talk", "dest": "/community-talk.html" },
     { "src": "/community/qna", "dest": "/community-qna.html" },
     { "src": "/finder", "dest": "/finder.html" },
+    { "src": "/admin", "dest": "/admin.html" },
     { "handle": "filesystem" },
     { "src": "/(.*)", "dest": "/index.html" }
   ]
