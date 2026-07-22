@@ -215,7 +215,7 @@
 
   <!-- 3. 모듈 + 4. 채널 -->
   <section class="card" id="secModule">
-    <h2><span class="step">STEP 3</span> 모듈 선택 <span class="hint">🔒 고정 모듈은 해제 불가 · ⚙ 자동 체크는 종속 규칙에 의해 선택됨</span></h2>
+    <h2><span class="step">STEP 3</span> 모듈 선택 <span class="hint">🔒 고정 모듈은 해제 불가 · ⚙ 자동 체크는 종속 규칙에 의해 선택됨 (해제 가능, 해제 시 경고 표시)</span></h2>
     <div class="card-body">
       <div id="moduleArea"></div>
       <ul class="auto-reasons" id="autoReasons"></ul>
@@ -504,15 +504,19 @@ const BASE_PREP_DAYS = 28; // 기준 준비 기간(4주)
    ═══════════════════════════════════════════════════════════════════════════ */
 const state = {
   manual:   new Set(),      // 사용자가 직접 체크한 선택 모듈
+  excluded: new Set(),      // 자동 체크를 사용자가 명시적으로 해제한 모듈
   channels: new Set(),      // 선택된 노출 채널 (C코드)
   overrides: new Map(),     // 행별 수정값: uid → {dept, due}
   activePreset: null,
 };
 
-/* 종속 규칙 폐쇄(fixpoint) 계산 → {active:Set, reasons:Map(code→[사유])} */
+/* 종속 규칙 폐쇄(fixpoint) 계산
+   → {active:Set, reasons:Map(code→[사유]), suppressed:Map(code→[사유])}
+   suppressed = 규칙상 자동 체크 대상이지만 사용자가 해제한 모듈(경고 표시용) */
 function computeEffective(){
-  const active = new Set([...FIXED_MODULES, ...state.manual]);
+  const active = new Set([...FIXED_MODULES, ...state.manual].filter(c => !state.excluded.has(c) || FIXED_MODULES.includes(c)));
   const reasons = new Map();
+  const suppressed = new Map();
   let changed = true;
   while(changed){
     changed = false;
@@ -522,6 +526,12 @@ function computeEffective(){
         (r.anyChannels && r.anyChannels.some(c => state.channels.has(c)));
       if(!hit) continue;
       for(const t of r.add){
+        if(state.excluded.has(t)){
+          const list = suppressed.get(t) || [];
+          if(!list.includes(r.why)) list.push(r.why);
+          suppressed.set(t, list);
+          continue;
+        }
         if(!active.has(t)){ active.add(t); changed = true; }
         if(!state.manual.has(t) && !FIXED_MODULES.includes(t)){
           const list = reasons.get(t) || [];
@@ -531,7 +541,7 @@ function computeEffective(){
       }
     }
   }
-  return {active, reasons};
+  return {active, reasons, suppressed};
 }
 
 /* ── 기한 계산 ── */
@@ -647,7 +657,7 @@ function renderPresets(){
 }
 
 function renderModules(){
-  const {active, reasons} = computeEffective();
+  const {active, reasons, suppressed} = computeEffective();
   const groups = ['기획','디자인','개발','오픈'];
   let html = '';
   for(const g of groups){
@@ -691,13 +701,17 @@ function renderModules(){
   }
   $('moduleArea').innerHTML = html;
 
-  // 자동 체크 사유 안내
+  // 자동 체크 사유 + 해제된 권장 모듈 경고
   const items = [...reasons.entries()].filter(([code]) => active.has(code));
+  const warns = [...suppressed.entries()];
   const box = $('autoReasons');
-  if(items.length){
+  if(items.length || warns.length){
     box.classList.add('visible');
-    box.innerHTML = '<b>⚙ 자동 체크 사유</b>' +
-      items.map(([code, why]) => `<li><b>${code}</b> — ${esc(why.join(' / '))} <span class="hint">(해제하려면 원인 모듈을 해제)</span></li>`).join('');
+    box.innerHTML =
+      (items.length ? '<b>⚙ 자동 체크 사유</b>' +
+        items.map(([code, why]) => `<li><b>${code}</b> — ${esc(why.join(' / '))} <span class="hint">(체크 해제 시 자동 선택에서 제외됨)</span></li>`).join('') : '') +
+      (warns.length ? '<b style="color:#B54708;">⚠ 종속 규칙 권장 모듈이 해제되어 있습니다 — 누락 여부를 확인하세요</b>' +
+        warns.map(([code, why]) => `<li style="color:#B54708;"><b>${code}</b> — ${esc(why.join(' / '))} <span class="hint">(다시 체크하면 복원)</span></li>`).join('') : '');
   }else{
     box.classList.remove('visible'); box.innerHTML = '';
   }
@@ -772,6 +786,7 @@ $('presetRow').addEventListener('click', e => {
   if(!btn) return;
   const p = PRESETS.find(x => x.key === btn.dataset.preset);
   state.manual = new Set(p.modules);
+  state.excluded.clear();
   state.channels = new Set(p.channels);
   state.overrides.clear();
   state.activePreset = p.key;
@@ -782,18 +797,14 @@ $('moduleArea').addEventListener('change', e => {
   const t = e.target;
   if(t.dataset.mod){
     const code = t.dataset.mod;
-    const {active} = computeEffective();
     if(t.checked){
+      state.excluded.delete(code);
       state.manual.add(code);
     }else{
       state.manual.delete(code);
-      // 종속 규칙으로 여전히 활성이면 해제 불가 안내
+      // 종속 규칙으로 여전히 활성이면 → 명시적 해제로 기록 (해제 허용, 경고만 표시)
       const after = computeEffective();
-      if(after.active.has(code)){
-        const why = (after.reasons.get(code) || []).join(' / ');
-        t.checked = true;
-        alert(`[${code}] 모듈은 종속 규칙에 의해 자동 선택 상태입니다.\n\n${why}\n\n해제하려면 원인 모듈을 먼저 해제하세요.`);
-      }
+      if(after.active.has(code)) state.excluded.add(code);
     }
     state.activePreset = null;
     renderAll();
