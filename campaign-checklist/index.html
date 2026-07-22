@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마케팅 캠페인 SOP 체크리스트 생성기 v2.0</title>
+<!--
+  ============================================================================
+  마케팅 캠페인 SOP — 모듈형 체크리스트 생성기 (단일 HTML 파일)
+  ----------------------------------------------------------------------------
+  · 외부 네트워크 요청 0건 (CDN / fetch / XHR / WebSocket 미사용)
+  · localStorage / sessionStorage / IndexedDB 미사용 — 모든 상태는 JS 변수
+  · Excel(.xlsx)은 라이브러리 없이 OOXML을 직접 생성 (스크립트 하단 참조)
+  · 과업 데이터 수정: 아래 <script> 최상단의 "데이터 정의" 블록만 고치면 됨
+  ============================================================================
+-->
+<style>
+  :root{
+    --cream:#FCF3D9; --cream2:#F9E7B8; --gold-l:#F7DC96; --gold:#F2C230; --gold-d:#E0A800;
+    --ink:#3D3319; --ink-soft:#6B5D33; --line:#E5D9B0; --bg:#FDFBF4; --white:#FFFFFF;
+    --auto:#B07D00; --danger:#B54708;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{font-size:15px;}
+  body{
+    font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",Dotum,sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.55; padding-bottom:90px;
+  }
+  .wrap{max-width:1180px; margin:0 auto; padding:0 20px;}
+
+  /* ── 헤더 ─────────────────────────────── */
+  header{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-d) 100%); padding:22px 0 18px; box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  header h1{font-size:1.35rem; color:#3D2F00; letter-spacing:-.02em;}
+  header p{font-size:.85rem; color:#5C4A08; margin-top:3px;}
+
+  /* ── 섹션 카드 ─────────────────────────── */
+  section.card{background:var(--white); border:1px solid var(--line); border-radius:10px; margin-top:18px; overflow:hidden;}
+  section.card > h2{
+    font-size:.98rem; padding:11px 16px; background:var(--cream); border-bottom:1px solid var(--line); color:var(--ink);
+    display:flex; align-items:center; gap:8px;
+  }
+  section.card > h2 .step{
+    background:var(--gold); color:#3D2F00; font-size:.75rem; border-radius:20px; padding:1px 9px; font-weight:bold;
+  }
+  .card-body{padding:16px;}
+  .hint{font-size:.78rem; color:var(--ink-soft);}
+
+  /* ── 1. 캠페인 정보 ────────────────────── */
+  .info-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+  .field label{display:block; font-size:.82rem; font-weight:bold; margin-bottom:5px;}
+  .field label .req{color:var(--danger);}
+  .field input,.field select{
+    width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font:inherit; font-size:.9rem; background:#FFFDF6;
+  }
+  .field input:focus,.field select:focus{outline:2px solid var(--gold); border-color:var(--gold);}
+  #budgetField{display:none;}
+  #budgetField.visible{display:block;}
+  #budgetField .why{font-size:.72rem; color:var(--auto); margin-top:3px;}
+
+  /* ── 2. 프리셋 ─────────────────────────── */
+  .preset-row{display:grid; grid-template-columns:repeat(5,1fr); gap:10px;}
+  .preset-btn{
+    border:1.5px solid var(--line); background:#FFFDF6; border-radius:8px; padding:10px 12px; cursor:pointer;
+    text-align:left; font:inherit; transition:all .12s;
+  }
+  .preset-btn:hover{border-color:var(--gold); background:var(--cream);}
+  .preset-btn.active{border-color:var(--gold-d); background:var(--cream2); box-shadow:0 0 0 2px var(--gold-l);}
+  .preset-btn .pk{display:inline-block; background:var(--gold); color:#3D2F00; font-weight:bold; font-size:.78rem; border-radius:4px; padding:0 7px; margin-bottom:5px;}
+  .preset-btn .pn{display:block; font-weight:bold; font-size:.86rem;}
+  .preset-btn .pd{display:block; font-size:.72rem; color:var(--ink-soft); margin-top:3px; line-height:1.4;}
+
+  /* ── 3. 모듈 체크박스 ──────────────────── */
+  .mod-stage{margin-bottom:14px;}
+  .mod-stage:last-child{margin-bottom:0;}
+  .mod-stage > h3{font-size:.85rem; color:var(--ink-soft); border-left:4px solid var(--gold); padding-left:8px; margin-bottom:8px;}
+  .mod-list{display:flex; flex-wrap:wrap; gap:8px;}
+  .mod{
+    display:inline-flex; align-items:center; gap:7px; border:1.5px solid var(--line); border-radius:7px;
+    padding:7px 11px; background:#FFFDF6; cursor:pointer; user-select:none; font-size:.85rem; position:relative;
+  }
+  .mod:hover{border-color:var(--gold);}
+  .mod input{accent-color:var(--gold-d); width:15px; height:15px; cursor:pointer;}
+  .mod .code{font-weight:bold; color:var(--gold-d); font-size:.78rem;}
+  .mod.checked{background:var(--cream2); border-color:var(--gold-d);}
+  .mod.fixed{background:var(--gold-l); border-color:var(--gold-d); cursor:not-allowed;}
+  .mod.fixed .lock{font-size:.72rem;}
+  .mod.auto{background:#FFF6DE; border-style:dashed; border-color:var(--auto);}
+  .mod .auto-badge{
+    font-size:.68rem; background:var(--auto); color:#fff; border-radius:3px; padding:0 5px; cursor:help;
+  }
+  .auto-reasons{margin-top:10px; font-size:.76rem; color:var(--auto); background:#FFF9EA; border:1px dashed var(--gold-l); border-radius:6px; padding:8px 12px; display:none;}
+  .auto-reasons.visible{display:block;}
+  .auto-reasons li{margin-left:16px;}
+
+  /* ── 채널 패널 ─────────────────────────── */
+  .channel-panel{margin-top:12px; border:1px solid var(--line); border-radius:8px; background:#FFFCF2; padding:12px 14px;}
+  .channel-panel > h4{font-size:.83rem; margin-bottom:4px;}
+  .channel-panel > .hint{margin-bottom:8px;}
+  .ch-group{margin-top:8px;}
+  .ch-group > span{font-size:.74rem; font-weight:bold; color:var(--ink-soft); display:block; margin-bottom:5px;}
+  .ch-list{display:flex; flex-wrap:wrap; gap:7px;}
+  .ch{
+    display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:6px;
+    padding:5px 9px; background:#fff; cursor:pointer; font-size:.8rem; user-select:none;
+  }
+  .ch:hover{border-color:var(--gold);}
+  .ch.checked{background:var(--cream2); border-color:var(--gold-d);}
+  .ch input{accent-color:var(--gold-d); cursor:pointer;}
+  .ch .code{font-weight:bold; color:var(--gold-d); font-size:.72rem;}
+
+  /* ── 5. 미리보기 ───────────────────────── */
+  .preview-head{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;}
+  .preview-stats{font-size:.82rem; color:var(--ink-soft);}
+  .preview-stats b{color:var(--gold-d); font-size:1rem;}
+  .notice{font-size:.78rem; background:#FFF4E0; border:1px solid var(--gold-l); color:#8A6400; border-radius:6px; padding:7px 12px; margin-bottom:10px; display:none;}
+  .notice.visible{display:block;}
+  .tbl-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
+  table.preview{border-collapse:collapse; width:100%; font-size:.8rem; background:#fff;}
+  table.preview th{
+    background:var(--gold-l); color:#3D2F00; padding:7px 8px; border:1px solid var(--line);
+    position:sticky; top:0; white-space:nowrap; font-size:.78rem;
+  }
+  table.preview td{border:1px solid var(--line); padding:6px 8px; vertical-align:top;}
+  td.stage-cell{font-weight:bold; text-align:center; vertical-align:middle; white-space:nowrap; width:52px;}
+  td.no-cell{white-space:nowrap; color:var(--ink-soft); font-size:.75rem; width:56px; text-align:center;}
+  td.task-cell{font-weight:bold; white-space:nowrap;}
+  td.status-cell{text-align:center; color:#8A8A8A; white-space:nowrap;}
+  td.note-cell{color:var(--ink-soft); font-size:.75rem;}
+  td.editable{background:#FFFDF0; cursor:text; min-width:80px;}
+  td.editable:focus{outline:2px solid var(--gold); background:#fff;}
+  td.editable:empty::before{content:'—'; color:#C9BD97;}
+  tr.auto-row td.no-cell::after{content:' ⚙'; color:var(--auto);}
+  .empty-msg{padding:28px; text-align:center; color:var(--ink-soft); font-size:.85rem;}
+
+  /* ── 다운로드 바 ───────────────────────── */
+  .dl-bar{
+    position:fixed; left:0; right:0; bottom:0; background:rgba(255,253,246,.97); border-top:2px solid var(--gold);
+    padding:12px 0; z-index:50; box-shadow:0 -4px 14px rgba(0,0,0,.06);
+  }
+  .dl-inner{max-width:1180px; margin:0 auto; padding:0 20px; display:flex; align-items:center; justify-content:space-between; gap:14px;}
+  .dl-msg{font-size:.8rem; color:var(--danger); flex:1;}
+  .dl-file{font-size:.78rem; color:var(--ink-soft);}
+  button.dl{
+    background:linear-gradient(135deg,var(--gold),var(--gold-d)); color:#3D2F00; border:none; border-radius:8px;
+    font:inherit; font-weight:bold; font-size:.95rem; padding:11px 26px; cursor:pointer; box-shadow:0 2px 6px rgba(224,168,0,.35);
+  }
+  button.dl:hover{filter:brightness(1.06);}
+  button.dl:active{transform:translateY(1px);}
+
+  /* ── 인쇄 ─────────────────────────────── */
+  @media print{
+    header,.dl-bar,#secInfo,#secPreset,#secModule{display:none;}
+    body{background:#fff; padding:0;}
+    section.card{border:none; margin:0;}
+    .tbl-scroll{overflow:visible; border:none;}
+    table.preview th{position:static;}
+  }
+  @media (max-width:900px){
+    .info-grid{grid-template-columns:repeat(2,1fr);}
+    .preset-row{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <h1>마케팅 캠페인 SOP — 모듈형 체크리스트 생성기 <small style="font-weight:normal;font-size:.8rem;">v2.0</small></h1>
+    <p>캠페인 성격에 맞는 모듈 선택 → 과업 단위 체크리스트 자동 생성 → 인쇄형 Excel 다운로드 · 사업전략팀</p>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- 1. 캠페인 정보 -->
+  <section class="card" id="secInfo">
+    <h2><span class="step">STEP 1</span> 캠페인 정보 입력</h2>
+    <div class="card-body">
+      <div class="info-grid">
+        <div class="field" style="grid-column:span 2;">
+          <label>캠페인명 <span class="req">*</span></label>
+          <input type="text" id="inpName" placeholder="예) 2026 하반기 신규가입 이벤트" maxlength="60">
+        </div>
+        <div class="field">
+          <label>캠페인 유형 <span class="req">*</span></label>
+          <select id="inpType">
+            <option value="">선택</option>
+            <option>인지</option><option>도달</option><option>전환</option><option>리텐션</option>
+          </select>
+        </div>
+        <div class="field" id="budgetField">
+          <label>예산 총액 (원)</label>
+          <input type="number" id="inpBudget" min="0" step="10000" placeholder="예) 3000000">
+          <div class="why">※ P2(예산 수립) 모듈 선택으로 표시됨 — 규칙 R8</div>
+        </div>
+        <div class="field">
+          <label>시작일 <span class="req">*</span></label>
+          <input type="date" id="inpStart">
+        </div>
+        <div class="field">
+          <label>종료일 <span class="req">*</span></label>
+          <input type="date" id="inpEnd">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 프리셋 -->
+  <section class="card" id="secPreset">
+    <h2><span class="step">STEP 2</span> 프리셋 선택 <span class="hint">클릭 시 해당 모듈 일괄 선택 · 이후 개별 수정 가능 (수정 시 종속 규칙 재적용)</span></h2>
+    <div class="card-body">
+      <div class="preset-row" id="presetRow"></div>
+    </div>
+  </section>
+
+  <!-- 3. 모듈 + 4. 채널 -->
+  <section class="card" id="secModule">
+    <h2><span class="step">STEP 3</span> 모듈 선택 <span class="hint">🔒 고정 모듈은 해제 불가 · ⚙ 자동 체크는 종속 규칙에 의해 선택됨</span></h2>
+    <div class="card-body">
+      <div id="moduleArea"></div>
+      <ul class="auto-reasons" id="autoReasons"></ul>
+    </div>
+  </section>
+
+  <!-- 5. 미리보기 -->
+  <section class="card" id="secPreview">
+    <h2><span class="step">STEP 4</span> 체크리스트 미리보기 <span class="hint">협업부서·기한(D-) 셀은 클릭하여 직접 수정 가능</span></h2>
+    <div class="card-body">
+      <div class="preview-head">
+        <div class="preview-stats" id="previewStats"></div>
+      </div>
+      <div class="notice" id="compressNotice"></div>
+      <div class="tbl-scroll" id="previewBox"></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- 다운로드 바 -->
+<div class="dl-bar">
+  <div class="dl-inner">
+    <div>
+      <div class="dl-file" id="dlFileName">파일명: (캠페인명 입력 시 표시)</div>
+      <div class="dl-msg" id="dlMsg"></div>
+    </div>
+    <button class="dl" id="btnDownload">⬇ Excel 다운로드 (.xlsx)</button>
+  </div>
+</div>
+
+<script>
+'use strict';
+/* ═══════════════════════════════════════════════════════════════════════════
+   [데이터 정의] — 기획서 v2.0 시트 2~7 원문을 구조화한 상수.
+   비개발자도 아래 배열의 문자열만 수정하면 항목을 고칠 수 있습니다.
+   · 과업 행 형식: [NO, 과업명, 체크리스트, 협업부서, 비고]
+     (과업명이 빈 문자열이면 앞 행 과업의 연속 항목으로 취급)
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 모듈 목록 (시트 2) ── */
+const MODULES = [
+  // {code, stage(화면 그룹), name, kind: fixed|select}
+  {code:'P0',  stage:'기획',   name:'기획 기본',                       kind:'fixed'},
+  {code:'P-T', stage:'기획',   name:'타겟·노출 대상 확정',              kind:'fixed'},
+  {code:'P1',  stage:'기획',   name:'공지·법무 검토',                   kind:'select'},
+  {code:'P2',  stage:'기획',   name:'예산 수립',                       kind:'select'},
+  {code:'P3',  stage:'기획',   name:'실적 측정 (KPI·UTM·제휴코드)',     kind:'select'},
+  {code:'P4',  stage:'기획',   name:'쿠폰',                            kind:'select'},
+  {code:'P4B', stage:'기획',   name:'할인',                            kind:'select'},
+  {code:'P5',  stage:'기획',   name:'경품',                            kind:'select'},
+  {code:'P7',  stage:'기획',   name:'페이지 기획',                      kind:'select'},
+  {code:'D1',  stage:'디자인', name:'이벤트 페이지 디자인',              kind:'select'},
+  {code:'D2',  stage:'디자인', name:'메인롤링 배너',                    kind:'select'},
+  {code:'D3',  stage:'디자인', name:'팝업',                            kind:'select'},
+  {code:'D4',  stage:'디자인', name:'오픈그래프',                       kind:'select'},
+  {code:'D5',  stage:'디자인', name:'전시관리',                         kind:'select'},
+  {code:'D6',  stage:'디자인', name:'외부 채널 소재',                   kind:'select'},
+  {code:'V1',  stage:'개발',   name:'이벤트 페이지 개발',                kind:'select'},
+  {code:'V2',  stage:'개발',   name:'응모 폼',                          kind:'select'},
+  {code:'V3',  stage:'개발',   name:'백오피스 연동',                    kind:'select'},
+  {code:'V4',  stage:'개발',   name:'팝업·전시 게시',                   kind:'select'},
+  {code:'O1',  stage:'오픈',   name:'오픈·모니터링',                    kind:'fixed'},
+  {code:'O2',  stage:'오픈',   name:'당첨자 발표',                      kind:'select'},
+  {code:'O3',  stage:'오픈',   name:'경품 발송·정산',                   kind:'select'},
+  {code:'O4',  stage:'오픈',   name:'결과 리포트',                      kind:'select'},
+];
+const FIXED_MODULES = ['P0','P-T','O1'];
+
+/* ── 모듈별 과업 (시트 3·5·6) — [NO, 과업, 체크리스트, 협업부서, 비고] ── */
+const TASKS = {
+  'P0': [
+    ['P0-1','목적 설정','캠페인 목적 설정 (인지/도달/전환/리텐션)','마케팅',''],
+    ['P0-2','프로세스 설정','참여 조건·당첨 방식·참여 흐름 확정','마케팅',''],
+    ['P0-3','일정 수립','시작·종료 일시 지정','마케팅',''],
+    ['P0-4','','당첨 발표·발송 일정 지정','마케팅','경품/쿠폰 시'],
+    ['P0-5','로드맵 확정','전체 캠페인 로드맵 작성','마케팅',''],
+    ['P0-6','기획안 승인','기획안 품의 및 승인 완료','마케팅',''],
+  ],
+  'P-T': [
+    ['PT-1','타겟 정의','대상 고객 정의 (업종·규모·직무)','마케팅',''],
+    ['PT-2','노출 채널 확정','노출 채널 선택 (채널 목록 참조)','마케팅','→ C군 활성화'],
+    ['PT-3','노출 조건 확정','채널별 노출 기간·위치·순서 확정','마케팅',''],
+    ['PT-4','소재 규격 확인','채널별 이미지 규격·문구 제한 확인','디자인팀',''],
+    ['PT-5','게시 경로 확인','채널별 게시 주체·요청 리드타임 확인','각 채널 담당',''],
+  ],
+  'P1': [
+    ['P1-1','안내 문구 작성','공지·유의사항 문구 작성','마케팅',''],
+    ['P1-2','법무 검토','법무 검토 요청 및 회신 확인','법무실','결재문서 첨부·리드타임 유의'],
+    ['P1-3','약관 확정','약관·개인정보 수집 동의 문구 확정','법무실',''],
+  ],
+  'P2': [
+    ['P2-1','예산 산정','항목별 예산 산정 (경품·광고·제작)','마케팅',''],
+    ['P2-2','예산 품의','예산 품의 및 승인','경영본부',''],
+  ],
+  'P3': [
+    ['P3-1','KPI 설정','캠페인 KPI 설정','마케팅',''],
+    ['P3-2','UTM 생성','채널별 UTM 생성','마케팅','명명 규칙 문서 참조'],
+    ['P3-3','','UTM 적용 URL 목록 정리 (채널 1:1 매칭)','마케팅',''],
+    ['P3-4','','UTM 적용 URL 접속 테스트','마케팅','페이지 개발 후'],
+    ['P3-5','제휴코드 등록','백오피스에 제휴코드 등록','마케팅','채번 규칙 문서 참조 · 누락 시 실적 0 집계'],
+    ['P3-6','','테스트 유입 → 백오피스 실적 집계 확인','마케팅·개발팀','검증 관문'],
+  ],
+  'P4': [
+    ['P4-1','① 쿠폰 등록','백오피스에 쿠폰 등록','마케팅','①등록→②발행→③발급 순서 필수'],
+    ['P4-2','② 쿠폰 발행','쿠폰 발행 처리','마케팅','등록만 하고 미발행 시 발급 불가'],
+    ['P4-3','','발행 상태 확인','마케팅',''],
+    ['P4-4','③ 발급 대상','발급 대상 지정 (전체/조건부/개별)','마케팅','필요시'],
+    ['P4-5','','발급 시점 설정 (즉시/예약/참여 시)','마케팅','필요시'],
+    ['P4-6','④ 발급 검증','테스트 계정 발급 확인','마케팅',''],
+    ['P4-7','','테스트 계정 사용(결제) 확인','마케팅',''],
+    ['P4-8','종료 처리','종료 후 발행 중지 처리','마케팅',''],
+  ],
+  'P4B': [
+    ['P4B-1','할인 등록','백오피스에 할인 등록','마케팅',''],
+    ['P4B-2','검증','결제 화면 할인가 노출 확인','마케팅',''],
+    ['P4B-3','종료 처리','종료일 자동 해제 설정 확인','마케팅',''],
+  ],
+  'P5': [
+    ['P5-1','경품 확정','경품 목록·수량 확정','마케팅',''],
+    ['P5-2','발주','구매처 선정 및 발주','마케팅',''],
+    ['P5-3','발송 준비','발송 경로 확인 (기프티쇼/문자 등)','마케팅',''],
+    ['P5-4','제세공과금','제세공과금 대상 여부 확인','경영본부','5만원 초과 시'],
+  ],
+  'P7': [
+    ['P7-1','구성 기획','페이지 구성·콘텐츠 기획','마케팅',''],
+    ['P7-2','와이어프레임','와이어프레임 작성','마케팅',''],
+    ['P7-3','기능 명세','기능 명세 정리 (개발 요청용)','마케팅',''],
+  ],
+  'D1': [
+    ['D1-1','시안 회수','상세페이지 시안 회수','디자인팀',''],
+    ['D1-2','반응형 확인','웹·모바일 반응형 확인','디자인팀',''],
+    ['D1-3','문구 검수','오탈자·법적 고지 반영 확인','마케팅',''],
+    ['D1-4','시안 확정','최종 시안 승인·확정','마케팅',''],
+    ['D1-5','전달','확정 디자인 개발팀 전달 (피그마/PPT)','개발팀',''],
+  ],
+  'D2': [
+    ['D2-1','시안 회수','배너 시안 회수','디자인팀',''],
+    ['D2-2','노출 확정','노출 순서·기간 확정','마케팅',''],
+  ],
+  'D3': [
+    ['D3-1','시안 회수','팝업 이미지 시안 회수','디자인팀',''],
+    ['D3-2','사이즈 확인','웹·모바일 사이즈 각각 확인','디자인팀',''],
+  ],
+  'D4': [
+    ['D4-1','OG 이미지','OG 이미지 제작','디자인팀',''],
+    ['D4-2','OG 문구','OG 타이틀·디스크립션 작성','마케팅',''],
+    ['D4-3','미리보기','링크 공유 미리보기 테스트','마케팅',''],
+  ],
+  'D5': [
+    ['D5-1','이미지 제작','전시 웹·모바일 이미지 제작','디자인팀',''],
+    ['D5-2','문구 작성','전시 디스크립션 작성','마케팅',''],
+  ],
+  'D6': [
+    ['D6-1','소재 제작','채널별 규격 소재 제작 (블로그·인스타·메일)','디자인팀',''],
+  ],
+  'V1': [
+    ['V1-1','개발 요청','기능 명세·확정 디자인 전달','개발팀',''],
+    ['V1-2','페이지 게시','이벤트 페이지 게시','개발팀',''],
+    ['V1-3','URL 확정','페이지 URL 확정','개발팀',''],
+    ['V1-4','종료 설정','종료 처리·리다이렉션 설정','개발팀',''],
+  ],
+  'V2': [
+    ['V2-1','동의 절차','개인정보 수집 동의 절차 반영','개발팀',''],
+    ['V2-2','중복 방지','중복 응모 방지 로직 확인','개발팀',''],
+  ],
+  'V3': [
+    ['V3-1','세팅 반영','쿠폰·경품 세팅 값 반영 확인','개발팀',''],
+    ['V3-2','데이터 적재','참여 데이터 적재 확인','개발팀',''],
+  ],
+  'V4': [
+    ['V4-1','팝업 게시','팝업 노출 설정 (기간·디바이스)','개발팀',''],
+    ['V4-2','전시 등록','전시 영역 등록·노출 순서 설정','개발팀',''],
+  ],
+  'O1': [
+    ['O1-1','오픈 확인','정상 오픈 확인','마케팅',''],
+    ['O1-2','','채널별 게시 상태 확인','마케팅',''],
+    ['O1-3','','유입 경로 정상 동작 확인','마케팅',''],
+    ['O1-4','모니터링','일별 참여·유입 지표 모니터링','마케팅',''],
+    ['O1-5','','오류·문의 접수·대응','마케팅',''],
+    ['O1-6','종료 처리','페이지 종료·리다이렉션 적용 확인','개발팀',''],
+    ['O1-7','','팝업·배너·전시 영역 내림','개발팀',''],
+  ],
+  'O2': [
+    ['O2-1','발표','당첨자 선정·발표 게시','마케팅','종료 후'],
+    ['O2-2','안내','당첨자 개별 안내 발송','마케팅','종료 후'],
+  ],
+  'O3': [
+    ['O3-1','발송','발송 완료·수령 확인','마케팅','종료 후'],
+    ['O3-2','재발송','미수령 건 재발송 처리','마케팅','종료 후'],
+    ['O3-3','정산','제세공과금 처리·사용내역 전달','경영본부','종료 후'],
+  ],
+  'O4': [
+    ['O4-1','실적 정리','KPI 대비 실적 정리','마케팅','종료 후'],
+    ['O4-2','분석','채널별 유입·전환 분석','마케팅','종료 후'],
+    ['O4-3','회고','회고 및 개선사항 정리','마케팅','종료 후'],
+  ],
+};
+
+/* ── 노출 채널 목록 (시트 4 · ※ 미확정 초안 — 확정 시 이 배열만 갱신) ──
+   형식: {code, name(채널명), type(유형), publisher(게시 주체)}                 */
+const CHANNELS = [
+  {code:'C1',  name:'크레디뷰 홈페이지 팝업',              type:'자사',          publisher:'개발팀'},
+  {code:'C2',  name:'크레디뷰 메인롤링 배너',              type:'자사',          publisher:'개발팀'},
+  {code:'C3',  name:'크레디뷰 전시영역',                  type:'자사',          publisher:'개발팀'},
+  {code:'C4',  name:'테크핀레이팅스 홈페이지',             type:'자사',          publisher:'개발팀'},
+  {code:'C5',  name:'서비스 내 알림 (앱푸시·알림톡·메일)',  type:'자사',          publisher:'개발팀'},
+  {code:'C6',  name:'네이버 블로그',                      type:'자사 외부채널',  publisher:'마케팅'},
+  {code:'C7',  name:'인스타그램',                         type:'자사 외부채널',  publisher:'마케팅'},
+  {code:'C8',  name:'뉴스레터',                           type:'자사 외부채널',  publisher:'마케팅'},
+  {code:'C9',  name:'제휴 협회 노출',                     type:'제휴',          publisher:'제휴처'},
+  {code:'C10', name:'제휴 플랫폼 (위하고 등)',             type:'제휴',          publisher:'제휴처·개발팀'},
+  {code:'C11', name:'유료 광고 (검색·디스플레이)',          type:'유료',          publisher:'마케팅'},
+  {code:'C12', name:'오프라인 (세미나·인쇄물)',             type:'오프라인',      publisher:'마케팅'},
+];
+
+/* ── 채널 공통 과업 세트 (시트 4 하단 · 선택된 채널마다 반복 생성) ──
+   stage: 배치될 단계 / dept:'PUBLISHER'는 채널의 게시 주체로 치환됨          */
+const CHANNEL_TASK_SET = [
+  {seq:1, stage:'채널',   task:'노출 확정',      checklist:'채널 노출 기간·위치 확정 (P-T 확정분 반영)', dept:'마케팅'},
+  {seq:2, stage:'디자인', task:'소재 제작',      checklist:'채널 규격 소재 제작',                        dept:'디자인팀'},
+  {seq:3, stage:'개발',   task:'게시',           checklist:'', /* 자사→게시 및 링크 연결 / 그 외→게시 요청 (아래 함수) */ dept:'PUBLISHER'},
+  {seq:4, stage:'검수',   task:'노출 검수',      checklist:'노출 상태·랜딩 동작 확인',                   dept:'마케팅'},
+  {seq:5, stage:'오픈',   task:'게시·종료 관리', checklist:'게시 확인 → 종료 후 내림',                   dept:'PUBLISHER'},
+];
+function channelStage3Text(ch){ return ch.type === '자사' ? '게시 및 링크 연결' : '게시 요청'; }
+
+/* ── 검수 자동 구성 규칙 (시트 6) ──
+   trigger: 'ALWAYS' | 모듈코드 배열(하나라도 선택 시) / channels: 채널코드 배열 */
+const INSPECTIONS = [
+  {trigger:'ALWAYS',            text:'법적 고지 최종 반영 확인',        dept:'마케팅', note:'공통'},
+  {trigger:'ALWAYS',            text:'오픈 준비 완료 승인',            dept:'마케팅', note:'공통'},
+  {trigger:['P1'],              text:'법무 회신 반영 확인',            dept:'법무실', note:''},
+  {trigger:['P3'],              text:'UTM 유입 집계 확인',             dept:'마케팅', note:''},
+  {trigger:['D1','V1'],         text:'웹·모바일 화면 깨짐 확인',        dept:'마케팅', note:''},
+  {trigger:['D1','V1'],         text:'브라우저 호환 확인',             dept:'마케팅', note:''},
+  {trigger:['D1','V1'],         text:'오탈자·이미지 누락 확인',         dept:'마케팅', note:''},
+  {trigger:['D1','V1'],         text:'CTA·배너 링크 동작 확인',        dept:'마케팅', note:''},
+  {trigger:['D1','V1'],         text:'종료 리다이렉션 동작 확인',       dept:'개발팀', note:''},
+  {trigger:['P4'],              text:'테스트 쿠폰 발급·사용 검증',      dept:'마케팅', note:''},
+  {trigger:['P5'],              text:'경품 재고·발송 준비 확인',        dept:'마케팅', note:''},
+  {trigger:'CH', channels:['C9','C10'], text:'제휴처 노출 상태 확인',  dept:'제휴처', note:''},
+  {trigger:['D3'],              text:'팝업 노출·클릭 랜딩 확인',        dept:'마케팅', note:''},
+  {trigger:['V2'],              text:'중복 응모 방지·동의 절차 확인',   dept:'개발팀', note:''},
+];
+
+/* ── 종속 규칙 R1~R9 (시트 7) ──
+   anyModules/anyChannels 중 하나라도 해당되면 add 모듈 자동 체크.
+   R8(예산 입력란 표시)·R9(채널→과업 배치)는 화면 로직으로 처리.               */
+const DEP_RULES = [
+  {id:'R1', anyModules:['P7'],        add:['D1','V1'], why:'R1 · P7(페이지 기획) 선택 → D1·V1 자동'},
+  {id:'R2', anyModules:['D1','V1'],   add:['P7'],      why:'R2 · D1/V1 선택 → P7 상호 체크'},
+  {id:'R3', anyModules:['P4','P5'],   add:['V3'],      why:'R3 · 쿠폰/경품 선택 → V3(백오피스 연동) 자동'},
+  {id:'R4', anyModules:['P5'],        add:['O2','O3'], why:'R4 · 경품 선택 → O2·O3(발표·발송) 자동'},
+  {id:'R5', anyChannels:['C9','C10'], add:['P1'],      why:'R5 · 제휴 채널(C9·C10) 노출 → P1(법무 검토) 자동'},
+  {id:'R6', anyModules:['D3','D5'],   add:['V4'],      why:'R6 · 팝업/전시 선택 → V4(게시 개발) 자동'},
+  {id:'R7', anyModules:['V2'],        add:['P1'],      why:'R7 · 응모 폼 선택 → P1(법무 검토) 자동'},
+];
+
+/* ── 프리셋 A~E (시트 7) — 고정 모듈(P0·P-T·O1)은 항상 포함 ── */
+const PRESETS = [
+  {key:'A', name:'이벤트 페이지 캠페인',
+    desc:'경품 응모형 · 페이지 신규 제작 · 풀 구성',
+    modules:['P1','P2','P3','P5','P7','D1','D2','D3','D4','V1','V2','V3','O2','O3','O4'], channels:[]},
+  {key:'B', name:'협회 제휴 캠페인',
+    desc:'제휴 협회 노출 포함 · 페이지 제작 (채널 C9 포함)',
+    modules:['P1','P3','P7','D1','D2','D4','D6','V1','O4'], channels:['C9']},
+  {key:'C', name:'쿠폰·할인 프로모션',
+    desc:'쿠폰 + 할인 · 팝업·전시 노출',
+    modules:['P3','P4','P4B','P7','D1','D2','D3','D5','V1','V3','V4','O4'], channels:[]},
+  {key:'D', name:'콘텐츠 인지 캠페인',
+    desc:'페이지 없이 SNS·뉴스레터 확산 (채널 C6·C7·C8)',
+    modules:['P3','D4','D6','O4'], channels:['C6','C7','C8']},
+  {key:'E', name:'직접 선택',
+    desc:'고정 모듈(P0·P-T·O1)만 두고 초기화',
+    modules:[], channels:[]},
+];
+
+/* ── 기한(D-) 기본값 — 단계별 시작일 역산 (준비 4주 미만 시 비율 압축) ── */
+const STAGE_ORDER = ['기획','채널','디자인','개발','검수','오픈'];
+const STAGE_DDAY  = {'기획':28,'채널':21,'디자인':21,'개발':14,'검수':7,'오픈':0};
+const BASE_PREP_DAYS = 28; // 기준 준비 기간(4주)
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   [상태] — 모든 상태는 JS 변수로만 관리 (스토리지 미사용)
+   ═══════════════════════════════════════════════════════════════════════════ */
+const state = {
+  manual:   new Set(),      // 사용자가 직접 체크한 선택 모듈
+  channels: new Set(),      // 선택된 노출 채널 (C코드)
+  overrides: new Map(),     // 행별 수정값: uid → {dept, due}
+  activePreset: null,
+};
+
+/* 종속 규칙 폐쇄(fixpoint) 계산 → {active:Set, reasons:Map(code→[사유])} */
+function computeEffective(){
+  const active = new Set([...FIXED_MODULES, ...state.manual]);
+  const reasons = new Map();
+  let changed = true;
+  while(changed){
+    changed = false;
+    for(const r of DEP_RULES){
+      const hit =
+        (r.anyModules  && r.anyModules.some(m => active.has(m))) ||
+        (r.anyChannels && r.anyChannels.some(c => state.channels.has(c)));
+      if(!hit) continue;
+      for(const t of r.add){
+        if(!active.has(t)){ active.add(t); changed = true; }
+        if(!state.manual.has(t) && !FIXED_MODULES.includes(t)){
+          const list = reasons.get(t) || [];
+          if(!list.includes(r.why)) list.push(r.why);
+          reasons.set(t, list);
+        }
+      }
+    }
+  }
+  return {active, reasons};
+}
+
+/* ── 기한 계산 ── */
+function parseDate(v){ return v ? new Date(v + 'T00:00:00') : null; }
+function fmtMD(d){ return String(d.getMonth()+1).padStart(2,'0') + '/' + String(d.getDate()).padStart(2,'0'); }
+function prepInfo(){
+  const start = parseDate(document.getElementById('inpStart').value);
+  if(!start) return {start:null, scale:1, prepDays:null};
+  const today = new Date(); today.setHours(0,0,0,0);
+  const prepDays = Math.round((start - today) / 86400000);
+  let scale = 1;
+  if(prepDays > 0 && prepDays < BASE_PREP_DAYS) scale = prepDays / BASE_PREP_DAYS;
+  return {start, scale, prepDays};
+}
+function defaultDue(stage, pi){
+  const base = STAGE_DDAY[stage];
+  const n = Math.max(0, Math.round(base * pi.scale));
+  const label = n === 0 ? 'D-Day' : 'D-' + n;
+  if(!pi.start) return label;
+  const d = new Date(pi.start); d.setDate(d.getDate() - n);
+  return label + ' (' + fmtMD(d) + ')';
+}
+
+/* ── 체크리스트 행 생성 (미리보기·Excel 공용 모델) ──
+   행: {stage, no, task, checklist, dept, due, status, note, uid, auto} */
+function buildRows(){
+  const {active, reasons} = computeEffective();
+  const pi = prepInfo();
+  const rows = [];
+  const selCh = CHANNELS.filter(c => state.channels.has(c.code));
+
+  const push = (stage, no, task, checklist, dept, note, uid) => {
+    const ov = state.overrides.get(uid) || {};
+    rows.push({
+      stage, no, task, checklist,
+      dept: ov.dept !== undefined ? ov.dept : dept,
+      due:  ov.due  !== undefined ? ov.due  : defaultDue(stage, pi),
+      status:'미착수', note, uid,
+      auto: reasons.has(uid.split('-')[0]) // 시각 표시용(모듈 단위)
+    });
+  };
+  const pushModule = (stage, code) => {
+    if(!active.has(code)) return;
+    for(const [no, task, checklist, dept, note] of TASKS[code]){
+      const ov = state.overrides.get(no) || {};
+      rows.push({
+        stage, no, task, checklist,
+        dept: ov.dept !== undefined ? ov.dept : dept,
+        due:  ov.due  !== undefined ? ov.due  : defaultDue(stage, pi),
+        status:'미착수', note: note || '', uid: no,
+        auto: reasons.has(code),
+      });
+    }
+  };
+
+  // 기획
+  ['P0','P-T','P1','P2','P3','P4','P4B','P5','P7'].forEach(c => pushModule('기획', c));
+  // 채널 (채널별 세트 1단계)
+  for(const ch of selCh){
+    const s = CHANNEL_TASK_SET[0];
+    push('채널', ch.code+'-1', ch.name, s.checklist, s.dept, ch.type, ch.code+'-s1');
+  }
+  // 디자인
+  ['D1','D2','D3','D4','D5','D6'].forEach(c => pushModule('디자인', c));
+  for(const ch of selCh){
+    const s = CHANNEL_TASK_SET[1];
+    push('디자인', ch.code+'-2', ch.name, s.checklist, s.dept, ch.type, ch.code+'-s2');
+  }
+  // 개발
+  ['V1','V2','V3','V4'].forEach(c => pushModule('개발', c));
+  for(const ch of selCh){
+    const s = CHANNEL_TASK_SET[2];
+    push('개발', ch.code+'-3', ch.name, channelStage3Text(ch), ch.publisher, ch.type, ch.code+'-s3');
+  }
+  // 검수 (자동 구성)
+  let qa = 0;
+  for(const ins of INSPECTIONS){
+    const on = ins.trigger === 'ALWAYS'
+      || (ins.trigger === 'CH' && ins.channels.some(c => state.channels.has(c)))
+      || (Array.isArray(ins.trigger) && ins.trigger.some(m => active.has(m)));
+    if(!on) continue;
+    qa++;
+    push('검수', 'QA-'+qa, ins.trigger === 'ALWAYS' ? '공통 검수' :
+      (ins.trigger === 'CH' ? '제휴 검수' : ins.trigger.join('·')+' 검수'),
+      ins.text, ins.dept, ins.note, 'QA:'+ins.text);
+  }
+  for(const ch of selCh){
+    const s = CHANNEL_TASK_SET[3];
+    push('검수', ch.code+'-4', ch.name, s.checklist, s.dept, ch.type, ch.code+'-s4');
+  }
+  // 오픈
+  ['O1','O2','O3','O4'].forEach(c => pushModule('오픈', c));
+  for(const ch of selCh){
+    const s = CHANNEL_TASK_SET[4];
+    push('오픈', ch.code+'-5', ch.name, s.checklist, ch.publisher, ch.type, ch.code+'-s5');
+  }
+  return {rows, active, reasons, pi};
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   [화면 렌더링]
+   ═══════════════════════════════════════════════════════════════════════════ */
+const $ = id => document.getElementById(id);
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
+function renderPresets(){
+  $('presetRow').innerHTML = PRESETS.map(p => `
+    <button type="button" class="preset-btn${state.activePreset===p.key?' active':''}" data-preset="${p.key}">
+      <span class="pk">${p.key}</span>
+      <span class="pn">${esc(p.name)}</span>
+      <span class="pd">${esc(p.desc)}</span>
+    </button>`).join('');
+}
+
+function renderModules(){
+  const {active, reasons} = computeEffective();
+  const groups = ['기획','디자인','개발','오픈'];
+  let html = '';
+  for(const g of groups){
+    html += `<div class="mod-stage"><h3>${g} 단계</h3><div class="mod-list">`;
+    for(const m of MODULES.filter(x => x.stage === g)){
+      const checked = active.has(m.code);
+      const isFixed = m.kind === 'fixed';
+      const isAuto  = checked && !isFixed && !state.manual.has(m.code);
+      const reason  = isAuto ? (reasons.get(m.code)||[]).join(' / ') : '';
+      html += `
+        <label class="mod${checked?' checked':''}${isFixed?' fixed':''}${isAuto?' auto':''}"
+               ${reason ? `title="${esc(reason)}"` : ''}>
+          <input type="checkbox" data-mod="${m.code}" ${checked?'checked':''} ${isFixed?'disabled':''}>
+          <span class="code">${m.code}</span> ${esc(m.name)}
+          ${isFixed ? '<span class="lock">🔒</span>' : ''}
+          ${isAuto ? `<span class="auto-badge" title="${esc(reason)}">자동</span>` : ''}
+        </label>`;
+    }
+    // P-T 아래 채널 패널 (기획 그룹 끝에 배치)
+    html += '</div>';
+    if(g === '기획'){
+      html += `<div class="channel-panel">
+        <h4>📡 노출 채널 선택 <span class="hint">(P-T 하위 · 규칙 R9 — 선택 시 채널별 5단계 과업 세트가 각 단계에 자동 배치)</span></h4>
+        <div class="hint">※ 채널 목록은 미확정 초안 — 확정 시 코드 상단 CHANNELS 배열만 갱신하면 됨</div>`;
+      const types = [...new Set(CHANNELS.map(c => c.type))];
+      for(const t of types){
+        html += `<div class="ch-group"><span>${esc(t)}</span><div class="ch-list">`;
+        for(const c of CHANNELS.filter(x => x.type === t)){
+          const on = state.channels.has(c.code);
+          html += `
+            <label class="ch${on?' checked':''}" title="게시 주체: ${esc(c.publisher)}">
+              <input type="checkbox" data-ch="${c.code}" ${on?'checked':''}>
+              <span class="code">${c.code}</span> ${esc(c.name)}
+            </label>`;
+        }
+        html += '</div></div>';
+      }
+      html += '</div>';
+    }
+    html += '</div>';
+  }
+  $('moduleArea').innerHTML = html;
+
+  // 자동 체크 사유 안내
+  const items = [...reasons.entries()].filter(([code]) => active.has(code));
+  const box = $('autoReasons');
+  if(items.length){
+    box.classList.add('visible');
+    box.innerHTML = '<b>⚙ 자동 체크 사유</b>' +
+      items.map(([code, why]) => `<li><b>${code}</b> — ${esc(why.join(' / '))} <span class="hint">(해제하려면 원인 모듈을 해제)</span></li>`).join('');
+  }else{
+    box.classList.remove('visible'); box.innerHTML = '';
+  }
+
+  // R8: P2 선택 시 예산 입력란 표시
+  $('budgetField').classList.toggle('visible', active.has('P2'));
+}
+
+function renderPreview(){
+  const {rows, active, pi} = buildRows();
+  const chCount = state.channels.size;
+  $('previewStats').innerHTML =
+    `총 <b>${rows.length}</b>개 과업 · 모듈 <b>${[...active].length}</b>개 · 채널 <b>${chCount}</b>개` +
+    STAGE_ORDER.map(s => {
+      const n = rows.filter(r => r.stage === s).length;
+      return n ? ` · ${s} ${n}` : '';
+    }).join('');
+
+  // 준비 기간 압축 안내
+  const notice = $('compressNotice');
+  if(pi.start && pi.prepDays !== null && pi.prepDays < BASE_PREP_DAYS){
+    notice.classList.add('visible');
+    notice.textContent = pi.prepDays <= 0
+      ? `⚠ 시작일이 오늘 이전입니다. 기한(D-)을 직접 조정하세요.`
+      : `⏱ 준비 기간 ${pi.prepDays}일 (기준 ${BASE_PREP_DAYS}일 미만) — 기한(D-) 기본값을 ${Math.round(pi.scale*100)}% 비율로 압축했습니다. 행별로 직접 수정 가능합니다.`;
+  }else{
+    notice.classList.remove('visible');
+  }
+
+  if(!rows.length){
+    $('previewBox').innerHTML = '<div class="empty-msg">모듈을 선택하면 체크리스트가 여기에 표시됩니다.</div>';
+    return;
+  }
+  // 단계 셀 rowspan 계산
+  let html = `<table class="preview"><thead><tr>
+    <th>단계</th><th>NO.</th><th>과업</th><th>체크리스트</th><th>협업부서</th><th>기한(D-)</th><th>상태</th><th>비고</th>
+  </tr></thead><tbody>`;
+  for(let i = 0; i < rows.length; i++){
+    const r = rows[i];
+    const first = i === 0 || rows[i-1].stage !== r.stage;
+    let span = 1;
+    if(first){ while(i + span < rows.length && rows[i+span].stage === r.stage) span++; }
+    html += `<tr${r.auto ? ' class="auto-row"' : ''}>`;
+    if(first) html += `<td class="stage-cell" rowspan="${span}" style="background:${stageColor(r.stage)}">${r.stage}</td>`;
+    html += `
+      <td class="no-cell">${esc(r.no)}</td>
+      <td class="task-cell">${esc(r.task)}</td>
+      <td>${esc(r.checklist)}</td>
+      <td class="editable" contenteditable="true" data-uid="${esc(r.uid)}" data-field="dept">${esc(r.dept)}</td>
+      <td class="editable" contenteditable="true" data-uid="${esc(r.uid)}" data-field="due">${esc(r.due)}</td>
+      <td class="status-cell">${r.status}</td>
+      <td class="note-cell">${esc(r.note)}</td>
+    </tr>`;
+  }
+  html += '</tbody></table>';
+  $('previewBox').innerHTML = html;
+
+  // 파일명 미리표시
+  const nm = $('inpName').value.trim();
+  $('dlFileName').textContent = '파일명: ' + (nm ? excelFileName(nm) : '(캠페인명 입력 시 표시)');
+}
+
+function stageColor(stage){
+  return {'기획':'#FCF3D9','채널':'#F9E7B8','디자인':'#FCF3D9','개발':'#F9E7B8','검수':'#F7DC96','오픈':'#F2C230'}[stage] || '#FCF3D9';
+}
+
+function renderAll(){ renderPresets(); renderModules(); renderPreview(); }
+
+/* ── 이벤트 바인딩 (위임) ── */
+$('presetRow').addEventListener('click', e => {
+  const btn = e.target.closest('[data-preset]');
+  if(!btn) return;
+  const p = PRESETS.find(x => x.key === btn.dataset.preset);
+  state.manual = new Set(p.modules);
+  state.channels = new Set(p.channels);
+  state.overrides.clear();
+  state.activePreset = p.key;
+  renderAll();
+});
+
+$('moduleArea').addEventListener('change', e => {
+  const t = e.target;
+  if(t.dataset.mod){
+    const code = t.dataset.mod;
+    const {active} = computeEffective();
+    if(t.checked){
+      state.manual.add(code);
+    }else{
+      state.manual.delete(code);
+      // 종속 규칙으로 여전히 활성이면 해제 불가 안내
+      const after = computeEffective();
+      if(after.active.has(code)){
+        const why = (after.reasons.get(code) || []).join(' / ');
+        t.checked = true;
+        alert(`[${code}] 모듈은 종속 규칙에 의해 자동 선택 상태입니다.\n\n${why}\n\n해제하려면 원인 모듈을 먼저 해제하세요.`);
+      }
+    }
+    state.activePreset = null;
+    renderAll();
+  }else if(t.dataset.ch){
+    if(t.checked) state.channels.add(t.dataset.ch);
+    else state.channels.delete(t.dataset.ch);
+    state.activePreset = null;
+    renderAll();
+  }
+});
+
+/* 인라인 편집 저장 */
+$('previewBox').addEventListener('input', e => {
+  const td = e.target.closest('td.editable');
+  if(!td) return;
+  const uid = td.dataset.uid, field = td.dataset.field;
+  const ov = state.overrides.get(uid) || {};
+  ov[field] = td.textContent.trim();
+  state.overrides.set(uid, ov);
+});
+
+/* 캠페인 정보 변경 → 기한 재계산 */
+['inpName','inpType','inpStart','inpEnd','inpBudget'].forEach(id => {
+  $(id).addEventListener('input', renderPreview);
+});
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   [Excel(.xlsx) 생성] — 라이브러리 없이 OOXML 직접 생성
+   · 선택 근거: SheetJS 커뮤니티판은 조건부 서식·데이터 유효성(드롭다운)을
+     지원하지 않고(Pro 전용) 인라인 삽입 시 파일이 1MB 이상 커짐.
+     필요한 스펙(인쇄 설정·드롭다운·조건부 서식)이 명확하므로 직접 생성이
+     파일 크기(수십 KB)와 안정성 모두 유리함.
+   · ZIP은 무압축(STORE) 방식 — CRC32만 계산하면 되어 구현이 단순·안전함.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* CRC32 */
+const CRC_TABLE = (() => {
+  const t = new Uint32Array(256);
+  for(let n = 0; n < 256; n++){
+    let c = n;
+    for(let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+    t[n] = c >>> 0;
+  }
+  return t;
+})();
+function crc32(u8){
+  let c = 0xFFFFFFFF;
+  for(let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+
+/* 무압축 ZIP 생성: files = [{name, text}] */
+function buildZip(files){
+  const enc = new TextEncoder();
+  const now = new Date();
+  const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | Math.floor(now.getSeconds() / 2);
+  const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+  const locals = [], centrals = [];
+  let offset = 0;
+
+  for(const f of files){
+    const nameU8 = enc.encode(f.name);
+    const dataU8 = enc.encode(f.text);
+    const crc = crc32(dataU8);
+    const lh = new DataView(new ArrayBuffer(30));
+    lh.setUint32(0, 0x04034b50, true);
+    lh.setUint16(4, 20, true);          // version needed
+    lh.setUint16(6, 0x0800, true);      // UTF-8 flag
+    lh.setUint16(8, 0, true);           // method: store
+    lh.setUint16(10, dosTime, true);
+    lh.setUint16(12, dosDate, true);
+    lh.setUint32(14, crc, true);
+    lh.setUint32(18, dataU8.length, true);
+    lh.setUint32(22, dataU8.length, true);
+    lh.setUint16(26, nameU8.length, true);
+    lh.setUint16(28, 0, true);
+    locals.push(new Uint8Array(lh.buffer), nameU8, dataU8);
+
+    const ch = new DataView(new ArrayBuffer(46));
+    ch.setUint32(0, 0x02014b50, true);
+    ch.setUint16(4, 20, true); ch.setUint16(6, 20, true);
+    ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
+    ch.setUint16(12, dosTime, true); ch.setUint16(14, dosDate, true);
+    ch.setUint32(16, crc, true);
+    ch.setUint32(20, dataU8.length, true); ch.setUint32(24, dataU8.length, true);
+    ch.setUint16(28, nameU8.length, true);
+    ch.setUint32(42, offset, true);
+    centrals.push(new Uint8Array(ch.buffer), nameU8);
+    offset += 30 + nameU8.length + dataU8.length;
+  }
+  const cdSize = centrals.reduce((s, a) => s + a.length, 0);
+  const eocd = new DataView(new ArrayBuffer(22));
+  eocd.setUint32(0, 0x06054b50, true);
+  eocd.setUint16(8, files.length, true);
+  eocd.setUint16(10, files.length, true);
+  eocd.setUint32(12, cdSize, true);
+  eocd.setUint32(16, offset, true);
+
+  const parts = [...locals, ...centrals, new Uint8Array(eocd.buffer)];
+  const total = parts.reduce((s, a) => s + a.length, 0);
+  const out = new Uint8Array(total);
+  let p = 0;
+  for(const a of parts){ out.set(a, p); p += a.length; }
+  return out;
+}
+
+function xesc(s){
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+                  .replace(/"/g,'&quot;').replace(/'/g,'&apos;');
+}
+function cellStr(ref, styleId, text){
+  if(text === '' || text === undefined || text === null)
+    return `<c r="${ref}" s="${styleId}"/>`;
+  return `<c r="${ref}" s="${styleId}" t="inlineStr"><is><t xml:space="preserve">${xesc(text)}</t></is></c>`;
+}
+const COLS = ['A','B','C','D','E','F','G','H'];
+
+/* 스타일 인덱스 (styles.xml 과 1:1 대응) */
+const XF = {DEFAULT:0, TITLE:1, OV_LABEL:2, OV_VALUE:3, HEADER:4,
+            STAGE_A:5, STAGE_B:6, STAGE_C:7, STAGE_D:8,
+            BODY:9, BODY_C:10, NOTE:11, STATUS:12};
+const STAGE_XF = {'기획':XF.STAGE_A,'채널':XF.STAGE_B,'디자인':XF.STAGE_A,'개발':XF.STAGE_B,'검수':XF.STAGE_C,'오픈':XF.STAGE_D};
+
+function stylesXml(){
+  return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<styleSheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<fonts count="5">
+<font><sz val="10"/><name val="맑은 고딕"/><family val="3"/></font>
+<font><b/><sz val="10"/><name val="맑은 고딕"/><family val="3"/></font>
+<font><b/><sz val="14"/><color rgb="FF3D2F00"/><name val="맑은 고딕"/><family val="3"/></font>
+<font><sz val="9"/><color rgb="FF7A6B3E"/><name val="맑은 고딕"/><family val="3"/></font>
+<font><b/><sz val="10"/><color rgb="FF3D2F00"/><name val="맑은 고딕"/><family val="3"/></font>
+</fonts>
+<fills count="8">
+<fill><patternFill patternType="none"/></fill>
+<fill><patternFill patternType="gray125"/></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF2C230"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF7DC96"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFFCF3D9"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF9E7B8"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF7DC96"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF2C230"/></patternFill></fill>
+</fills>
+<borders count="2">
+<border><left/><right/><top/><bottom/><diagonal/></border>
+<border><left style="thin"><color rgb="FFCBB878"/></left><right style="thin"><color rgb="FFCBB878"/></right><top style="thin"><color rgb="FFCBB878"/></top><bottom style="thin"><color rgb="FFCBB878"/></bottom><diagonal/></border>
+</borders>
+<cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
+<cellXfs count="13">
+<xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/>
+<xf numFmtId="0" fontId="2" fillId="2" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="0" fontId="4" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="left" vertical="center" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="4" fillId="3" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="1" fillId="4" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="1" fillId="5" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="1" fillId="6" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="1" fillId="7" borderId="1" xfId="0" applyFont="1" applyFill="1" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="left" vertical="top" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="top" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="3" fillId="0" borderId="1" xfId="0" applyFont="1" applyBorder="1" applyAlignment="1"><alignment horizontal="left" vertical="top" wrapText="1"/></xf>
+<xf numFmtId="0" fontId="0" fillId="0" borderId="1" xfId="0" applyBorder="1" applyAlignment="1"><alignment horizontal="center" vertical="center"/></xf>
+</cellXfs>
+<cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles>
+<dxfs count="3">
+<dxf><font><color rgb="FF006100"/></font><fill><patternFill><bgColor rgb="FFC6EFCE"/></patternFill></fill></dxf>
+<dxf><font><color rgb="FF9C6500"/></font><fill><patternFill><bgColor rgb="FFFFEB9C"/></patternFill></fill></dxf>
+<dxf><font><color rgb="FF808080"/></font><fill><patternFill><bgColor rgb="FFE7E6E6"/></patternFill></fill></dxf>
+</dxfs>
+</styleSheet>`;
+}
+
+function excelFileName(name){
+  const d = new Date();
+  const ymd = d.getFullYear() + String(d.getMonth()+1).padStart(2,'0') + String(d.getDate()).padStart(2,'0');
+  const safe = name.replace(/[\\/:*?"<>|]/g, '_').trim() || '캠페인';
+  return `${safe}_체크리스트_${ymd}.xlsx`;
+}
+
+function buildWorkbook(){
+  const {rows} = buildRows();
+  const name   = $('inpName').value.trim();
+  const type   = $('inpType').value;
+  const start  = $('inpStart').value, end = $('inpEnd').value;
+  const budget = $('inpBudget').value;
+  const {active} = computeEffective();
+  const showBudget = active.has('P2');
+  const today = new Date();
+  const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+
+  const sheetRows = [];   // {cells:[{col,xf,text}], ht, merges:[]}
+  const merges = [];
+  let r = 0;
+  const addRow = (cells, ht) => { sheetRows.push({cells, ht}); return ++r; };
+
+  // ── 상단: 캠페인 개요 블록 ──
+  addRow(COLS.map(c => ({col:c, xf:XF.TITLE, text: c==='A' ? `${name} — 캠페인 체크리스트` : ''})), 30);
+  merges.push('A1:H1');
+
+  const ovRow = (l1, v1, l2, v2) => {
+    const rr = r + 1;
+    addRow([
+      {col:'A', xf:XF.OV_LABEL, text:l1},
+      {col:'B', xf:XF.OV_VALUE, text:v1}, {col:'C', xf:XF.OV_VALUE, text:''}, {col:'D', xf:XF.OV_VALUE, text:''},
+      {col:'E', xf:XF.OV_LABEL, text:l2},
+      {col:'F', xf:XF.OV_VALUE, text:v2}, {col:'G', xf:XF.OV_VALUE, text:''}, {col:'H', xf:XF.OV_VALUE, text:''},
+    ], 20);
+    merges.push(`B${rr}:D${rr}`, `F${rr}:H${rr}`);
+  };
+  ovRow('캠페인명', name, '캠페인 유형', type);
+  ovRow('캠페인 기간', `${start} ~ ${end}`, '생성일', todayStr);
+  if(showBudget) ovRow('예산 총액', budget ? Number(budget).toLocaleString('ko-KR') + ' 원' : '(미입력)', '상태 기준', '미착수 / 진행중 / 완료 / N.A');
+
+  const modLine = MODULES.filter(m => active.has(m.code)).map(m => m.code).join(' · ');
+  const chLine  = CHANNELS.filter(c => state.channels.has(c.code)).map(c => `${c.code} ${c.name}`).join(' · ') || '(없음)';
+  const wideRow = (label, text) => {
+    const rr = r + 1;
+    addRow([
+      {col:'A', xf:XF.OV_LABEL, text:label},
+      ...COLS.slice(1).map(c => ({col:c, xf:XF.OV_VALUE, text: c==='B' ? text : ''})),
+    ], Math.max(20, Math.ceil(text.length / 55) * 15 + 6));
+    merges.push(`B${rr}:H${rr}`);
+  };
+  wideRow('선택 모듈', modLine);
+  wideRow('노출 채널', chLine);
+
+  addRow(COLS.map(c => ({col:c, xf:XF.DEFAULT, text:''})), 8); // 여백
+
+  // ── 헤더 행 (인쇄 반복) ──
+  const headerRowNum = r + 1;
+  addRow([
+    {col:'A', xf:XF.HEADER, text:'단계'},   {col:'B', xf:XF.HEADER, text:'NO.'},
+    {col:'C', xf:XF.HEADER, text:'과업'},   {col:'D', xf:XF.HEADER, text:'체크리스트'},
+    {col:'E', xf:XF.HEADER, text:'협업부서'},{col:'F', xf:XF.HEADER, text:'기한(D-)'},
+    {col:'G', xf:XF.HEADER, text:'상태'},   {col:'H', xf:XF.HEADER, text:'비고'},
+  ], 22);
+
+  // ── 데이터 행 ──
+  const dataFirst = r + 1;
+  for(let i = 0; i < rows.length; i++){
+    const row = rows[i];
+    const rr = r + 1;
+    const stageXf = STAGE_XF[row.stage];
+    const isFirst = i === 0 || rows[i-1].stage !== row.stage;
+    if(isFirst){
+      let span = 1;
+      while(i + span < rows.length && rows[i+span].stage === row.stage) span++;
+      if(span > 1) merges.push(`A${rr}:A${rr + span - 1}`);
+    }
+    const est = Math.max(row.checklist.length / 26, row.task.length / 11, row.note.length / 13, 1);
+    addRow([
+      {col:'A', xf:stageXf, text: isFirst ? row.stage : ''},
+      {col:'B', xf:XF.BODY_C, text:row.no},
+      {col:'C', xf:XF.BODY,   text:row.task},
+      {col:'D', xf:XF.BODY,   text:row.checklist},
+      {col:'E', xf:XF.BODY_C, text:row.dept},
+      {col:'F', xf:XF.BODY_C, text:row.due},
+      {col:'G', xf:XF.STATUS, text:row.status},
+      {col:'H', xf:XF.NOTE,   text:row.note},
+    ], Math.max(19, Math.ceil(est) * 14 + 5));
+  }
+  const dataLast = r;
+
+  // ── sheet1.xml ──
+  let sheetData = '';
+  sheetRows.forEach((sr, idx) => {
+    const rn = idx + 1;
+    sheetData += `<row r="${rn}" ht="${sr.ht}" customHeight="1">` +
+      sr.cells.map(c => cellStr(c.col + rn, c.xf, c.text)).join('') + '</row>';
+  });
+
+  const sheetXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<worksheet xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main">
+<sheetPr><pageSetUpPr fitToPage="1"/></sheetPr>
+<dimension ref="A1:H${dataLast}"/>
+<sheetViews><sheetView workbookViewId="0" showGridLines="0"><pane ySplit="${headerRowNum}" topLeftCell="A${headerRowNum+1}" activePane="bottomLeft" state="frozen"/></sheetView></sheetViews>
+<sheetFormatPr defaultRowHeight="18"/>
+<cols>
+<col min="1" max="1" width="7.5" customWidth="1"/>
+<col min="2" max="2" width="8" customWidth="1"/>
+<col min="3" max="3" width="15" customWidth="1"/>
+<col min="4" max="4" width="42" customWidth="1"/>
+<col min="5" max="5" width="12" customWidth="1"/>
+<col min="6" max="6" width="13" customWidth="1"/>
+<col min="7" max="7" width="9" customWidth="1"/>
+<col min="8" max="8" width="20" customWidth="1"/>
+</cols>
+<sheetData>${sheetData}</sheetData>
+<mergeCells count="${merges.length}">${merges.map(m => `<mergeCell ref="${m}"/>`).join('')}</mergeCells>
+<conditionalFormatting sqref="G${dataFirst}:G${dataLast}">
+<cfRule type="cellIs" dxfId="0" priority="1" operator="equal"><formula>"완료"</formula></cfRule>
+<cfRule type="cellIs" dxfId="1" priority="2" operator="equal"><formula>"진행중"</formula></cfRule>
+<cfRule type="cellIs" dxfId="2" priority="3" operator="equal"><formula>"N.A"</formula></cfRule>
+</conditionalFormatting>
+<dataValidations count="1">
+<dataValidation type="list" allowBlank="1" showInputMessage="1" showErrorMessage="1" sqref="G${dataFirst}:G${dataLast}"><formula1>"미착수,진행중,완료,N.A"</formula1></dataValidation>
+</dataValidations>
+<printOptions horizontalCentered="1"/>
+<pageMargins left="0.35" right="0.35" top="0.55" bottom="0.55" header="0.3" footer="0.3"/>
+<pageSetup paperSize="9" orientation="portrait" fitToWidth="1" fitToHeight="0" horizontalDpi="300" verticalDpi="300"/>
+</worksheet>`;
+
+  const workbookXml = `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<workbook xmlns="http://schemas.openxmlformats.org/spreadsheetml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships">
+<sheets><sheet name="체크리스트" sheetId="1" r:id="rId1"/></sheets>
+<definedNames>
+<definedName name="_xlnm.Print_Area" localSheetId="0">'체크리스트'!$A$1:$H$${dataLast}</definedName>
+<definedName name="_xlnm.Print_Titles" localSheetId="0">'체크리스트'!$${headerRowNum}:$${headerRowNum}</definedName>
+</definedNames>
+</workbook>`;
+
+  const files = [
+    {name:'[Content_Types].xml', text:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types">
+<Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/>
+<Default Extension="xml" ContentType="application/xml"/>
+<Override PartName="/xl/workbook.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet.main+xml"/>
+<Override PartName="/xl/worksheets/sheet1.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/>
+<Override PartName="/xl/styles.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.styles+xml"/>
+<Override PartName="/docProps/core.xml" ContentType="application/vnd.openxmlformats-package.core-properties+xml"/>
+<Override PartName="/docProps/app.xml" ContentType="application/vnd.openxmlformats-officedocument.extended-properties+xml"/>
+</Types>`},
+    {name:'_rels/.rels', text:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="xl/workbook.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/package/2006/relationships/metadata/core-properties" Target="docProps/core.xml"/>
+<Relationship Id="rId3" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/extended-properties" Target="docProps/app.xml"/>
+</Relationships>`},
+    {name:'docProps/core.xml', text:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/">
+<dc:title>${xesc(name)} 캠페인 체크리스트</dc:title><dc:creator>마케팅 캠페인 SOP 생성기 v2.0</dc:creator>
+</cp:coreProperties>`},
+    {name:'docProps/app.xml', text:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>Campaign SOP Checklist Generator</Application></Properties>`},
+    {name:'xl/workbook.xml', text:workbookXml},
+    {name:'xl/_rels/workbook.xml.rels', text:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">
+<Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet1.xml"/>
+<Relationship Id="rId2" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/styles" Target="styles.xml"/>
+</Relationships>`},
+    {name:'xl/styles.xml', text:stylesXml()},
+    {name:'xl/worksheets/sheet1.xml', text:sheetXml},
+  ];
+  return buildZip(files);
+}
+
+/* ── 다운로드 ── */
+$('btnDownload').addEventListener('click', () => {
+  const msg = $('dlMsg');
+  const name = $('inpName').value.trim();
+  const missing = [];
+  if(!name) missing.push('캠페인명');
+  if(!$('inpType').value) missing.push('캠페인 유형');
+  if(!$('inpStart').value) missing.push('시작일');
+  if(!$('inpEnd').value) missing.push('종료일');
+  if(missing.length){
+    msg.textContent = '⚠ 필수 입력 누락: ' + missing.join(', ');
+    $('secInfo').scrollIntoView({behavior:'smooth'});
+    return;
+  }
+  if($('inpEnd').value < $('inpStart').value){
+    msg.textContent = '⚠ 종료일이 시작일보다 빠릅니다.';
+    return;
+  }
+  msg.textContent = '';
+  const buf = buildWorkbook();
+  const blob = new Blob([buf], {type:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = excelFileName(name);
+  document.body.appendChild(a);
+  a.click();
+  const url = a.href;
+  setTimeout(() => { a.remove(); URL.revokeObjectURL(url); }, 3000);
+});
+
+/* 초기 렌더 */
+renderAll();
+</script>
+</body>
+</html>
