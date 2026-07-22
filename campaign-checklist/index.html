@@ -16,9 +16,9 @@
 -->
 <style>
   :root{
-    --cream:#FCF3D9; --cream2:#F9E7B8; --gold-l:#F7DC96; --gold:#F2C230; --gold-d:#E0A800;
-    --ink:#3D3319; --ink-soft:#6B5D33; --line:#E5D9B0; --bg:#FDFBF4; --white:#FFFFFF;
-    --auto:#B07D00; --danger:#B54708;
+    --tint:#EDF1F5; --tint2:#E0E6EC; --tint3:#D6DEE7; --accent:#3E5C76; --accent-d:#2E4759;
+    --ink:#26303A; --ink-soft:#5B6773; --line:#DFE3E8; --bg:#F6F7F9; --white:#FFFFFF;
+    --auto:#9A6700; --danger:#B54708;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{font-size:15px;}
@@ -29,18 +29,18 @@
   .wrap{max-width:1180px; margin:0 auto; padding:0 20px;}
 
   /* ── 헤더 ─────────────────────────────── */
-  header{background:linear-gradient(135deg,var(--gold) 0%,var(--gold-d) 100%); padding:22px 0 18px; box-shadow:0 2px 8px rgba(0,0,0,.08);}
-  header h1{font-size:1.35rem; color:#3D2F00; letter-spacing:-.02em;}
-  header p{font-size:.85rem; color:#5C4A08; margin-top:3px;}
+  header{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-d) 100%); padding:22px 0 18px; box-shadow:0 2px 8px rgba(0,0,0,.08);}
+  header h1{font-size:1.35rem; color:#FFFFFF; letter-spacing:-.02em;}
+  header p{font-size:.85rem; color:#C9D6E2; margin-top:3px;}
 
   /* ── 섹션 카드 ─────────────────────────── */
   section.card{background:var(--white); border:1px solid var(--line); border-radius:10px; margin-top:18px; overflow:hidden;}
   section.card > h2{
-    font-size:.98rem; padding:11px 16px; background:var(--cream); border-bottom:1px solid var(--line); color:var(--ink);
+    font-size:.98rem; padding:11px 16px; background:var(--tint); border-bottom:1px solid var(--line); color:var(--ink);
     display:flex; align-items:center; gap:8px;
   }
   section.card > h2 .step{
-    background:var(--gold); color:#3D2F00; font-size:.75rem; border-radius:20px; padding:1px 9px; font-weight:bold;
+    background:var(--accent); color:#FFFFFF; font-size:.75rem; border-radius:20px; padding:1px 9px; font-weight:bold;
   }
   .card-body{padding:16px;}
   .hint{font-size:.78rem; color:var(--ink-soft);}
@@ -50,9 +50,17 @@
   .field label{display:block; font-size:.82rem; font-weight:bold; margin-bottom:5px;}
   .field label .req{color:var(--danger);}
   .field input,.field select{
-    width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font:inherit; font-size:.9rem; background:#FFFDF6;
+    width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font:inherit; font-size:.9rem; background:#FFFFFF;
   }
-  .field input:focus,.field select:focus{outline:2px solid var(--gold); border-color:var(--gold);}
+  .field input:focus,.field select:focus{outline:2px solid var(--accent); border-color:var(--accent);}
+  .type-chips{display:flex; gap:7px; flex-wrap:wrap; padding:3px 0;}
+  .tchip{
+    display:inline-flex; align-items:center; gap:6px; border:1.5px solid var(--line); border-radius:6px;
+    padding:7px 12px; background:#FFFFFF; cursor:pointer; user-select:none; font-size:.87rem;
+  }
+  .tchip:hover{border-color:var(--accent);}
+  .tchip:has(input:checked){background:var(--tint2); border-color:var(--accent);}
+  .tchip input{accent-color:var(--accent); width:14px; height:14px; cursor:pointer;}
   #budgetField{display:none;}
   #budgetField.visible{display:block;}
   #budgetField .why{font-size:.72rem; color:var(--auto); margin-top:3px;}
@@ -60,40 +68,40 @@
   /* ── 2. 프리셋 ─────────────────────────── */
   .preset-row{display:grid; grid-template-columns:repeat(5,1fr); gap:10px;}
   .preset-btn{
-    border:1.5px solid var(--line); background:#FFFDF6; border-radius:8px; padding:10px 12px; cursor:pointer;
+    border:1.5px solid var(--line); background:#FFFFFF; border-radius:8px; padding:10px 12px; cursor:pointer;
     text-align:left; font:inherit; transition:all .12s;
   }
-  .preset-btn:hover{border-color:var(--gold); background:var(--cream);}
-  .preset-btn.active{border-color:var(--gold-d); background:var(--cream2); box-shadow:0 0 0 2px var(--gold-l);}
-  .preset-btn .pk{display:inline-block; background:var(--gold); color:#3D2F00; font-weight:bold; font-size:.78rem; border-radius:4px; padding:0 7px; margin-bottom:5px;}
+  .preset-btn:hover{border-color:var(--accent); background:var(--tint);}
+  .preset-btn.active{border-color:var(--accent-d); background:var(--tint2); box-shadow:0 0 0 2px var(--tint3);}
+  .preset-btn .pk{display:inline-block; background:var(--accent); color:#FFFFFF; font-weight:bold; font-size:.78rem; border-radius:4px; padding:0 7px; margin-bottom:5px;}
   .preset-btn .pn{display:block; font-weight:bold; font-size:.86rem;}
   .preset-btn .pd{display:block; font-size:.72rem; color:var(--ink-soft); margin-top:3px; line-height:1.4;}
 
   /* ── 3. 모듈 체크박스 ──────────────────── */
   .mod-stage{margin-bottom:14px;}
   .mod-stage:last-child{margin-bottom:0;}
-  .mod-stage > h3{font-size:.85rem; color:var(--ink-soft); border-left:4px solid var(--gold); padding-left:8px; margin-bottom:8px;}
+  .mod-stage > h3{font-size:.85rem; color:var(--ink-soft); border-left:4px solid var(--accent); padding-left:8px; margin-bottom:8px;}
   .mod-list{display:flex; flex-wrap:wrap; gap:8px;}
   .mod{
     display:inline-flex; align-items:center; gap:7px; border:1.5px solid var(--line); border-radius:7px;
-    padding:7px 11px; background:#FFFDF6; cursor:pointer; user-select:none; font-size:.85rem; position:relative;
+    padding:7px 11px; background:#FFFFFF; cursor:pointer; user-select:none; font-size:.85rem; position:relative;
   }
-  .mod:hover{border-color:var(--gold);}
-  .mod input{accent-color:var(--gold-d); width:15px; height:15px; cursor:pointer;}
-  .mod .code{font-weight:bold; color:var(--gold-d); font-size:.78rem;}
-  .mod.checked{background:var(--cream2); border-color:var(--gold-d);}
-  .mod.fixed{background:var(--gold-l); border-color:var(--gold-d); cursor:not-allowed;}
+  .mod:hover{border-color:var(--accent);}
+  .mod input{accent-color:var(--accent-d); width:15px; height:15px; cursor:pointer;}
+  .mod .code{font-weight:bold; color:var(--accent-d); font-size:.78rem;}
+  .mod.checked{background:var(--tint2); border-color:var(--accent-d);}
+  .mod.fixed{background:var(--tint3); border-color:var(--accent-d); cursor:not-allowed;}
   .mod.fixed .lock{font-size:.72rem;}
-  .mod.auto{background:#FFF6DE; border-style:dashed; border-color:var(--auto);}
+  .mod.auto{background:#FBF7EC; border-style:dashed; border-color:#C9A75C;}
   .mod .auto-badge{
     font-size:.68rem; background:var(--auto); color:#fff; border-radius:3px; padding:0 5px; cursor:help;
   }
-  .auto-reasons{margin-top:10px; font-size:.76rem; color:var(--auto); background:#FFF9EA; border:1px dashed var(--gold-l); border-radius:6px; padding:8px 12px; display:none;}
+  .auto-reasons{margin-top:10px; font-size:.76rem; color:var(--auto); background:#FBF7EC; border:1px dashed #D9C48A; border-radius:6px; padding:8px 12px; display:none;}
   .auto-reasons.visible{display:block;}
   .auto-reasons li{margin-left:16px;}
 
   /* ── 채널 패널 ─────────────────────────── */
-  .channel-panel{margin-top:12px; border:1px solid var(--line); border-radius:8px; background:#FFFCF2; padding:12px 14px;}
+  .channel-panel{margin-top:12px; border:1px solid var(--line); border-radius:8px; background:#FAFBFC; padding:12px 14px;}
   .channel-panel > h4{font-size:.83rem; margin-bottom:4px;}
   .channel-panel > .hint{margin-bottom:8px;}
   .ch-group{margin-top:8px;}
@@ -103,21 +111,21 @@
     display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:6px;
     padding:5px 9px; background:#fff; cursor:pointer; font-size:.8rem; user-select:none;
   }
-  .ch:hover{border-color:var(--gold);}
-  .ch.checked{background:var(--cream2); border-color:var(--gold-d);}
-  .ch input{accent-color:var(--gold-d); cursor:pointer;}
-  .ch .code{font-weight:bold; color:var(--gold-d); font-size:.72rem;}
+  .ch:hover{border-color:var(--accent);}
+  .ch.checked{background:var(--tint2); border-color:var(--accent-d);}
+  .ch input{accent-color:var(--accent-d); cursor:pointer;}
+  .ch .code{font-weight:bold; color:var(--accent-d); font-size:.72rem;}
 
   /* ── 5. 미리보기 ───────────────────────── */
   .preview-head{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;}
   .preview-stats{font-size:.82rem; color:var(--ink-soft);}
-  .preview-stats b{color:var(--gold-d); font-size:1rem;}
-  .notice{font-size:.78rem; background:#FFF4E0; border:1px solid var(--gold-l); color:#8A6400; border-radius:6px; padding:7px 12px; margin-bottom:10px; display:none;}
+  .preview-stats b{color:var(--accent-d); font-size:1rem;}
+  .notice{font-size:.78rem; background:#EEF3F7; border:1px solid #C7D2DD; color:#33495D; border-radius:6px; padding:7px 12px; margin-bottom:10px; display:none;}
   .notice.visible{display:block;}
   .tbl-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
   table.preview{border-collapse:collapse; width:100%; font-size:.8rem; background:#fff;}
   table.preview th{
-    background:var(--gold-l); color:#3D2F00; padding:7px 8px; border:1px solid var(--line);
+    background:var(--tint3); color:#26303A; padding:7px 8px; border:1px solid var(--line);
     position:sticky; top:0; white-space:nowrap; font-size:.78rem;
   }
   table.preview td{border:1px solid var(--line); padding:6px 8px; vertical-align:top;}
@@ -126,23 +134,23 @@
   td.task-cell{font-weight:bold; white-space:nowrap;}
   td.status-cell{text-align:center; color:#8A8A8A; white-space:nowrap;}
   td.note-cell{color:var(--ink-soft); font-size:.75rem;}
-  td.editable{background:#FFFDF0; cursor:text; min-width:80px;}
-  td.editable:focus{outline:2px solid var(--gold); background:#fff;}
+  td.editable{background:#F7F9FB; cursor:text; min-width:80px;}
+  td.editable:focus{outline:2px solid var(--accent); background:#fff;}
   td.editable:empty::before{content:'—'; color:#C9BD97;}
   tr.auto-row td.no-cell::after{content:' ⚙'; color:var(--auto);}
   .empty-msg{padding:28px; text-align:center; color:var(--ink-soft); font-size:.85rem;}
 
   /* ── 다운로드 바 ───────────────────────── */
   .dl-bar{
-    position:fixed; left:0; right:0; bottom:0; background:rgba(255,253,246,.97); border-top:2px solid var(--gold);
+    position:fixed; left:0; right:0; bottom:0; background:rgba(246,247,249,.97); border-top:2px solid var(--accent);
     padding:12px 0; z-index:50; box-shadow:0 -4px 14px rgba(0,0,0,.06);
   }
   .dl-inner{max-width:1180px; margin:0 auto; padding:0 20px; display:flex; align-items:center; justify-content:space-between; gap:14px;}
   .dl-msg{font-size:.8rem; color:var(--danger); flex:1;}
   .dl-file{font-size:.78rem; color:var(--ink-soft);}
   button.dl{
-    background:linear-gradient(135deg,var(--gold),var(--gold-d)); color:#3D2F00; border:none; border-radius:8px;
-    font:inherit; font-weight:bold; font-size:.95rem; padding:11px 26px; cursor:pointer; box-shadow:0 2px 6px rgba(224,168,0,.35);
+    background:linear-gradient(135deg,var(--accent),var(--accent-d)); color:#FFFFFF; border:none; border-radius:8px;
+    font:inherit; font-weight:bold; font-size:.95rem; padding:11px 26px; cursor:pointer; box-shadow:0 2px 6px rgba(62,92,118,.3);
   }
   button.dl:hover{filter:brightness(1.06);}
   button.dl:active{transform:translateY(1px);}
@@ -181,12 +189,14 @@
           <label>캠페인명 <span class="req">*</span></label>
           <input type="text" id="inpName" placeholder="예) 2026 하반기 신규가입 이벤트" maxlength="60">
         </div>
-        <div class="field">
-          <label>캠페인 유형 <span class="req">*</span></label>
-          <select id="inpType">
-            <option value="">선택</option>
-            <option>인지</option><option>도달</option><option>전환</option><option>리텐션</option>
-          </select>
+        <div class="field" style="grid-column:span 2;">
+          <label>캠페인 유형 <span class="req">*</span> <span class="hint" style="font-weight:normal;">(중복 선택 가능)</span></label>
+          <div class="type-chips" id="typeChips">
+            <label class="tchip"><input type="checkbox" value="인지">인지</label>
+            <label class="tchip"><input type="checkbox" value="도달">도달</label>
+            <label class="tchip"><input type="checkbox" value="전환">전환</label>
+            <label class="tchip"><input type="checkbox" value="리텐션">리텐션</label>
+          </div>
         </div>
         <div class="field" id="budgetField">
           <label>예산 총액 (원)</label>
@@ -645,6 +655,7 @@ function buildRows(){
    [화면 렌더링]
    ═══════════════════════════════════════════════════════════════════════════ */
 const $ = id => document.getElementById(id);
+function getTypes(){ return [...document.querySelectorAll('#typeChips input:checked')].map(el => el.value); }
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
 function renderPresets(){
@@ -775,7 +786,7 @@ function renderPreview(){
 }
 
 function stageColor(stage){
-  return {'기획':'#FCF3D9','채널':'#F9E7B8','디자인':'#FCF3D9','개발':'#F9E7B8','검수':'#F7DC96','오픈':'#F2C230'}[stage] || '#FCF3D9';
+  return {'기획':'#EDF1F5','채널':'#E0E6EC','디자인':'#EDF1F5','개발':'#E0E6EC','검수':'#D6DEE7','오픈':'#C7D2DD'}[stage] || '#EDF1F5';
 }
 
 function renderAll(){ renderPresets(); renderModules(); renderPreview(); }
@@ -827,9 +838,10 @@ $('previewBox').addEventListener('input', e => {
 });
 
 /* 캠페인 정보 변경 → 기한 재계산 */
-['inpName','inpType','inpStart','inpEnd','inpBudget'].forEach(id => {
+['inpName','inpStart','inpEnd','inpBudget'].forEach(id => {
   $(id).addEventListener('input', renderPreview);
 });
+$('typeChips').addEventListener('change', renderPreview);
 
 /* ═══════════════════════════════════════════════════════════════════════════
    [Excel(.xlsx) 생성] — 라이브러리 없이 OOXML 직접 생성
@@ -934,23 +946,23 @@ function stylesXml(){
 <fonts count="5">
 <font><sz val="10"/><name val="맑은 고딕"/><family val="3"/></font>
 <font><b/><sz val="10"/><name val="맑은 고딕"/><family val="3"/></font>
-<font><b/><sz val="14"/><color rgb="FF3D2F00"/><name val="맑은 고딕"/><family val="3"/></font>
-<font><sz val="9"/><color rgb="FF7A6B3E"/><name val="맑은 고딕"/><family val="3"/></font>
-<font><b/><sz val="10"/><color rgb="FF3D2F00"/><name val="맑은 고딕"/><family val="3"/></font>
+<font><b/><sz val="14"/><color rgb="FFFFFFFF"/><name val="맑은 고딕"/><family val="3"/></font>
+<font><sz val="9"/><color rgb="FF5B6773"/><name val="맑은 고딕"/><family val="3"/></font>
+<font><b/><sz val="10"/><color rgb="FF26303A"/><name val="맑은 고딕"/><family val="3"/></font>
 </fonts>
 <fills count="8">
 <fill><patternFill patternType="none"/></fill>
 <fill><patternFill patternType="gray125"/></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFF2C230"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFF7DC96"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFFCF3D9"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFF9E7B8"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFF7DC96"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFF2C230"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FF3E5C76"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFE3E8EE"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFEDF1F5"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFE0E6EC"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFD6DEE7"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFC7D2DD"/></patternFill></fill>
 </fills>
 <borders count="2">
 <border><left/><right/><top/><bottom/><diagonal/></border>
-<border><left style="thin"><color rgb="FFCBB878"/></left><right style="thin"><color rgb="FFCBB878"/></right><top style="thin"><color rgb="FFCBB878"/></top><bottom style="thin"><color rgb="FFCBB878"/></bottom><diagonal/></border>
+<border><left style="thin"><color rgb="FFC4CDD6"/></left><right style="thin"><color rgb="FFC4CDD6"/></right><top style="thin"><color rgb="FFC4CDD6"/></top><bottom style="thin"><color rgb="FFC4CDD6"/></bottom><diagonal/></border>
 </borders>
 <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
 <cellXfs count="13">
@@ -987,7 +999,7 @@ function excelFileName(name){
 function buildWorkbook(){
   const {rows} = buildRows();
   const name   = $('inpName').value.trim();
-  const type   = $('inpType').value;
+  const type   = getTypes().join(' · ');
   const start  = $('inpStart').value, end = $('inpEnd').value;
   const budget = $('inpBudget').value;
   const {active} = computeEffective();
@@ -1157,7 +1169,7 @@ $('btnDownload').addEventListener('click', () => {
   const name = $('inpName').value.trim();
   const missing = [];
   if(!name) missing.push('캠페인명');
-  if(!$('inpType').value) missing.push('캠페인 유형');
+  if(!getTypes().length) missing.push('캠페인 유형');
   if(!$('inpStart').value) missing.push('시작일');
   if(!$('inpEnd').value) missing.push('종료일');
   if(missing.length){
