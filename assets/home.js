@@ -304,7 +304,24 @@
     });
   }
 
+  /* ---------- 데스크테리어 히어로: 날짜 + 계산 슬립 → 계산기 열기 ---------- */
+  function initHero() {
+    var el = document.querySelector('[data-today]');
+    if (el) {
+      var d = new Date(), wd = ['일', '월', '화', '수', '목', '금', '토'];
+      el.textContent = '· ' + d.getFullYear() + '. ' + (d.getMonth() + 1) + '. ' + d.getDate() + ' (' + wd[d.getDay()] + ')';
+    }
+    document.querySelectorAll('[data-open-calc]').forEach(function (b) {
+      b.addEventListener('click', function (e) {
+        e.preventDefault();
+        var fab = document.querySelector('[data-calc-fab]');
+        if (fab) fab.click();
+      });
+    });
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
+    initHero();
     initContentTabs();
     initQA();
     initSchedule();
