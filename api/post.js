@@ -149,7 +149,7 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
   <header class="gnb"><div class="wrap gnb-inner">
     <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
     <nav class="gnb-nav"><a href="/">홈</a><a href="/content" class="active">콘텐츠</a><a href="/guide">실무 노트</a><a href="/community/talk">실무 문답</a><a href="/archive">실무자료 아카이브</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더</a></nav>
-    <span class="gnb-login">로그인</span><span class="gnb-join">회원가입</span>
+    <span class="gnb-join" data-open-subscribe>메일로 소식 받기</span>
   </div></header>
 
   <article class="read" style="padding-top:46px;padding-bottom:64px;">
@@ -170,6 +170,7 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
 
   <footer class="footer"><div class="wrap" style="padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;"><img src="/assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"><div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div></div></footer>
 </div>
+<script src="/assets/subscribe.js"></script>
 </body>
 </html>`;
 }

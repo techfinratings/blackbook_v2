@@ -1,5 +1,5 @@
-/* 이메일 리드 적재 — 파인더/자료실 공용, 단일 '리드' 탭에 구분 컬럼으로 통합
-   POST { type:'finder'|'download', email, consent, source?, item?, row? }
+/* 이메일 리드 적재 — 파인더/자료실/소식구독 공용, 단일 '리드' 탭에 구분 컬럼으로 통합
+   POST { type:'finder'|'download'|'subscribe', email, consent, source?, item?, row? }
    → Google Sheets '리드' 탭: [일시, 구분, 이메일, 마케팅동의, 상세, User-Agent] */
 const { appendRow } = require('../lib/sheets');
 
@@ -25,8 +25,11 @@ module.exports = async (req, res) => {
 
   // 유입 출처 구분
   const isDownload = body.type === 'download';
-  const source = isDownload ? '자료실' : '정책자금 파인더';
-  const detail = isDownload ? String(body.item || '') : String(body.source || '파인더 사전신청');
+  const isSubscribe = body.type === 'subscribe';
+  const source = isDownload ? '자료실' : isSubscribe ? '소식 구독' : '정책자금 파인더';
+  const detail = isDownload ? String(body.item || '')
+    : isSubscribe ? String(body.source || 'gnb')
+    : String(body.source || '파인더 사전신청');
 
   try {
     await appendRow('리드', [now, source, email, consent, detail, ua]);
