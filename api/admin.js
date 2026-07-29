@@ -60,6 +60,42 @@ module.exports = async (req, res) => {
       const result = await require('../lib/migrate').runMigration(!!body.force);
       return res.status(result.ok ? 200 : 500).json(result);
     }
+    /* ── 자료실 관리 (Supabase 전용) ── */
+    if (action === 'archiveList') {
+      if (!sb.ready()) return res.status(503).json({ error: 'Supabase 미설정' });
+      const rows = await sb.select('archive_files?order=id.desc&select=*');
+      return res.status(200).json({ files: rows || [] });
+    }
+    if (action === 'archiveAdd') {
+      if (!sb.ready()) return res.status(503).json({ error: 'Supabase 미설정' });
+      const name = String(body.name || '').trim();
+      const url = String(body.download_url || '').trim();
+      if (!name || !url) return res.status(400).json({ error: '파일명과 다운로드 링크는 필수입니다.' });
+      await sb.insert('archive_files', [{
+        name: name.slice(0, 200),
+        description: String(body.description || '').slice(0, 500),
+        category: String(body.category || '실무'),
+        file_type: String(body.file_type || '').toUpperCase().slice(0, 10),
+        prep: String(body.prep || '').slice(0, 200),
+        related_url: String(body.related_url || '').slice(0, 500),
+        download_url: url.slice(0, 500),
+        dated: String(body.dated || '').slice(0, 10),
+      }]);
+      return res.status(200).json({ ok: true });
+    }
+    if (action === 'archiveVisible') {
+      if (!sb.ready()) return res.status(503).json({ error: 'Supabase 미설정' });
+      await sb.rest('archive_files?id=eq.' + parseInt(body.id, 10), {
+        method: 'PATCH', body: { visible: !!body.visible }, headers: { Prefer: 'return=minimal' },
+      });
+      return res.status(200).json({ ok: true });
+    }
+    if (action === 'archiveDelete') {
+      if (!sb.ready()) return res.status(503).json({ error: 'Supabase 미설정' });
+      await sb.rest('archive_files?id=eq.' + parseInt(body.id, 10), { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+      return res.status(200).json({ ok: true });
+    }
+
     if (action === 'guideFlags') {
       // 실무백과 '검토 필요' 플래그 목록 (크론이 개정 법령 감지 시 적재)
       if (!sb.ready()) return res.status(200).json({ flags: [] });

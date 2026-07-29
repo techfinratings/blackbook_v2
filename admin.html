@@ -56,6 +56,7 @@
       <button data-tab="lead">리드</button>
       <button data-tab="fb">의견</button>
       <button data-tab="guide">백과 검토</button>
+      <button data-tab="archive">자료실</button>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 4px;">
       <button class="a-btn ghost" id="btnDiag">Supabase 연결 점검</button>
@@ -148,6 +149,63 @@
     if (tab === 'lead') return renderLeads();
     if (tab === 'fb') return renderFeedback();
     if (tab === 'guide') return renderGuideFlags();
+    if (tab === 'archive') return renderArchive();
+  }
+
+  /* ---- 자료실 등재·관리 ---- */
+  function renderArchive() {
+    panel.innerHTML = '<div class="mono" style="color:#7E868F;padding:20px 0;">불러오는 중…</div>';
+    api('archiveList').then(function (d) {
+      var rows = d.files || [];
+      var form =
+        '<div class="a-card" style="margin-bottom:16px;">' +
+        '<div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--blue);margin-bottom:10px;">새 자료 등재 — 파일은 구글 드라이브에 올리고 공유 링크를 붙여넣으세요</div>' +
+        '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">' +
+        '<input id="afName" class="a-field" placeholder="파일명 (예: 부가가치세 확정신고 체크리스트) *">' +
+        '<input id="afUrl" class="a-field" placeholder="다운로드 링크 (드라이브 공유 링크) *">' +
+        '<input id="afDesc" class="a-field" placeholder="설명 (한 줄)">' +
+        '<input id="afRel" class="a-field" placeholder="관련 링크 (선택 — 실무백과·콘텐츠 URL)">' +
+        '<select id="afCat" class="a-field"><option>세무</option><option>회계</option><option>재무</option><option>실무</option><option>경영</option><option>법령</option><option>정책자금</option></select>' +
+        '<select id="afType" class="a-field"><option>XLSX</option><option>PPTX</option><option>DOCX</option><option>HWP</option><option>PDF</option><option>MD</option><option>ZIP</option></select>' +
+        '<input id="afPrep" class="a-field" placeholder="사전준비 (선택)">' +
+        '<input id="afDate" class="a-field" placeholder="날짜 yyyy.mm (예: 2026.07)">' +
+        '</div>' +
+        '<div style="display:flex;justify-content:flex-end;align-items:center;gap:10px;margin-top:10px;">' +
+        '<span class="mono" id="afMsg" style="font-size:10.5px;color:#7E868F;"></span>' +
+        '<button class="a-btn blue" id="afSubmit">자료실에 등재</button></div></div>';
+      var list = '<div class="a-card" style="overflow-x:auto;"><table class="a-tbl"><thead><tr><th>파일명</th><th>분야</th><th>형태</th><th>날짜</th><th>다운로드</th><th></th><th></th></tr></thead><tbody>' +
+        (rows.length ? rows.map(function (f) {
+          return '<tr' + (f.visible ? '' : ' style="opacity:.45;"') + '><td style="font-weight:600;">' + esc(f.name) + '</td><td>' + esc(f.category || '') + '</td><td class="mono">' + esc(f.file_type || '') + '</td><td class="mono">' + esc(f.dated || '') + '</td><td class="mono">' + (f.downloads || 0) + '</td>' +
+            '<td><button class="a-btn ghost" data-af-vis="' + f.id + '" data-v="' + (f.visible ? '0' : '1') + '">' + (f.visible ? '숨김' : '표시') + '</button></td>' +
+            '<td><button class="a-btn danger" data-af-del="' + f.id + '">삭제</button></td></tr>';
+        }).join('') : '<tr><td colspan="7" class="mono" style="color:#7E868F;padding:20px;">등재된 자료가 없습니다.</td></tr>') +
+        '</tbody></table></div>';
+      panel.innerHTML = form + list;
+      if (!document.getElementById('afStyle')) {
+        var st = document.createElement('style'); st.id = 'afStyle';
+        st.textContent = '.a-field{border:1px solid #D8DCE0;border-radius:3px;padding:9px 11px;font-family:inherit;font-size:13px;color:var(--ink-1);outline:none;background:#fff;}.a-field:focus{border-color:var(--blue);}';
+        document.head.appendChild(st);
+      }
+      document.getElementById('afSubmit').addEventListener('click', function () {
+        var b = this, msg = document.getElementById('afMsg');
+        var payload = {
+          name: document.getElementById('afName').value, download_url: document.getElementById('afUrl').value,
+          description: document.getElementById('afDesc').value, related_url: document.getElementById('afRel').value,
+          category: document.getElementById('afCat').value, file_type: document.getElementById('afType').value,
+          prep: document.getElementById('afPrep').value, dated: document.getElementById('afDate').value,
+        };
+        if (!payload.name.trim() || !payload.download_url.trim()) { msg.style.color = '#B4322B'; msg.textContent = '파일명과 다운로드 링크는 필수입니다.'; return; }
+        b.disabled = true; msg.style.color = '#7E868F'; msg.textContent = '등재 중…';
+        api('archiveAdd', payload).then(function () { renderArchive(); })
+          .catch(function (e) { b.disabled = false; msg.style.color = '#B4322B'; msg.textContent = (e && e.msg) || '등재 실패'; });
+      });
+      panel.querySelectorAll('[data-af-vis]').forEach(function (b) {
+        b.addEventListener('click', function () { api('archiveVisible', { id: b.getAttribute('data-af-vis'), visible: b.getAttribute('data-v') === '1' }).then(renderArchive); });
+      });
+      panel.querySelectorAll('[data-af-del]').forEach(function (b) {
+        b.addEventListener('click', function () { if (confirm('이 자료를 삭제할까요?')) api('archiveDelete', { id: b.getAttribute('data-af-del') }).then(renderArchive); });
+      });
+    }).catch(function (e) { panel.innerHTML = '<div class="mono" style="color:#B4322B;padding:20px 0;">' + esc((e && e.msg) || '목록을 불러오지 못했습니다.') + '</div>'; });
   }
 
   /* ---- 실무백과 검토 플래그 (크론이 개정 법령 감지 시 적재) ---- */
