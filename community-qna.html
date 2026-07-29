@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>실무 문답 — BLACK BOOK</title>
+<title>QnA — BLACK BOOK</title>
 <meta name="description" content="실무자와 크레디뷰가 함께 답을 채우는 문답 스레드.">
 <link rel="stylesheet" href="/assets/styles.css">
 <style>
@@ -19,12 +19,12 @@
 <div class="page">
   <header class="gnb"><div class="wrap gnb-inner">
     <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
-    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide">실무백과</a><a href="/community/talk" class="active">실무 문답</a><a href="/archive">실무자료 아카이브</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더</a></nav>
+    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide">실무백과</a><a href="/community/talk" class="active">QnA</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더</a></nav>
     <span class="gnb-join" data-open-subscribe>메일로 소식 받기</span>
   </div></header>
 
   <div class="read">
-    <a href="/community/talk" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);">← 실무 문답</a>
+    <a href="/community/talk" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);">← QnA</a>
     <div id="thread"><div class="mono" style="color:#7E868F;padding:40px 0;">불러오는 중…</div></div>
   </div>
 
@@ -122,7 +122,7 @@
     fetch('/api/answers?qid=' + encodeURIComponent(qid) + '&_=' + Date.now(), { cache:'no-store' }).then(function (r) { return r.ok ? r.json() : { items: [] }; })
   ]).then(function (rs) {
     var q = (rs[0].items || []).find(function (x) { return x.id === qid; });
-    if (!q) { thread.innerHTML = '<div style="padding:60px 0;text-align:center;"><div class="bt" style="font-size:22px;font-weight:700;">삭제되었거나 찾을 수 없는 글이에요</div><p style="color:var(--ink-3);margin-top:10px;"><a href="/community/talk" style="color:var(--blue);">실무 문답</a>으로 돌아가기</p></div>'; return; }
+    if (!q) { thread.innerHTML = '<div style="padding:60px 0;text-align:center;"><div class="bt" style="font-size:22px;font-weight:700;">삭제되었거나 찾을 수 없는 글이에요</div><p style="color:var(--ink-3);margin-top:10px;"><a href="/community/talk" style="color:var(--blue);">QnA</a>으로 돌아가기</p></div>'; return; }
     var question = { id:q.id, category:q.category, title:q.title, ts:q.ts, content:q.content, tags:(q.tags ? String(q.tags).split(/[\s,]+/).map(function(t){return t.replace(/^#/,'');}).filter(Boolean) : []), anonymous:q.anonymous };
     render(question, rs[1].items || []);
   }).catch(function () { render(SAMPLE.question, SAMPLE.answers); });

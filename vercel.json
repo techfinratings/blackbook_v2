@@ -4,8 +4,12 @@
     "api/calendar.js": { "regions": ["icn1"] },
     "api/post.js": { "regions": ["icn1"] },
     "api/guide.js": { "regions": ["icn1"] },
-    "api/sitemap.js": { "regions": ["icn1"] }
+    "api/sitemap.js": { "regions": ["icn1"] },
+    "api/cron/sync-calendar.js": { "regions": ["icn1"], "maxDuration": 60 }
   },
+  "crons": [
+    { "path": "/api/cron/sync-calendar", "schedule": "0 20 * * *" }
+  ],
   "routes": [
     { "src": "/sitemap.xml", "dest": "/api/sitemap.js" },
     { "src": "/p/(.*)", "dest": "/api/post.js?slug=$1" },

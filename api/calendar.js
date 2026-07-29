@@ -1,5 +1,6 @@
 const BIZMANG_KEY = 'hCd7Cu';
 const LAW_OC      = 'blackbook2026';
+const sb = require('../lib/supabase');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -14,21 +15,45 @@ module.exports = async (req, res) => {
   const startDate = `${y}${pad(m)}01`;
   const endDate   = `${y}${pad(m)}${pad(lastDay)}`;
 
-  // 두 API 병렬 호출
-  const [policyResult, lawResult] = await Promise.allSettled([
+  // 라이브 API + Supabase(크론 적재·수동 등록) 병렬 조회
+  const [policyResult, lawResult, dbResult] = await Promise.allSettled([
     fetchPolicyEvents(y, m),
     fetchLawEvents(y, m, startDate, endDate),
+    fetchDbEvents(y, m),
   ]);
 
   const policyEvents = policyResult.status === 'fulfilled' ? policyResult.value : [];
   const lawEvents    = lawResult.status    === 'fulfilled' ? lawResult.value    : [];
+  const dbEvents     = dbResult.status     === 'fulfilled' ? dbResult.value     : [];
+
+  // 라이브 우선, DB는 라이브에 없는 것만 추가(수동 등록·라이브 API 장애 대비)
+  const seen = new Set([...policyEvents, ...lawEvents].map(e => e.day + '|' + e.title));
+  const extras = dbEvents.filter(e => !seen.has(e.day + '|' + e.title));
 
   res.status(200).json({
-    events: [...policyEvents, ...lawEvents],
+    events: [...policyEvents, ...lawEvents, ...extras],
     year: y,
     month: m,
   });
 };
+
+/* ── Supabase calendar_events (크론 자동 수집 + 수동 등록) ── */
+async function fetchDbEvents(y, m) {
+  if (!sb.ready()) return [];
+  try {
+    const rows = await sb.select(`calendar_events?year=eq.${y}&month=eq.${m}&visible=eq.true&select=*`);
+    return (rows || []).map(r => ({
+      day: r.day, title: r.title, link: r.link || '',
+      type: r.kind === 'policy' ? 'policy' : (r.kind === 'update' ? 'update' : 'statutory'),
+      tag: r.tag || '', cat: r.cat || '', agency: r.agency || '',
+      summary: r.summary || '',
+      ...(r.extra && typeof r.extra === 'object' ? r.extra : {}),
+    }));
+  } catch (e) {
+    console.error('supabase calendar read error:', e.message);
+    return [];
+  }
+}
 
 /* ── 기업마당 주요일정 ── */
 async function fetchPolicyEvents(y, m) {

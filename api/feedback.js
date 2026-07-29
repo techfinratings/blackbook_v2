@@ -1,5 +1,6 @@
-/* 의견 적재 — POST { text, email? } → Google Sheets '의견' 탭 */
+/* 의견 적재 — POST { text, email? } → Supabase(feedback) 또는 Google Sheets '의견' 탭 */
 const { appendRow } = require('../lib/sheets');
+const sb = require('../lib/supabase');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -19,7 +20,11 @@ module.exports = async (req, res) => {
   const now = new Date().toISOString();
   const ua = (req.headers['user-agent'] || '').slice(0, 200);
   try {
-    await appendRow('의견', [now, text.slice(0, 2000), email, ua]);
+    if (sb.ready()) {
+      await sb.insert('feedback', [{ content: text.slice(0, 2000), email, ua }]);
+    } else {
+      await appendRow('의견', [now, text.slice(0, 2000), email, ua]);
+    }
     res.status(200).json({ ok: true });
   } catch (e) {
     console.error('feedback append error:', e.message);

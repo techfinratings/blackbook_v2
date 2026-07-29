@@ -27,7 +27,8 @@
     if (!Array.isArray(events)) return [];
     return events.map(function (e) {
       var cat;
-      if (e.type === 'policy') cat = 'fund';
+      if (e.cat && CATS[e.cat]) cat = e.cat;            // 서버(DB)가 지정한 분류 우선
+      else if (e.type === 'policy') cat = 'fund';
       else cat = classifyLaw(e.title);
       var suffix = '';
       if (e.type === 'policy') suffix = e.tag === 'end' ? ' 신청 마감' : ' 접수 시작';

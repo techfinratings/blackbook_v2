@@ -2,6 +2,7 @@
    POST { type:'finder'|'download'|'subscribe', email, consent, source?, item?, row? }
    → Google Sheets '리드' 탭: [일시, 구분, 이메일, 마케팅동의, 상세, User-Agent] */
 const { appendRow } = require('../lib/sheets');
+const sb = require('../lib/supabase');
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -32,7 +33,11 @@ module.exports = async (req, res) => {
     : String(body.source || '파인더 사전신청');
 
   try {
-    await appendRow('리드', [now, source, email, consent, detail, ua]);
+    if (sb.ready()) {
+      await sb.insert('leads', [{ source, email, consent: consent === 'Y', detail, ua }]);
+    } else {
+      await appendRow('리드', [now, source, email, consent, detail, ua]);
+    }
     res.status(200).json({ ok: true });
   } catch (e) {
     console.error('lead append error:', e.message);

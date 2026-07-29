@@ -30,10 +30,27 @@ async function getAccessToken() {
   return data.access_token;
 }
 
+const sb = require('../lib/supabase');
+
 module.exports = async function (req, res) {
   if (req.method !== 'POST') return res.status(405).end();
 
-  const { row } = req.body || {};
+  const { row, id } = req.body || {};
+
+  // Supabase 경로: archive_files.downloads +1
+  if (sb.ready() && id) {
+    try {
+      const cur = await sb.select('archive_files?id=eq.' + encodeURIComponent(id) + '&select=downloads');
+      const count = ((cur && cur[0] && cur[0].downloads) || 0) + 1;
+      await sb.rest('archive_files?id=eq.' + encodeURIComponent(id), {
+        method: 'PATCH', body: { downloads: count }, headers: { Prefer: 'return=minimal' },
+      });
+      return res.status(200).json({ count });
+    } catch (err) {
+      return res.status(500).json({ error: err.message });
+    }
+  }
+
   if (!row) return res.status(400).json({ error: 'row required' });
 
   try {

@@ -19,7 +19,7 @@
     ]
   };
 
-  /* ---------- 히어로 하단: 최신 실무 문답 제목 세로 티커 ----------
+  /* ---------- 히어로 하단: 최신 QnA 제목 세로 티커 ----------
      위→아래로 한 항목씩 흐르고, 중앙에 왔을 때 1초 멈춘다. */
   function initHeroTicker() {
     var viewport = document.querySelector('[data-qa-ticker]');
