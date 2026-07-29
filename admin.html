@@ -57,6 +57,7 @@
       <button data-tab="fb">의견</button>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 4px;">
+      <button class="a-btn ghost" id="btnDiag">Supabase 연결 점검</button>
       <button class="a-btn blue" id="btnMigrate">시트 → Supabase 이관 실행</button>
       <button class="a-btn ink" id="btnCalSync">캘린더 수집 실행</button>
       <span class="mono" id="sysMsg" style="font-size:11px;color:#7E868F;"></span>
@@ -96,8 +97,16 @@
   document.getElementById('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(this.value); });
   document.getElementById('logoutBtn').addEventListener('click', function () { sessionStorage.removeItem('bb_admin_key'); location.reload(); });
 
-  /* ---- 시스템: 이관 · 캘린더 수집 ---- */
+  /* ---- 시스템: 점검 · 이관 · 캘린더 수집 ---- */
   var sysMsg = document.getElementById('sysMsg');
+  document.getElementById('btnDiag').addEventListener('click', function () {
+    var b = this; b.disabled = true; sysMsg.textContent = '점검 중…';
+    fetch('/api/admin', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ key: KEY, action: 'diag' }) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { b.disabled = false; sysMsg.textContent = '키: ' + (j.supabase_key || '?') + ' · ' + JSON.stringify(j.tables || {}); })
+      .catch(function () { b.disabled = false; sysMsg.textContent = '점검 실패'; });
+  });
   document.getElementById('btnMigrate').addEventListener('click', function () {
     if (!confirm('구글시트 데이터를 Supabase로 이관합니다. 실행할까요?\n(이미 데이터가 있는 테이블은 건너뜁니다)')) return;
     var b = this; b.disabled = true; sysMsg.textContent = '이관 중…';
