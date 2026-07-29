@@ -1,21 +1,26 @@
 /* ============================================================
    대출 가능성 계산기 (loan capacity calculator)
    The single floating "calculator slip" from THE LEDGER.
-   - 연 매출(annual revenue) · 자기자본(equity) inputs
+   - 연 매출(annual revenue) · 기존 차입금(outstanding debt) inputs
    - live 예상 한도(estimated credit limit) estimate
    - a working keypad that types into the focused field
    Estimate is a rough heuristic, NOT a real loan offer.
+
+   산식(은행권 공통 여신심사 운전자금 방식의 단순화):
+     소요운전자금 ≈ 연매출 × 1/3
+     예상 가용 한도 = 소요운전자금 − 기존 차입금 (음수면 0)
+   출처:
+   · 여신심사 실무 소요운전자금 산정 — 1회전 소요운전자금 =
+     (연매출 − 감가상각비) × 1회전기간/365, 가용한도 = 소요운전자금 − 기차입금
+     (금융위원회 '금융회사 여신심사 선진화 방안', 은행권 운전자금 한도 산출 실무)
+   · 신용보증기금 운전자금 보증한도 — 매출액의 1/4 ~ 1/3 (kodit.co.kr)
+   → 1/3은 회전기간 약 120일을 가정한 근사치. 감가상각비·회전기간 등
+     기업별 변수는 생략한 추정으로, 실제 승인 한도가 아니다.
    ============================================================ */
 (function () {
   'use strict';
 
-  // Conservative SME capacity heuristic:
-  //   revenue-based   = 연매출 × 0.35
-  //   equity-based    = 자기자본 × 1.5
-  //   한도 = min(둘)        (the tighter constraint governs)
-  // e.g. 매출 12억 / 자본 3.5억  →  min(4.2억, 5.25억) = 4.2억
-  var REVENUE_FACTOR = 0.35;
-  var EQUITY_FACTOR = 1.5;
+  var WORKING_CAPITAL_FACTOR = 1 / 3;   // 소요운전자금 ≈ 연매출 × 1/3
 
   function onlyDigits(s) { return String(s).replace(/[^0-9]/g, ''); }
   function withCommas(n) {
@@ -43,7 +48,7 @@
     var panel = root.querySelector('[data-calc-panel]');
     var closeBtn = root.querySelector('[data-calc-close]');
     var revInput = root.querySelector('[data-calc="revenue"]');
-    var eqInput = root.querySelector('[data-calc="equity"]');
+    var eqInput = root.querySelector('[data-calc="debt"]');
     var outNum = root.querySelector('[data-calc-out-num]');
     var outUnit = root.querySelector('[data-calc-out-unit]');
     var keys = root.querySelectorAll('[data-key]');
@@ -76,9 +81,10 @@
 
     function compute() {
       var rev = currentNumber(revInput);
-      var eq = currentNumber(eqInput);
-      var limit = Math.min(rev * REVENUE_FACTOR, eq * EQUITY_FACTOR);
-      if (rev <= 0 || eq <= 0) limit = 0;
+      var debt = currentNumber(eqInput);
+      // 예상 가용 한도 = 소요운전자금(연매출 × 1/3) − 기존 차입금
+      var limit = Math.max(0, rev * WORKING_CAPITAL_FACTOR - debt);
+      if (rev <= 0) limit = 0;
       var f = formatKRW(limit);
       if (outNum) outNum.textContent = f.num;
       if (outUnit) outUnit.textContent = f.unit;
