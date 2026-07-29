@@ -1,26 +1,24 @@
 /* ============================================================
    대출 가능성 계산기 (loan capacity calculator)
    The single floating "calculator slip" from THE LEDGER.
-   - 연 매출(annual revenue) · 기존 차입금(outstanding debt) inputs
+   - 연 매출 · 감가상각비 · 기존 차입금 입력 + 업종별 1회전기간 선택
    - live 예상 한도(estimated credit limit) estimate
    - a working keypad that types into the focused field
    Estimate is a rough heuristic, NOT a real loan offer.
 
-   산식(은행권 공통 여신심사 운전자금 방식의 단순화):
-     소요운전자금 ≈ 연매출 × 1/3
+   산식(은행권 공통 여신심사 운전자금 방식):
+     1회전 소요운전자금 = (연매출 − 감가상각비) × 1회전기간/365
      예상 가용 한도 = 소요운전자금 − 기존 차입금 (음수면 0)
    출처:
-   · 여신심사 실무 소요운전자금 산정 — 1회전 소요운전자금 =
-     (연매출 − 감가상각비) × 1회전기간/365, 가용한도 = 소요운전자금 − 기차입금
-     (금융위원회 '금융회사 여신심사 선진화 방안', 은행권 운전자금 한도 산출 실무)
+   · 금융위원회 '금융회사 여신심사 선진화 방안' — 운전자금 가용한도
+     = 1회전 소요운전자금 − 금융기관 총차입액
+   · 은행권 운전자금 한도 산출 실무양식(1회전기간 기반 산정)
    · 신용보증기금 운전자금 보증한도 — 매출액의 1/4 ~ 1/3 (kodit.co.kr)
-   → 1/3은 회전기간 약 120일을 가정한 근사치. 감가상각비·회전기간 등
-     기업별 변수는 생략한 추정으로, 실제 승인 한도가 아니다.
+   → 1회전기간은 업종 평균 가정치(서비스 60/도소매 90/제조 120/건설 150일).
+     재고·매출채권 회전 등 기업별 변수는 반영하지 않은 추정이다.
    ============================================================ */
 (function () {
   'use strict';
-
-  var WORKING_CAPITAL_FACTOR = 1 / 3;   // 소요운전자금 ≈ 연매출 × 1/3
 
   function onlyDigits(s) { return String(s).replace(/[^0-9]/g, ''); }
   function withCommas(n) {
@@ -47,17 +45,20 @@
     var fab = root.querySelector('[data-calc-fab]');
     var panel = root.querySelector('[data-calc-panel]');
     var closeBtn = root.querySelector('[data-calc-close]');
+    var inputs = Array.prototype.slice.call(root.querySelectorAll('input[data-calc]'));
     var revInput = root.querySelector('[data-calc="revenue"]');
-    var eqInput = root.querySelector('[data-calc="debt"]');
+    var depInput = root.querySelector('[data-calc="dep"]');
+    var debtInput = root.querySelector('[data-calc="debt"]');
+    var daysSel = root.querySelector('[data-calc-days]');
     var outNum = root.querySelector('[data-calc-out-num]');
     var outUnit = root.querySelector('[data-calc-out-unit]');
     var keys = root.querySelectorAll('[data-key]');
-    if (!panel || !revInput || !eqInput) return;
+    if (!panel || !revInput || !debtInput) return;
 
     var active = revInput;         // last-focused field the keypad edits
     var buffers = new Map();       // field -> pending arithmetic expression
 
-    [revInput, eqInput].forEach(function (el) {
+    inputs.forEach(function (el) {
       el.addEventListener('focus', function () { active = el; });
       el.addEventListener('input', function () {
         // Live typing: keep it numeric + comma-formatted, preserve caret at end.
@@ -81,14 +82,19 @@
 
     function compute() {
       var rev = currentNumber(revInput);
-      var debt = currentNumber(eqInput);
-      // 예상 가용 한도 = 소요운전자금(연매출 × 1/3) − 기존 차입금
-      var limit = Math.max(0, rev * WORKING_CAPITAL_FACTOR - debt);
+      var dep = depInput ? currentNumber(depInput) : 0;
+      var debt = currentNumber(debtInput);
+      var days = daysSel ? (Number(daysSel.value) || 90) : 90;
+      // 1회전 소요운전자금 = (연매출 − 감가상각비) × 1회전기간/365
+      var wc = Math.max(0, rev - dep) * days / 365;
+      // 예상 가용 한도 = 소요운전자금 − 기존 차입금
+      var limit = Math.max(0, wc - debt);
       if (rev <= 0) limit = 0;
       var f = formatKRW(limit);
       if (outNum) outNum.textContent = f.num;
       if (outUnit) outUnit.textContent = f.unit;
     }
+    if (daysSel) daysSel.addEventListener('change', compute);
 
     // Keypad: digits/decimal build an expression, operators chain it,
     // "=" evaluates safely (only [0-9 . + - * /] ever reach eval).
