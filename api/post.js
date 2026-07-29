@@ -148,7 +148,7 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
 <div class="page">
   <header class="gnb"><div class="wrap gnb-inner">
     <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
-    <nav class="gnb-nav"><a href="/">홈</a><a href="/content" class="active">콘텐츠</a><a href="/guide">실무백과</a><a href="/community/talk">QnA</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더</a></nav>
+    <nav class="gnb-nav"><a href="/">홈</a><a href="/content" class="active">콘텐츠</a><a href="/guide">실무백과</a><a href="/community/talk">QnA</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더<i class="gnb-soon">COMING SOON</i></a></nav>
     <span class="gnb-join" data-open-subscribe>메일로 소식 받기</span>
   </div></header>
 
@@ -182,7 +182,7 @@ function errorPage(status, msg, canonical) {
 <meta name="robots" content="noindex"><link rel="stylesheet" href="/assets/styles.css"></head>
 <body><div class="fore-edge"></div><div class="page">
 <header class="gnb"><div class="wrap gnb-inner"><a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
-<nav class="gnb-nav"><a href="/">홈</a><a href="/content" class="active">콘텐츠</a><a href="/guide">실무백과</a><a href="/community/talk">QnA</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더</a></nav></div></header>
+<nav class="gnb-nav"><a href="/">홈</a><a href="/content" class="active">콘텐츠</a><a href="/guide">실무백과</a><a href="/community/talk">QnA</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더<i class="gnb-soon">COMING SOON</i></a></nav></div></header>
 <div class="wrap" style="padding:100px 40px;text-align:center;">
 <div class="bt" style="font-size:34px;font-weight:700;">${esc(msg)}</div>
 <p style="color:var(--ink-3);margin-top:12px;">잠시 후 다시 시도하거나 <a href="/content" style="color:var(--blue);">콘텐츠 목록</a>으로 돌아가세요.</p>
