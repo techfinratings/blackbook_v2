@@ -34,7 +34,13 @@ module.exports = async (req, res) => {
 
   try {
     if (sb.ready()) {
-      await sb.insert('leads', [{ source, email, consent: consent === 'Y', detail, ua }]);
+      try {
+        await sb.insert('leads', [{ source, email, consent: consent === 'Y', detail, ua }]);
+      } catch (e) {
+        // 테이블 미생성 등 Supabase 실패 시 시트로 폴백 — 리드 유실 방지
+        console.error('lead supabase error, falling back to sheet:', e.message);
+        await appendRow('리드', [now, source, email, consent, detail, ua]);
+      }
     } else {
       await appendRow('리드', [now, source, email, consent, detail, ua]);
     }

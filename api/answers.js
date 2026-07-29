@@ -35,7 +35,7 @@ module.exports = async (req, res) => {
           official: !!r.official, content: r.content, helpful: 0,
         })).sort((a, b) => (b.official - a.official) || String(a.ts).localeCompare(String(b.ts)));
         return res.status(200).json({ items });
-      } catch (e) { return res.status(200).json({ items: [] }); }
+      } catch (e) { console.error('answers supabase read error, falling back to sheet:', e.message); }
     }
     try {
       const all = rowsToAnswers(await readRows('답변'));
@@ -71,8 +71,8 @@ module.exports = async (req, res) => {
       await sb.insert('qna_answers', [{ question_ts: qid, author, official, content: content.slice(0, 4000) }]);
       return res.status(200).json({ ok: true });
     } catch (e) {
-      console.error('answer supabase append error:', e.message);
-      return res.status(500).json({ error: '적재 실패' });
+      console.error('answer supabase append error, falling back to sheet:', e.message);
+      // 아래 시트 경로로 폴백
     }
   }
   try {
