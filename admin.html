@@ -55,6 +55,7 @@
       <button data-tab="qna" class="on">QnA</button>
       <button data-tab="lead">리드</button>
       <button data-tab="fb">의견</button>
+      <button data-tab="guide">백과 검토</button>
     </div>
     <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 4px;">
       <button class="a-btn ghost" id="btnDiag">Supabase 연결 점검</button>
@@ -146,6 +147,34 @@
     if (tab === 'qna') return renderQna();
     if (tab === 'lead') return renderLeads();
     if (tab === 'fb') return renderFeedback();
+    if (tab === 'guide') return renderGuideFlags();
+  }
+
+  /* ---- 실무백과 검토 플래그 (크론이 개정 법령 감지 시 적재) ---- */
+  function renderGuideFlags() {
+    panel.innerHTML = '<div class="mono" style="color:#7E868F;padding:20px 0;">불러오는 중…</div>';
+    api('guideFlags').then(function (d) {
+      var rows = d.flags || [];
+      if (!rows.length) {
+        panel.innerHTML = '<div class="a-card"><p style="font-size:13.5px;color:#49505A;margin:0;line-height:1.7;">검토할 항목이 없습니다.<br>매일 새벽 크론이 법제처 개정 법령을 감지하면, 관련 실무백과 항목이 여기에 <b>검토 필요</b>로 표시됩니다. 내용 확인·수정 후 [확인 처리]를 누르면 목록에서 사라집니다.</p></div>';
+        return;
+      }
+      panel.innerHTML = '<div class="a-card" style="overflow-x:auto;"><table class="a-tbl"><thead><tr><th>감지일</th><th>백과 항목</th><th>관련 개정 법령</th><th>시행일</th><th></th></tr></thead><tbody>' +
+        rows.map(function (r) {
+          return '<tr><td class="mono" style="white-space:nowrap;">' + fmtTime(r.created_at) + '</td>' +
+            '<td><a href="/guide/' + esc(r.guide_slug) + '" target="_blank" style="color:#2348D6;font-weight:600;">' + esc(r.guide_title || r.guide_slug) + '</a></td>' +
+            '<td>' + (r.law_link ? '<a href="' + esc(r.law_link) + '" target="_blank" rel="noopener" style="color:#181B1E;">' + esc(r.law_title) + '</a>' : esc(r.law_title)) + '</td>' +
+            '<td class="mono">' + esc(r.eff_date || '') + '</td>' +
+            '<td><button class="a-btn blue" data-ack="' + r.id + '">확인 처리</button></td></tr>';
+        }).join('') + '</tbody></table></div>';
+      panel.querySelectorAll('[data-ack]').forEach(function (b) {
+        b.addEventListener('click', function () {
+          b.disabled = true;
+          api('ackFlag', { id: b.getAttribute('data-ack') }).then(renderGuideFlags)
+            .catch(function () { b.disabled = false; });
+        });
+      });
+    }).catch(function () { panel.innerHTML = '<div class="mono" style="color:#B4322B;padding:20px 0;">목록을 불러오지 못했습니다.</div>'; });
   }
 
   function renderQna() {

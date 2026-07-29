@@ -54,23 +54,12 @@
 
     <!-- SIDEBAR -->
     <div class="side-stack">
+      <!-- 통계·답변자 랭킹은 실데이터 연동 전까지 비노출 (허구 수치 방지) -->
       <div class="side-card">
-        <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);padding:15px 18px 0;">오늘의 장부</div>
-        <div style="padding:6px 18px 14px;">
-          <div class="stat-line"><span style="font-size:13px;color:var(--ink-2);">오늘 올라온 문답</span><span class="mono" style="font-size:15px;font-weight:600;">38</span></div>
-          <div class="stat-line"><span style="font-size:13px;color:var(--ink-2);">누적 문답</span><span class="mono" style="font-size:15px;font-weight:600;">12,480</span></div>
-          <div class="stat-line"><span style="font-size:13px;color:var(--ink-2);">평균 첫 답변</span><span class="mono" style="font-size:15px;font-weight:600;">42분</span></div>
-          <div class="stat-line" style="border-bottom:0;"><span style="font-size:13px;color:var(--ink-2);">크레디뷰 답변</span><span class="mono" style="font-size:15px;font-weight:600;">1,240</span></div>
+        <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);padding:15px 18px 0;">함께 답을 채우는 곳</div>
+        <div style="padding:10px 18px 16px;">
+          <p style="font-size:13px;color:var(--ink-2);line-height:1.7;margin:0;">막힌 실무를 물으면 동료 실무자와 운영사 <b style="color:var(--ink-1);">크레디뷰(기업신용평가사)</b>가 함께 답을 채웁니다. 답변에는 근거가 되는 조문·사례를 함께 남겨 주세요.</p>
         </div>
-      </div>
-      <div>
-        <div class="sec-head" style="padding-bottom:9px;"><h3 class="bt" style="font-size:18px;">이달의 답변자</h3><span class="mono" style="font-size:10px;color:var(--ink-3);">답변 수 기준</span></div>
-        <div class="ans-row">
-          <div class="mono" style="width:34px;height:34px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:600;font-size:11px;flex-shrink:0;">CR</div>
-          <div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:6px;"><span style="font-size:13.5px;font-weight:700;">크레디뷰 리서치</span><span class="mono" style="font-size:8.5px;font-weight:600;color:#fff;background:var(--blue);border-radius:2px;padding:2px 5px;">운영사</span></div><div class="mono" style="font-size:10.5px;color:var(--ink-3);margin-top:1px;">기업신용평가사</div></div>
-          <div style="text-align:right;flex-shrink:0;"><div class="mono" style="font-size:13px;font-weight:600;color:var(--blue);">128</div><div class="mono" style="font-size:9px;color:#9BA3AB;">답변</div></div>
-        </div>
-        <div id="answerers"></div>
       </div>
       <div class="side-cta">
         <div class="bt" style="font-size:17px;font-weight:700;line-height:1.5;">막힌 자리를 그냥 두지 마세요.</div>
@@ -116,25 +105,17 @@
 (function () {
   var COL = { 세무:'#C2611B', 회계:'#1F8455', 법령:'#6A3FC0', 실무:'#2348D6', 경영:'#181B1E' };
   var DATA = [
-    { cat:'세무', official:true,  ans:4, views:'128', mins:15,   author:'익명 · 세무담당', title:'관계회사 대여금, 업무무관 가지급금으로 보는 기준이 어디까지인가요?', snippet:'특수관계자 간 자금 대여인데 이자를 받고 있어도 업무무관으로 보는지 실무 경험이 궁금합니다.', tags:['가지급금','특수관계자'] },
-    { cat:'실무', official:false, ans:2, views:'96',  mins:60,   author:'김대리 · 재무팀', title:'거래처 신용등급이 두 단계 떨어졌는데 여신 한도 어떻게 조정하세요?', snippet:'주 거래처 등급이 갑자기 하락했습니다. 한도 축소 기준과 통보 방식 다들 어떻게 하시는지.', tags:['여신','신용등급'] },
-    { cat:'세무', official:true,  ans:7, views:'240', mins:180,  author:'이과장 · 회계', title:'가업승계 증여세 특례, 사후관리 요건 실무 경험 있으신 분?', snippet:'5년 사후관리 중 고용유지 요건을 못 맞출 것 같은데 추징 규모가 어느 정도인지 궁금합니다.', tags:['가업승계','증여세'] },
-    { cat:'회계', official:true,  ans:5, views:'182', mins:300,  author:'익명 · 결산담당', title:'리스 회계처리, 사용권자산 감가 기준 다들 어떻게 잡으세요?', snippet:'리스기간과 내용연수가 다를 때 상각 기준을 어디에 맞추는지 실무 사례가 필요합니다.', tags:['리스','사용권자산'] },
+    { cat:'세무', official:true,  ans:2, views:'128', mins:15,   author:'익명 · 세무담당', title:'관계회사 대여금, 업무무관 가지급금으로 보는 기준이 어디까지인가요?', snippet:'특수관계자 간 자금 대여인데 이자를 받고 있어도 업무무관으로 보는지 실무 경험이 궁금합니다.', tags:['가지급금','특수관계자'] },
+    { cat:'실무', official:false, ans:1, views:'96',  mins:60,   author:'김대리 · 재무팀', title:'거래처 신용등급이 두 단계 떨어졌는데 여신 한도 어떻게 조정하세요?', snippet:'주 거래처 등급이 갑자기 하락했습니다. 한도 축소 기준과 통보 방식 다들 어떻게 하시는지.', tags:['여신','신용등급'] },
+    { cat:'세무', official:true,  ans:1, views:'240', mins:180,  author:'이과장 · 회계', title:'가업승계 증여세 특례, 사후관리 요건 실무 경험 있으신 분?', snippet:'5년 사후관리 중 고용유지 요건을 못 맞출 것 같은데 추징 규모가 어느 정도인지 궁금합니다.', tags:['가업승계','증여세'] },
+    { cat:'회계', official:true,  ans:1, views:'182', mins:300,  author:'익명 · 결산담당', title:'리스 회계처리, 사용권자산 감가 기준 다들 어떻게 잡으세요?', snippet:'리스기간과 내용연수가 다를 때 상각 기준을 어디에 맞추는지 실무 사례가 필요합니다.', tags:['리스','사용권자산'] },
     { cat:'법령', official:false, ans:0, views:'54',  mins:12,   author:'박주임 · 관리', title:'중대재해처벌법 적용 사업장, 재무·관리팀이 챙길 항목이 있을까요?', snippet:'안전관리 예산 편성과 증빙 관리 측면에서 재무팀이 준비할 게 있는지 궁금합니다.', tags:['중대재해','컴플라이언스'] },
-    { cat:'실무', official:false, ans:3, views:'310', mins:40,   author:'최팀장 · 재무', title:'결산 마감 일정 관리, 부서별 체크리스트 템플릿 공유 가능하신 분?', snippet:'분기 결산마다 부서 취합이 늦어집니다. 쓰시는 체크리스트나 캘린더 공유 부탁드려요.', tags:['결산','템플릿'] },
-    { cat:'세무', official:false, ans:2, views:'88',  mins:60,   author:'익명', title:'외화환산손익 인식 시점, 결산일 기준 환율 적용이 맞나요?', snippet:'외화예금과 외화매출채권 환산 시점을 결산일 매매기준율로 잡는 게 맞는지 확인 부탁드립니다.', tags:['외화환산','결산'] },
-    { cat:'경영', official:true,  ans:6, views:'420', mins:1440, author:'정이사 · CFO', title:'런웨이 12개월 남은 시점, 재무팀이 먼저 손대야 할 항목의 우선순위는?', snippet:'비용 구조를 다시 짜야 하는데 어디부터 손대는 게 효과적이었는지 경험 나눠주세요.', tags:['런웨이','비용관리'] },
+    { cat:'실무', official:false, ans:1, views:'310', mins:40,   author:'최팀장 · 재무', title:'결산 마감 일정 관리, 부서별 체크리스트 템플릿 공유 가능하신 분?', snippet:'분기 결산마다 부서 취합이 늦어집니다. 쓰시는 체크리스트나 캘린더 공유 부탁드려요.', tags:['결산','템플릿'] },
+    { cat:'세무', official:false, ans:1, views:'88',  mins:60,   author:'익명', title:'외화환산손익 인식 시점, 결산일 기준 환율 적용이 맞나요?', snippet:'외화예금과 외화매출채권 환산 시점을 결산일 매매기준율로 잡는 게 맞는지 확인 부탁드립니다.', tags:['외화환산','결산'] },
+    { cat:'경영', official:true,  ans:1, views:'420', mins:1440, author:'정이사 · CFO', title:'런웨이 12개월 남은 시점, 재무팀이 먼저 손대야 할 항목의 우선순위는?', snippet:'비용 구조를 다시 짜야 하는데 어디부터 손대는 게 효과적이었는지 경험 나눠주세요.', tags:['런웨이','비용관리'] },
     { cat:'회계', official:false, ans:1, views:'62',  mins:120,  author:'한사원', title:'개발비 자산화 요건, 내부 프로젝트에서 어디까지 인정받으셨나요?', snippet:'무형자산 인식 기준 중 기술적 실현가능성을 어떤 문서로 입증해 남기시는지 궁금합니다.', tags:['개발비','무형자산'] },
-    { cat:'법령', official:true,  ans:3, views:'140', mins:1440, author:'익명 · 노무', title:'주 52시간 유연근무 도입, 급여 설계에서 놓치기 쉬운 지점은?', snippet:'선택근로제 정산기간 설정과 연장수당 계산에서 실수했던 사례 공유 부탁드립니다.', tags:['주52시간','급여'] }
+    { cat:'법령', official:true,  ans:1, views:'140', mins:1440, author:'익명 · 노무', title:'주 52시간 유연근무 도입, 급여 설계에서 놓치기 쉬운 지점은?', snippet:'선택근로제 정산기간 설정과 연장수당 계산에서 실수했던 사례 공유 부탁드립니다.', tags:['주52시간','급여'] }
   ];
-  var ANSWERERS = [
-    { rank:'1', initial:'김', name:'김세무', role:'세무사 · 세정회계', picked:'32' },
-    { rank:'2', initial:'이', name:'이회계', role:'공인회계사', picked:'27' },
-    { rank:'3', initial:'박', name:'박현업', role:'前 상장사 CFO', picked:'21' },
-    { rank:'4', initial:'정', name:'정노무', role:'노무사', picked:'18' },
-    { rank:'5', initial:'최', name:'최여신', role:'前 은행 여신심사역', picked:'15' }
-  ];
-  var RANKCOL = ['#2348D6','#2348D6','#2348D6','#C2C9D0','#C2C9D0'];
   var FILTERS = ['전체','세무','회계','법령','실무','경영'];
   var sort = 'hot', filter = '전체', ccat = '세무';
 
@@ -183,13 +164,6 @@
       return '<button class="filter' + (f === filter ? ' on' : '') + '" data-f="' + f + '">' + f + '</button>';
     }).join('');
   }
-  document.getElementById('answerers').innerHTML = ANSWERERS.map(function (a, i) {
-    return '<div class="ans-row"><span class="bt" style="font-size:18px;font-weight:700;color:' + RANKCOL[i] + ';width:20px;text-align:center;flex-shrink:0;">' + a.rank + '</span>' +
-      '<div class="bt" style="width:34px;height:34px;border-radius:50%;background:#EEF0F2;color:#49505A;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0;">' + a.initial + '</div>' +
-      '<div style="min-width:0;flex:1;"><div style="font-size:13.5px;font-weight:700;">' + a.name + '</div><div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:1px;">' + a.role + '</div></div>' +
-      '<div style="text-align:right;flex-shrink:0;"><div class="mono" style="font-size:13px;font-weight:600;">' + a.picked + '</div><div class="mono" style="font-size:9px;color:#9BA3AB;">답변</div></div></div>';
-  }).join('');
-
   function renderCcats() {
     document.getElementById('ccats').innerHTML = ['세무','회계','법령','실무','경영'].map(function (k) {
       var c = COL[k], on = ccat === k;

@@ -60,6 +60,20 @@ module.exports = async (req, res) => {
       const result = await require('../lib/migrate').runMigration(!!body.force);
       return res.status(result.ok ? 200 : 500).json(result);
     }
+    if (action === 'guideFlags') {
+      // 실무백과 '검토 필요' 플래그 목록 (크론이 개정 법령 감지 시 적재)
+      if (!sb.ready()) return res.status(200).json({ flags: [] });
+      try {
+        const rows = await sb.select('guide_flags?order=created_at.desc&select=*');
+        return res.status(200).json({ flags: rows || [] });
+      } catch (e) { return res.status(200).json({ flags: [], error: e.message.slice(0, 120) }); }
+    }
+    if (action === 'ackFlag') {
+      // 확인 처리 = 플래그 삭제 (백과 내용 반영을 마친 뒤 누른다)
+      if (!sb.ready()) return res.status(503).json({ error: 'Supabase 미설정' });
+      await sb.rest('guide_flags?id=eq.' + parseInt(body.id, 10), { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+      return res.status(200).json({ ok: true });
+    }
     if (action === 'diag') {
       // Supabase 연결 점검: 키 유무 + 테이블별 접근 가능 여부/행 수
       const out = { supabase_key: sb.ready() ? '설정됨' : '미설정(폴백: 구글시트)', tables: {} };
