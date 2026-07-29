@@ -6,8 +6,11 @@
      action=hideAnswer   { row, value }   → 답변 노출(G열)
      action=delete   { tab, row }         → 행 삭제 (문답/답변/리드/의견)
      action=migrate  { force? }           → 구글시트 → Supabase 1회성 이관
+   Supabase 키가 설정돼 있으면 Supabase를, 아니면 구글시트를 관리한다.
+   (row 필드는 Supabase 모드에서 테이블 행 id를 담는다)
 */
 const { readRows, appendRow, updateCell, deleteRow } = require('../lib/sheets');
+const sb = require('../lib/supabase');
 
 function objQuestions(rows) {
   return rows.slice(1).map((r, i) => ({
@@ -57,6 +60,59 @@ module.exports = async (req, res) => {
       const result = await require('../lib/migrate').runMigration(!!body.force);
       return res.status(result.ok ? 200 : 500).json(result);
     }
+
+    /* ── Supabase 모드 ── */
+    if (sb.ready()) {
+      if (action === 'overview') {
+        const [q, a, l, f] = await Promise.all([
+          sb.select('qna_questions?order=created_at.asc&select=*'),
+          sb.select('qna_answers?order=created_at.asc&select=*'),
+          sb.select('leads?order=created_at.asc&select=*'),
+          sb.select('feedback?order=created_at.asc&select=*'),
+        ]);
+        return res.status(200).json({
+          questions: (q || []).map(x => ({
+            row: x.id, ts: x.legacy_ts || x.created_at, category: x.category || '',
+            title: x.title, content: x.content || '', tags: x.tags || '',
+            anonymous: !!x.anonymous, hidden: !!x.hidden,
+          })).reverse(),
+          answers: (a || []).map(x => ({
+            row: x.id, ts: x.created_at, qid: x.question_ts, author: x.author || '',
+            official: !!x.official, content: x.content, helpful: 0, hidden: !!x.hidden,
+          })),
+          leads: (l || []).map(x => ({
+            row: x.id, ts: x.created_at, source: x.source || '', email: x.email,
+            consent: x.consent ? 'Y' : 'N', detail: x.detail || '',
+          })).reverse(),
+          feedback: (f || []).map(x => ({
+            row: x.id, ts: x.created_at, text: x.content, email: x.email || '',
+          })).reverse(),
+        });
+      }
+      if (action === 'answer') {
+        const qid = String(body.qid || '').trim();
+        const content = String(body.content || '').trim();
+        if (!qid || !content) { res.status(400).json({ error: 'qid·내용 필요' }); return; }
+        await sb.insert('qna_answers', [{ question_ts: qid, author: '크레디뷰 리서치', official: true, content: content.slice(0, 4000) }]);
+        return res.status(200).json({ ok: true });
+      }
+      if (action === 'hideQuestion' || action === 'hideAnswer') {
+        const table = action === 'hideQuestion' ? 'qna_questions' : 'qna_answers';
+        await sb.rest(table + '?id=eq.' + parseInt(body.row, 10), {
+          method: 'PATCH', body: { hidden: body.value === 'N' }, headers: { Prefer: 'return=minimal' },
+        });
+        return res.status(200).json({ ok: true });
+      }
+      if (action === 'delete') {
+        const tableMap = { question: 'qna_questions', answer: 'qna_answers', lead: 'leads', feedback: 'feedback' };
+        const table = tableMap[body.tab]; if (!table) { res.status(400).json({ error: 'bad tab' }); return; }
+        await sb.rest(table + '?id=eq.' + parseInt(body.row, 10), { method: 'DELETE', headers: { Prefer: 'return=minimal' } });
+        return res.status(200).json({ ok: true });
+      }
+      return res.status(400).json({ error: 'unknown action' });
+    }
+
+    /* ── 구글시트 모드(폴백) ── */
     if (action === 'overview') {
       const [q, a, l, f] = await Promise.all([
         readRows('문답'), readRows('답변'), readRows('리드'), readRows('의견'),
