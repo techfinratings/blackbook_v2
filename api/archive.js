@@ -19,7 +19,8 @@ module.exports = async function (req, res) {
       ]);
       return res.status(200).json({ values });
     } catch (err) {
-      return res.status(500).json({ error: err.message });
+      console.error('archive supabase read error, falling back to sheet:', err.message);
+      // 아래 시트 경로로 폴백
     }
   }
 

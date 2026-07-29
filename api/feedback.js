@@ -21,7 +21,12 @@ module.exports = async (req, res) => {
   const ua = (req.headers['user-agent'] || '').slice(0, 200);
   try {
     if (sb.ready()) {
-      await sb.insert('feedback', [{ content: text.slice(0, 2000), email, ua }]);
+      try {
+        await sb.insert('feedback', [{ content: text.slice(0, 2000), email, ua }]);
+      } catch (e) {
+        console.error('feedback supabase error, falling back to sheet:', e.message);
+        await appendRow('의견', [now, text.slice(0, 2000), email, ua]);
+      }
     } else {
       await appendRow('의견', [now, text.slice(0, 2000), email, ua]);
     }

@@ -52,8 +52,8 @@ module.exports = async (req, res) => {
         });
         return res.status(200).json({ items });
       } catch (e) {
-        console.error('qna supabase read error:', e.message);
-        return res.status(200).json({ items: [] });
+        console.error('qna supabase read error, falling back to sheet:', e.message);
+        // 테이블 미생성 등 → 아래 시트 경로로 폴백
       }
     }
     try {
@@ -101,8 +101,8 @@ module.exports = async (req, res) => {
       }]);
       return res.status(200).json({ ok: true });
     } catch (e) {
-      console.error('qna supabase append error:', e.message);
-      return res.status(500).json({ error: '적재 실패' });
+      console.error('qna supabase append error, falling back to sheet:', e.message);
+      // 아래 시트 경로로 폴백
     }
   }
   try {
