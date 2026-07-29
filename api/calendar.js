@@ -4,6 +4,21 @@ const sb = require('../lib/supabase');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
+
+  // 크론 수집 트리거: /api/calendar-sync (routes) → ?sync=1
+  // Vercel Cron은 CRON_SECRET 설정 시 Authorization: Bearer <secret>을 붙여 호출한다.
+  if (req.query && req.query.sync) {
+    const secret = process.env.CRON_SECRET;
+    const auth = req.headers.authorization || '';
+    const adminOk = process.env.ADMIN_PASSWORD && (req.headers['x-admin-key'] || '') === process.env.ADMIN_PASSWORD;
+    if (secret && auth !== 'Bearer ' + secret && !adminOk) {
+      return res.status(401).json({ error: 'unauthorized' });
+    }
+    res.setHeader('Cache-Control', 'no-store');
+    try { return res.status(200).json(await require('../lib/calendar-sync').sync()); }
+    catch (e) { return res.status(500).json({ error: e.message }); }
+  }
+
   res.setHeader('Cache-Control', 's-maxage=3600, stale-while-revalidate=86400');
 
   const { year, month } = req.query;
