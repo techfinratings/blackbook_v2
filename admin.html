@@ -56,6 +56,11 @@
       <button data-tab="lead">리드</button>
       <button data-tab="fb">의견</button>
     </div>
+    <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:12px 0 4px;">
+      <button class="a-btn blue" id="btnMigrate">시트 → Supabase 이관 실행</button>
+      <button class="a-btn ink" id="btnCalSync">캘린더 수집 실행</button>
+      <span class="mono" id="sysMsg" style="font-size:11px;color:#7E868F;"></span>
+    </div>
     <div id="panel"></div>
   </div>
 
@@ -90,6 +95,29 @@
   document.getElementById('loginBtn').addEventListener('click', function () { doLogin(document.getElementById('pw').value); });
   document.getElementById('pw').addEventListener('keydown', function (e) { if (e.key === 'Enter') doLogin(this.value); });
   document.getElementById('logoutBtn').addEventListener('click', function () { sessionStorage.removeItem('bb_admin_key'); location.reload(); });
+
+  /* ---- 시스템: 이관 · 캘린더 수집 ---- */
+  var sysMsg = document.getElementById('sysMsg');
+  document.getElementById('btnMigrate').addEventListener('click', function () {
+    if (!confirm('구글시트 데이터를 Supabase로 이관합니다. 실행할까요?\n(이미 데이터가 있는 테이블은 건너뜁니다)')) return;
+    var b = this; b.disabled = true; sysMsg.textContent = '이관 중…';
+    fetch('/api/admin', { method:'POST', headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ key: KEY, action: 'migrate' }) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) {
+        b.disabled = false;
+        sysMsg.textContent = j.ok ? ('이관 완료 — ' + JSON.stringify(j.migrated)) : ('이관 실패: ' + (j.error || '') + (j.partial ? ' / 부분: ' + JSON.stringify(j.partial) : ''));
+        if (j.ok) load();
+      })
+      .catch(function () { b.disabled = false; sysMsg.textContent = '이관 요청 실패'; });
+  });
+  document.getElementById('btnCalSync').addEventListener('click', function () {
+    var b = this; b.disabled = true; sysMsg.textContent = '캘린더 수집 중…';
+    fetch('/api/calendar-sync', { headers: { 'x-admin-key': KEY } })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { b.disabled = false; sysMsg.textContent = '캘린더: ' + JSON.stringify(j); })
+      .catch(function () { b.disabled = false; sysMsg.textContent = '캘린더 수집 실패'; });
+  });
 
   document.getElementById('aTabs').addEventListener('click', function (e) {
     var b = e.target.closest('[data-tab]'); if (!b) return; tab = b.getAttribute('data-tab');
