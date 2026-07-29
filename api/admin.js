@@ -5,6 +5,7 @@
      action=hideQuestion { row, value }   → 문답 노출(H열) 'N'=숨김 / ''=표시
      action=hideAnswer   { row, value }   → 답변 노출(G열)
      action=delete   { tab, row }         → 행 삭제 (문답/답변/리드/의견)
+     action=migrate  { force? }           → 구글시트 → Supabase 1회성 이관
 */
 const { readRows, appendRow, updateCell, deleteRow } = require('../lib/sheets');
 
@@ -52,6 +53,10 @@ module.exports = async (req, res) => {
 
   const action = body.action;
   try {
+    if (action === 'migrate') {
+      const result = await require('../lib/migrate').runMigration(!!body.force);
+      return res.status(result.ok ? 200 : 500).json(result);
+    }
     if (action === 'overview') {
       const [q, a, l, f] = await Promise.all([
         readRows('문답'), readRows('답변'), readRows('리드'), readRows('의견'),
