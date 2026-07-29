@@ -59,6 +59,7 @@
         link: (r[6] || '').trim(),
         date: (r[7] || '').trim(),
         dl: parseInt(r[8] || '0', 10) || 0,
+        id: (r[9] || '').trim(),       // Supabase 행 id(있을 때만) — 다운로드 카운트용
         _dk: dateKey(r[7])
       };
     }).filter(function (f) { return f.name; });
@@ -79,11 +80,11 @@
   // 다운로드: drive 링크 열고, 카운트 증가는 fire-and-forget.
   function download(file) {
     if (file && file.link) window.open(file.link, '_blank', 'noopener');
-    if (file && file.row) {
+    if (file && (file.row || file.id)) {
       fetch('/api/download', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ row: file.row })
+        body: JSON.stringify({ row: file.row, id: file.id || undefined })
       }).catch(function () {});
     }
   }

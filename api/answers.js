@@ -5,6 +5,7 @@
         · 운영사(크레디뷰) 답변(official:true): ADMIN_PASSWORD 필요
    답변 탭: [일시, 문답ID, 작성자, 운영사(Y/N), 내용, 도움돼요, 노출(N=숨김)] */
 const { appendRow, readRows } = require('../lib/sheets');
+const sb = require('../lib/supabase');
 
 function rowsToAnswers(rows) {
   return rows.slice(1).map((r, i) => ({
@@ -25,6 +26,17 @@ module.exports = async (req, res) => {
   if (req.method === 'GET') {
     res.setHeader('Cache-Control', 's-maxage=10, stale-while-revalidate=60');
     const qid = String((req.query && req.query.qid) || '').trim();
+    if (sb.ready()) {
+      try {
+        const q = qid ? '&question_ts=eq.' + encodeURIComponent(qid) : '';
+        const rows = await sb.select('qna_answers?hidden=eq.false' + q + '&order=created_at.asc&select=*');
+        const items = (rows || []).map(r => ({
+          ts: r.created_at, qid: r.question_ts, author: r.author || '익명',
+          official: !!r.official, content: r.content, helpful: 0,
+        })).sort((a, b) => (b.official - a.official) || String(a.ts).localeCompare(String(b.ts)));
+        return res.status(200).json({ items });
+      } catch (e) { return res.status(200).json({ items: [] }); }
+    }
     try {
       const all = rowsToAnswers(await readRows('답변'));
       const items = (qid ? all.filter(a => a.qid === qid) : all)
@@ -54,6 +66,15 @@ module.exports = async (req, res) => {
 
   const now = new Date().toISOString();
   const author = official ? '크레디뷰 리서치' : (String(body.author || '').trim() || '익명');
+  if (sb.ready()) {
+    try {
+      await sb.insert('qna_answers', [{ question_ts: qid, author, official, content: content.slice(0, 4000) }]);
+      return res.status(200).json({ ok: true });
+    } catch (e) {
+      console.error('answer supabase append error:', e.message);
+      return res.status(500).json({ error: '적재 실패' });
+    }
+  }
   try {
     await appendRow('답변', [now, qid, author, official ? 'Y' : 'N', content.slice(0, 4000), 0, '']);
     res.status(200).json({ ok: true });

@@ -68,7 +68,7 @@ ${jsonld.map(o => `<script type="application/ld+json">${JSON.stringify(o)}</scri
 <div class="page">
   <header class="gnb"><div class="wrap gnb-inner">
     <a href="/"><img class="gnb-logo" src="/assets/logo_white.png" alt="BLACK BOOK"></a>
-    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide" class="active">실무백과</a><a href="/community/talk">실무 문답</a><a href="/archive">실무자료 아카이브</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더</a></nav>
+    <nav class="gnb-nav"><a href="/">홈</a><a href="/content">콘텐츠</a><a href="/guide" class="active">실무백과</a><a href="/community/talk">QnA</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a><a href="/finder">정책자금 파인더</a></nav>
     <span class="gnb-join" data-open-subscribe>메일로 소식 받기</span>
   </div></header>`;
 }
@@ -193,8 +193,8 @@ function renderDetail(g, base) {
 
     <div class="side-cta" style="margin-top:34px;border-radius:12px;">
       <div class="bt" style="font-size:17px;font-weight:700;line-height:1.5;">관련 서식이 필요하신가요?</div>
-      <p style="font-size:12.5px;color:var(--ink-4);line-height:1.65;margin:8px 0 16px;">신고에 바로 쓰는 엑셀·서식 자료를 실무자료 아카이브에서 받아보세요.</p>
-      <a href="/archive" class="btn" style="display:inline-block;padding:11px 22px;">실무자료 아카이브 가기 →</a>
+      <p style="font-size:12.5px;color:var(--ink-4);line-height:1.65;margin:8px 0 16px;">신고에 바로 쓰는 엑셀·서식 자료를 자료실에서 받아보세요.</p>
+      <a href="/archive" class="btn" style="display:inline-block;padding:11px 22px;">자료실 가기 →</a>
     </div>
   </article>` + FOOT;
 }
