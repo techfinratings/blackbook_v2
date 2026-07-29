@@ -21,7 +21,11 @@ module.exports = async (req, res) => {
       return res.status(200).json({ debug: true, sample });
     }
 
-    const list = await fetchPublished(key);
+    // ?limit=N → 첫 페이지만 조회해 상위 N건 반환(홈 화면용 — 전량 수집 생략으로 응답 단축)
+    const limit = Math.min(parseInt(req.query && req.query.limit, 10) || 0, 50);
+    const list = limit
+      ? (await fetchPublished(key, Math.max(limit * 3, 30), true)).slice(0, limit)
+      : await fetchPublished(key);
     const posts = list.map(p => ({
       id: p.id, title: p.title, slug: p.slug,
       description: p.description, date: p.date, image: p.image,
