@@ -60,6 +60,21 @@ module.exports = async (req, res) => {
       const result = await require('../lib/migrate').runMigration(!!body.force);
       return res.status(result.ok ? 200 : 500).json(result);
     }
+    if (action === 'diag') {
+      // Supabase 연결 점검: 키 유무 + 테이블별 접근 가능 여부/행 수
+      const out = { supabase_key: sb.ready() ? '설정됨' : '미설정(폴백: 구글시트)', tables: {} };
+      if (sb.ready()) {
+        for (const t of ['leads', 'feedback', 'qna_questions', 'qna_answers', 'archive_files', 'calendar_events']) {
+          try {
+            const rows = await sb.select(t + '?select=id&limit=1000');
+            out.tables[t] = 'OK · ' + (rows ? rows.length : 0) + '행' + ((rows && rows.length === 1000) ? '+' : '');
+          } catch (e) {
+            out.tables[t] = '오류: ' + e.message.slice(0, 120);
+          }
+        }
+      }
+      return res.status(200).json(out);
+    }
 
     /* ── Supabase 모드 ── */
     if (sb.ready()) {
