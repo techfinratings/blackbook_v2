@@ -19,6 +19,75 @@
     ]
   };
 
+  /* ---------- 히어로 하단: 최신 실무 문답 제목 세로 티커 ----------
+     위→아래로 한 항목씩 흐르고, 중앙에 왔을 때 1초 멈춘다. */
+  function initHeroTicker() {
+    var viewport = document.querySelector('[data-qa-ticker]');
+    var track = document.querySelector('[data-qa-ticker-track]');
+    if (!viewport || !track) return;
+
+    var ROW = 40;                       // .hd-ticker-item height
+    var DWELL = 1000;                   // 중앙 멈춤(1초)
+    var SLIDE = 450;                    // 이동 시간
+    var CLONES = 2;                     // 무한 루프용 앞쪽 복제 수
+    var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); };
+
+    var items = QA.new.concat(QA.hot).map(function (q) { return { cat: q.cat, title: q.q }; });
+    var idx = 0, timer = null, homeIdx = 0;
+
+    function centerOffset() { return (viewport.offsetHeight - ROW) / 2; }
+
+    // 트랙은 [끝쪽 복제 2개] + [역순 목록]. idx를 줄여가며 트랙을 아래로 밀면
+    // 새 제목이 위에서 내려와 중앙에 멈춘다(상단→하단 흐름, 최신순 표시).
+    function build() {
+      var rev = items.slice().reverse();
+      var list = rev.slice(-CLONES).concat(rev);
+      homeIdx = list.length - 1;                        // 실제 items[0](최신) 위치
+      track.innerHTML = list.map(function (it) {
+        var col = CAT_COLOR[it.cat] || '#2348D6';
+        return '<a class="hd-ticker-item" href="/community/talk">' +
+          '<span class="tk-cat" style="color:' + col + ';">' + esc(it.cat) + '</span>' +
+          '<span class="tk-title">' + esc(it.title) + '</span></a>';
+      }).join('');
+    }
+
+    function paint(animate) {
+      track.style.transition = animate ? 'transform ' + SLIDE + 'ms cubic-bezier(.4,0,.2,1)' : 'none';
+      track.style.transform = 'translateY(' + (centerOffset() - idx * ROW) + 'px)';
+      var rows = track.children;
+      for (var i = 0; i < rows.length; i++) rows[i].classList.toggle('on', i === idx);
+    }
+
+    function step() {
+      idx--;
+      paint(true);
+      if (idx <= CLONES - 1) {
+        // 복제 구간(한 바퀴 완료) → 이동이 끝난 뒤 눈에 안 띄게 원위치로 리셋
+        setTimeout(function () { idx = homeIdx; paint(false); }, SLIDE + 30);
+      }
+      timer = setTimeout(step, SLIDE + DWELL);
+    }
+
+    function start() {
+      clearTimeout(timer);
+      build();
+      idx = homeIdx; paint(false);
+      timer = setTimeout(step, DWELL);
+    }
+    start();
+
+    // 실제 기입된 최신 문답으로 교체 (실패 시 정적 샘플 유지)
+    var fetchQa = function () { return fetch('/api/qna').then(function (r) { return r.ok ? r.json() : null; }); };
+    var applyQa = function (d) {
+      if (!d || !d.items || !d.items.length) return;
+      var next = d.items.slice(0, 8).map(function (it) { return { cat: it.category || '실무', title: it.title }; });
+      if (JSON.stringify(next) === JSON.stringify(items)) return;   // 동일하면 재시작하지 않음
+      items = next; idx = 0; start();
+    };
+    if (window.bbSWR) window.bbSWR.swr('bb_qa_ticker_v1', fetchQa, applyQa);
+    else fetchQa().then(applyQa).catch(function () {});
+  }
+
   /* ---------- content segmented tabs ---------- */
   function initContentTabs() {
     var seg = document.getElementById('contentSeg');
@@ -231,7 +300,8 @@
     var hero = document.getElementById('homeHero');
     var ledger = document.getElementById('homeLedger');
     if (!hero) return;
-    var fetchPosts = function () { return fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }); };
+    // 홈은 상위 3건만 쓰므로 limit로 요청 — 인블로그 전량 수집을 건너뛰어 응답이 빨라진다
+    var fetchPosts = function () { return fetch('/api/posts?limit=6').then(function (r) { return r.ok ? r.json() : null; }); };
     var applyPosts = function (d) {
       if (!d || !d.posts || !d.posts.length) return;   // 실패 시 정적 샘플 유지
       var posts = d.posts;
@@ -261,7 +331,7 @@
         }).join('');
       }
     };
-    if (window.bbSWR) window.bbSWR.swr('bb_posts_v1', fetchPosts, applyPosts);
+    if (window.bbSWR) window.bbSWR.swr('bb_posts_home_v2', fetchPosts, applyPosts);
     else fetchPosts().then(applyPosts).catch(function () {});
   }
 
@@ -322,6 +392,7 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     initHero();
+    initHeroTicker();
     initContentTabs();
     initQA();
     initSchedule();

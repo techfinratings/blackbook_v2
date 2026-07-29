@@ -21,7 +21,18 @@
     font-weight:700;margin:16px 0 0;}
   .hd-title em{font-style:normal;color:var(--blue);}
   .hd-sub{font-size:14.5px;color:var(--ink-2);line-height:1.7;margin:13px auto 0;max-width:440px;}
-  .hd-cta{display:flex;align-items:center;justify-content:center;gap:10px;margin-top:24px;flex-wrap:wrap;}
+  /* 최신 실무 문답 세로 티커 — 위→아래 흐름, 중앙에서 1초 멈춤 */
+  .hd-ticker{position:relative;margin-top:26px;height:120px;overflow:hidden;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 26%,#000 74%,transparent 100%);
+    mask-image:linear-gradient(180deg,transparent 0,#000 26%,#000 74%,transparent 100%);}
+  .hd-ticker-track{display:flex;flex-direction:column;will-change:transform;}
+  .hd-ticker-item{display:flex;align-items:center;justify-content:center;gap:9px;height:40px;flex-shrink:0;
+    font-size:14px;font-weight:600;color:var(--ink-3);opacity:.45;transition:opacity .4s,color .4s,transform .4s;
+    white-space:nowrap;overflow:hidden;}
+  .hd-ticker-item .tk-cat{font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;flex-shrink:0;}
+  .hd-ticker-item .tk-title{overflow:hidden;text-overflow:ellipsis;max-width:420px;}
+  .hd-ticker-item.on{opacity:1;color:var(--ink-1);font-weight:700;transform:scale(1.04);}
+  .hd-ticker-item.on .tk-title{color:var(--ink-1);}
   .obj{position:absolute;z-index:1;box-shadow:0 22px 44px rgba(15,17,19,.16),0 5px 12px rgba(15,17,19,.10);}
   .obj-tag{position:absolute;white-space:nowrap;z-index:3;
     font-family:var(--font-mono);font-size:9px;letter-spacing:.08em;color:#fff;background:var(--blue);
@@ -152,10 +163,11 @@
       <nav class="gnb-nav">
         <a href="/" class="active">홈</a>
         <a href="/content">콘텐츠</a>
-        <span class="has-sub"><a class="hb-toggle">실무 핸드북<i>▾</i></a><span class="gnb-sub"><a href="/guide">실무 노트</a><a href="/community/talk">실무 이야기</a></span></span>
+        <a href="/guide">실무 노트</a>
+        <a href="/community/talk">실무 문답</a>
         <a href="/archive">실무자료 아카이브</a>
         <a href="/calendar">캘린더</a>
-        <a href="/finder">파인더</a>
+        <a href="/finder">정책자금 파인더</a>
       </nav>
       <span class="gnb-login">로그인</span>
       <span class="gnb-join">회원가입</span>
@@ -197,14 +209,13 @@
 
     <div class="hd-center">
       <div class="hd-eyebrow">
-        <span class="mono" style="font-size:11px;letter-spacing:.12em;color:var(--blue);">재무·회계 실무자의 블랙북</span>
+        <span class="mono" style="font-size:11px;letter-spacing:.12em;color:var(--blue);">재무·회계 실무자를 위한</span>
         <span class="mono" style="font-size:11px;color:var(--ink-3);" data-today></span>
       </div>
-      <h1 class="hd-title">책상 위의 실무를,<br><em>한 권의 장부</em>에 담다.</h1>
-      <p class="hd-sub">전표·서식·신고 일정·문답 — 매일 책상에 펼쳐 두던 것들을 블랙북 한 화면에 정리했습니다. 크레디뷰가 펴냅니다.</p>
-      <div class="hd-cta">
-        <a href="/community/talk" class="btn-blue" style="font-size:13.5px;padding:13px 24px;border-radius:3px;">문답 기입하기 →</a>
-        <a href="/content" class="btn-outline" style="font-size:13.5px;padding:12px 22px;">콘텐츠 둘러보기</a>
+      <h1 class="hd-title">책상 위의 실무를,<br><em>한 권의 블랙북</em>에 담다.</h1>
+      <p class="hd-sub">실무자가 알려주는 — 매일 책상에 펼쳐 두던 것들을 블랙북 한 화면에 정리했습니다. 크레디뷰가 펴냅니다.</p>
+      <div class="hd-ticker" data-qa-ticker aria-label="최신 실무 문답">
+        <div class="hd-ticker-track" data-qa-ticker-track></div>
       </div>
     </div>
   </section>
@@ -271,10 +282,10 @@
           </div>
         </section>
 
-        <!-- 실무 이야기 모듈 -->
+        <!-- 실무 문답 모듈 -->
         <section class="module">
           <div class="sec-head">
-            <h2 class="bt" style="font-size:23px;">실무 이야기</h2>
+            <h2 class="bt" style="font-size:23px;">실무 문답</h2>
             <a class="sec-more" href="/community/talk">전체 →</a>
           </div>
           <div class="qmodes" data-qmodes>
@@ -287,7 +298,7 @@
               <div class="q-dots" data-qdots></div>
             </div>
             <div style="min-width:0;display:flex;flex-direction:column;border-left:1px solid var(--rule-hair);padding-left:26px;">
-              <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);margin-bottom:4px;">최근 올라온 이야기</div>
+              <div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);margin-bottom:4px;">최근 올라온 문답</div>
               <div data-qrecent></div>
             </div>
           </div>
@@ -340,14 +351,14 @@
     </div>
   </main>
 
-  <!-- COMING SOON: 파인더 -->
+  <!-- COMING SOON: 정책자금 파인더 -->
   <section class="coming">
     <div class="wrap coming-inner">
       <div class="bt" style="position:absolute;right:24px;top:-58px;font-size:178px;line-height:1;color:var(--paper-1);opacity:.045;pointer-events:none;">06</div>
       <div style="position:relative;">
         <span class="mono" style="font-size:11px;letter-spacing:.14em;color:var(--blue);">INDEX 05 — COMING SOON</span>
         <h3 class="bt" style="font-size:30px;font-weight:700;margin:13px 0 9px;">우리 회사가 받을 수 있는 정책자금, 한 번에</h3>
-        <p style="color:var(--ink-4);font-size:14.5px;margin:0;max-width:520px;line-height:1.65;">업종·규모·재무 상태로 맞는 정책자금을 추려주는 파인더가 곧 펼쳐집니다. 사전예약하면 가장 먼저 알려드릴게요.</p>
+        <p style="color:var(--ink-4);font-size:14.5px;margin:0;max-width:520px;line-height:1.65;">업종·규모·재무 상태로 맞는 정책자금을 추려주는 정책자금 파인더가 곧 펼쳐집니다. 사전예약하면 가장 먼저 알려드릴게요.</p>
       </div>
       <a href="/finder" class="btn-blue" style="position:relative;flex-shrink:0;border-radius:0;font-size:14px;padding:15px 28px;display:flex;align-items:center;gap:9px;white-space:nowrap;">사전예약 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:16px;height:16px;"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
@@ -362,12 +373,12 @@
           <p style="font-size:12.5px;line-height:1.75;margin:0;">재무·회계 실무자가 매일 한 줄씩 채워가는 장부이자 커뮤니티. <b style="color:#D2D7DD;white-space:nowrap;">크레디뷰</b>가 펴냅니다.</p>
         </div>
         <div style="display:flex;gap:54px;flex-wrap:wrap;">
-          <div style="display:flex;flex-direction:column;gap:11px;"><span class="mono" style="font-size:10px;letter-spacing:.08em;color:#6A7079;margin-bottom:3px;">커뮤니티</span><a href="/content">콘텐츠</a><a href="/guide">실무 노트</a><a href="/community/talk">Q&amp;A</a><a href="/archive">실무자료 아카이브</a><a href="/calendar">캘린더</a></div>
+          <div style="display:flex;flex-direction:column;gap:11px;"><span class="mono" style="font-size:10px;letter-spacing:.08em;color:#6A7079;margin-bottom:3px;">커뮤니티</span><a href="/content">콘텐츠</a><a href="/guide">실무 노트</a><a href="/community/talk">실무 문답</a><a href="/archive">실무자료 아카이브</a><a href="/calendar">캘린더</a></div>
           <div style="display:flex;flex-direction:column;gap:11px;"><span class="mono" style="font-size:10px;letter-spacing:.08em;color:#6A7079;margin-bottom:3px;">크레디뷰 서비스</span><a href="https://crediview.co.kr/?utm_source=blackbook&utm_medium=footer" target="_blank" rel="noopener">기업신용평가</a><a href="https://crediview.co.kr/intro/ai-report?utm_source=blackbook&utm_medium=footer" target="_blank" rel="noopener">AI경영진단보고서</a><a href="https://ms.crediview.co.kr/landing?utm_source=blackbook&utm_medium=footer" target="_blank" rel="noopener">기업모니터링</a><a href="https://db.crediview.co.kr/landing?utm_source=blackbook&utm_medium=footer" target="_blank" rel="noopener">기업DB조회 플랫폼</a></div>
         </div>
       </div>
       <div style="display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:40px;padding-top:22px;border-top:1px solid #2A2E33;">
-        <div class="mono" style="font-size:10.5px;color:#6A7079;line-height:1.8;">(주)테크핀레이팅스 · 크레디뷰 · help@blackbook.co.kr</div>
+        <div class="mono" style="font-size:10.5px;color:#6A7079;line-height:1.8;">(주)테크핀레이팅스 · 크레디뷰 · service@techfinratings.com</div>
         <div style="display:flex;gap:18px;"><a class="mono" style="font-size:10.5px;color:#6A7079;" href="#">이용약관</a><a class="mono" style="font-size:10.5px;color:#6A7079;" href="#">개인정보처리방침</a><span class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK</span></div>
       </div>
     </div>
