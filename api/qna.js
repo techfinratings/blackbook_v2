@@ -89,6 +89,10 @@ module.exports = async (req, res) => {
   const content = String(body.content || '').trim();
   if (!title || !content) { res.status(400).json({ error: '제목과 내용을 입력해 주세요.' }); return; }
 
+  // 금칙어(욕설·스팸) 필터 — 통과분도 관리자에서 사후 숨김·삭제 가능
+  const banned = require('../lib/moderation').findBanned(title + ' ' + content + ' ' + String(body.tags || ''));
+  if (banned) { res.status(400).json({ error: '부적절한 표현이 포함되어 있어 등록할 수 없습니다.' }); return; }
+
   const now = new Date().toISOString();
   const ua = (req.headers['user-agent'] || '').slice(0, 200);
   if (sb.ready()) {

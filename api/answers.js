@@ -56,6 +56,10 @@ module.exports = async (req, res) => {
   const official = !!body.official;
   if (!qid || !content) { res.status(400).json({ error: '질문과 내용이 필요합니다.' }); return; }
 
+  // 금칙어(욕설·스팸) 필터
+  const banned = require('../lib/moderation').findBanned(content);
+  if (banned && !official) { res.status(400).json({ error: '부적절한 표현이 포함되어 있어 등록할 수 없습니다.' }); return; }
+
   // 운영사(크레디뷰 공식) 답변은 관리자 인증 필요
   if (official) {
     const key = process.env.ADMIN_PASSWORD;

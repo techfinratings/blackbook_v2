@@ -83,6 +83,23 @@ function mdToHtml(md) {
   return html;
 }
 
+/* ── 목차: 본문 h1~h3에 앵커 id를 부여하고 TOC 항목을 수집 ── */
+function buildToc(html) {
+  const items = [];
+  let n = 0;
+  const out = String(html || '').replace(/<h([123])([^>]*)>([\s\S]*?)<\/h\1>/gi, (m, lv, attrs, inner) => {
+    const text = stripTags(inner).trim();
+    if (!text) return m;
+    const existing = attrs.match(/\bid\s*=\s*"([^"]+)"/);
+    if (existing) { items.push({ lv: parseInt(lv, 10), text, id: existing[1] }); return m; }
+    n += 1;
+    const id = 'sec-' + n;
+    items.push({ lv: parseInt(lv, 10), text, id });
+    return `<h${lv}${attrs} id="${id}">${inner}</h${lv}>`;
+  });
+  return { html: out, items };
+}
+
 /* ── 전체 HTML 문서 렌더 ── */
 function renderPage(post, bodyHtml, canonical) {
   const displayTitle = post.title || '콘텐츠';              // 본문 헤드라인(화면 표시)
@@ -103,7 +120,15 @@ function renderPage(post, bodyHtml, canonical) {
   const hero = img
     ? `<img src="${esc(img)}" alt="${esc(displayTitle)}" style="width:100%;border-radius:12px;margin:30px 0 36px;display:block;">`
     : `<div style="width:100%;aspect-ratio:16/8;border-radius:12px;background:var(--blue);margin:30px 0 36px;"></div>`;
-  const body = bodyHtml || `<p>${esc(post.description || '본문을 준비 중입니다.')}</p>`;
+  // 목차: 본문 헤딩(h1~h3) 2개 이상일 때 좌측 고정 목차 표시 (인블로그와 동일한 UX)
+  const toc = buildToc(bodyHtml || '');
+  const body = (toc.html || '') || `<p>${esc(post.description || '본문을 준비 중입니다.')}</p>`;
+  const hasToc = toc.items.length >= 2;
+  const tocHtml = hasToc
+    ? `<nav class="toc" aria-label="목차"><div class="toc-h">목차</div>` +
+      toc.items.map(it => `<a class="toc-l${it.lv}" href="#${esc(it.id)}">${esc(clamp(it.text, 46))}</a>`).join('') +
+      `</nav>`
+    : '';
 
   return `<!DOCTYPE html>
 <html lang="ko">
@@ -134,12 +159,37 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
   .abody p{margin:0 0 22px;} .abody b,.abody strong{color:var(--ink-1);font-weight:700;}
   .abody h1,.abody h2{font-family:var(--font-display);font-weight:700;line-height:1.4;margin:38px 0 16px;}
   .abody h2{font-size:26px;} .abody h1{font-size:30px;} .abody h3{font-size:20px;font-weight:700;margin:28px 0 12px;}
+  .abody h1,.abody h2,.abody h3{scroll-margin-top:84px;}
   .abody img{max-width:100%;height:auto;border-radius:10px;margin:14px 0;display:block;}
   .abody a{color:var(--blue);text-decoration:underline;}
   .abody blockquote{font-family:var(--font-display);margin:34px 0;padding:4px 0 4px 24px;border-left:3px solid var(--blue);font-size:22px;line-height:1.55;font-weight:700;color:var(--ink-1);}
-  .abody ul{padding-left:22px;margin:0 0 22px;} .abody li{margin:0 0 8px;line-height:1.7;}
+  .abody ul,.abody ol{padding-left:22px;margin:0 0 22px;} .abody li{margin:0 0 8px;line-height:1.7;}
   .abody pre{background:var(--paper-2);border-radius:8px;padding:16px;overflow-x:auto;font-family:var(--font-mono);font-size:13.5px;}
   .abody code{font-family:var(--font-mono);font-size:.9em;background:var(--paper-2);padding:2px 5px;border-radius:3px;}
+  /* 리치 요소 — 인블로그 콜아웃·표·구분선·임베드 */
+  .abody div[class*="callout"],.abody aside,.abody .notice{
+    background:var(--blue-soft);border:1px solid rgba(35,72,214,.14);border-left:3px solid var(--blue);
+    border-radius:0 8px 8px 0;padding:16px 18px;margin:26px 0;font-size:15.5px;line-height:1.75;}
+  .abody div[class*="callout"] p:last-child,.abody aside p:last-child{margin-bottom:0;}
+  .abody hr{border:0;border-top:1px solid var(--rule-hair);margin:36px 0;}
+  .abody table{border-collapse:collapse;width:100%;font-size:14.5px;margin:24px 0;display:block;overflow-x:auto;}
+  .abody th{font-weight:700;color:var(--ink-1);background:var(--paper-2);}
+  .abody th,.abody td{border:1px solid var(--rule-hair);padding:9px 13px;text-align:left;line-height:1.6;}
+  .abody figure{margin:24px 0;} .abody figcaption{font-size:12.5px;color:var(--ink-3);text-align:center;margin-top:8px;}
+  .abody iframe,.abody video{max-width:100%;border:0;border-radius:10px;}
+  .abody mark{background:#FBF0C8;padding:1px 3px;border-radius:2px;}
+  /* 좌측 고정 목차 (인블로그 UX) */
+  .read-grid{display:grid;grid-template-columns:210px minmax(0,760px);gap:44px;justify-content:center;
+    padding:0 24px;}
+  .read-grid .read{max-width:none;margin:0;padding:0;}
+  .toc{position:sticky;top:88px;align-self:start;font-size:13px;line-height:1.5;
+    border-left:1px solid var(--rule-hair);padding:2px 0 2px 16px;max-height:calc(100vh - 120px);overflow-y:auto;}
+  .toc-h{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--ink-3);margin-bottom:10px;}
+  .toc a{display:block;color:var(--ink-3);padding:4px 0;font-weight:500;border:0;}
+  .toc a.toc-l3{padding-left:12px;font-size:12.5px;}
+  .toc a:hover{color:var(--ink-1);}
+  .toc a.on{color:var(--blue);font-weight:700;}
+  @media (max-width:1080px){.read-grid{display:block;padding:0;}.read-grid .read{max-width:760px;margin:0 auto;padding:0 24px;}.toc{display:none;}}
 </style>
 </head>
 <body>
@@ -152,7 +202,9 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
     <span class="gnb-join" data-open-subscribe>메일로 소식 받기</span>
   </div></header>
 
-  <article class="read" style="padding-top:46px;padding-bottom:64px;">
+  <div class="${hasToc ? 'read-grid' : ''}" style="padding-top:46px;padding-bottom:64px;">
+  ${tocHtml}
+  <article class="read">
     <a href="/content" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);">← 콘텐츠 · 아티클</a>
     <div style="display:flex;align-items:center;gap:11px;margin-top:24px;flex-wrap:wrap;">
       <span class="mono" style="font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--ink-1);border:1px solid var(--ink-1);border-radius:3px;padding:4px 9px;">아티클</span>
@@ -167,10 +219,17 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
     ${hero}
     <div class="abody">${body}</div>
   </article>
+  </div>
 
   <footer class="footer"><div class="wrap" style="padding:40px 40px 32px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;"><img src="/assets/logo_white.png" style="height:20px;" alt="BLACK BOOK"><div class="mono" style="font-size:10.5px;color:#6A7079;">© 2025 BLACK BOOK · 크레디뷰</div></div></footer>
 </div>
 <script src="/assets/subscribe.js"></script>
+${hasToc ? `<script>
+(function(){var links=[].slice.call(document.querySelectorAll('.toc a'));if(!links.length)return;
+var map={};links.forEach(function(a){var id=a.getAttribute('href').slice(1);var h=document.getElementById(id);if(h)map[id]=a;});
+var obs=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(a){a.classList.remove('on');});var a=map[e.target.id];if(a)a.classList.add('on');}});},{rootMargin:'-80px 0px -70% 0px'});
+Object.keys(map).forEach(function(id){obs.observe(document.getElementById(id));});})();
+</script>` : ''}
 </body>
 </html>`;
 }
