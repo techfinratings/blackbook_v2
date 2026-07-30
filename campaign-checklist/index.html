@@ -436,35 +436,53 @@ const TASKS = {
   ],
 };
 
-/* ── 노출 채널 목록 (시트 4 · ※ 미확정 초안 — 확정 시 이 배열만 갱신) ──
-   형식: {code, name(채널명), type(유형), publisher(게시 주체)}                 */
+/* ── 노출 채널 목록 (주주사/자체/광고 · 목록 변경 시 이 배열만 갱신) ──
+   형식: {code, name, type(주주사|자체|광고), publisher(게시 주체), note(특이사항)} */
 const CHANNELS = [
-  {code:'C1',  name:'크레디뷰 홈페이지 팝업',              type:'자사',          publisher:'개발팀'},
-  {code:'C2',  name:'크레디뷰 메인롤링 배너',              type:'자사',          publisher:'개발팀'},
-  {code:'C3',  name:'크레디뷰 전시영역',                  type:'자사',          publisher:'개발팀'},
-  {code:'C4',  name:'테크핀레이팅스 홈페이지',             type:'자사',          publisher:'개발팀'},
-  {code:'C5',  name:'서비스 내 알림 (앱푸시·알림톡·메일)',  type:'자사',          publisher:'개발팀'},
-  {code:'C6',  name:'네이버 블로그',                      type:'자사 외부채널',  publisher:'마케팅'},
-  {code:'C7',  name:'인스타그램',                         type:'자사 외부채널',  publisher:'마케팅'},
-  {code:'C8',  name:'뉴스레터',                           type:'자사 외부채널',  publisher:'마케팅'},
-  {code:'C9',  name:'제휴 협회 노출',                     type:'제휴',          publisher:'제휴처'},
-  {code:'C10', name:'제휴 플랫폼 (위하고 등)',             type:'제휴',          publisher:'제휴처·개발팀'},
-  {code:'C11', name:'유료 광고 (검색·디스플레이)',          type:'유료',          publisher:'마케팅'},
-  {code:'C12', name:'오프라인 (세미나·인쇄물)',             type:'오프라인',      publisher:'마케팅'},
+  // 주주사 채널 — 게시 주체·절차가 채널마다 다름 (비고 확인)
+  {code:'C1',  name:'더존 4종 배너·팝업',                    type:'주주사', publisher:'위하고 협업플랫폼', note:'변경 시마다 위하고 협업플랫폼으로 협조전 상신 필요'},
+  {code:'C2',  name:'더존 온라인 고객센터 배너',              type:'주주사', publisher:'홍보실',          note:'홍보실로 변경 요청'},
+  {code:'C3',  name:'신한 기업뱅킹(웹) 로그인 전·후 배너',     type:'주주사', publisher:'신한은행',        note:''},
+  {code:'C4',  name:'신한 기업뱅킹(웹) 메뉴 탑재',            type:'주주사', publisher:'신한은행',        note:''},
+  {code:'C5',  name:'신한 쏠비즈(앱) 토스트 팝업',            type:'주주사', publisher:'신한은행',        note:''},
+  {code:'C6',  name:'신한 론앤비즈(웹) 하단 배너',            type:'주주사', publisher:'신한은행',        note:''},
+  // 자체 채널
+  {code:'C7',  name:'공식 홈페이지 팝업·배너',                type:'자체',   publisher:'개발팀',          note:''},
+  {code:'C8',  name:'크레디뷰 로그인 전 (팝업·롤링 배너·우측 FAB)', type:'자체', publisher:'개발팀',      note:''},
+  {code:'C9',  name:'크레디뷰 로그인 후 (배너·팝업)',          type:'자체',   publisher:'개발팀',          note:''},
+  // 광고 — 게시가 아닌 캠페인 세팅·집행 (링크드인은 진행하지 않아 목록 제외)
+  {code:'C10', name:'메타 DA',                              type:'광고',   publisher:'마케팅',          note:''},
+  {code:'C11', name:'네이버 광고 (DA·파워콘텐츠·파워링크·브랜드검색)', type:'광고', publisher:'마케팅',  note:''},
+  {code:'C12', name:'구글 광고 (DA·키워드)',                  type:'광고',   publisher:'마케팅',          note:''},
+  {code:'C13', name:'네이버 블로그 바이럴 (티블·인링크 배포)',  type:'광고',   publisher:'마케팅',          note:'배포 가이드 제작 필요'},
+  // 협회 채널
+  {code:'C14', name:'협회 노출 (배너·팝업)',                   type:'협회',   publisher:'협회',            note:'협회별로 배너·팝업 제작하여 배포'},
 ];
 
-/* ── 채널 공통 과업 세트 (시트 4 하단 · 선택된 채널마다 반복 생성) ──
-   stage: 배치될 단계 / dept:'PUBLISHER'는 채널의 게시 주체로 치환됨
-   디자인 단계는 [초안 요청 → 시안 확정] 2개 과업으로 구성 (실제 협업 흐름 반영) */
+/* ── 채널 공통 과업 세트 (선택된 채널마다 반복 생성) ──
+   stage: 배치될 단계 — 노출 확정은 기획 단계에서 함께 진행
+   dept:'PUBLISHER'는 채널의 게시 주체로 치환 / dyn 항목은 채널 유형별 문구 적용 */
 const CHANNEL_TASK_SET = [
-  {seq:1, stage:'채널',   task:'노출 확정',      checklist:'채널 노출 기간·위치 확정 (P-T 확정분 반영)', dept:'마케팅'},
+  {seq:1, stage:'기획',   task:'노출 확정',      checklist:'채널 노출 기간·위치·조건 확정 (게시 절차·리드타임 확인)', dept:'마케팅'},
   {seq:2, stage:'디자인', task:'초안 요청',      checklist:'구좌 규격 확인 → 디자인 초안(요청서) 작성·디자인팀 전달', dept:'마케팅'},
   {seq:3, stage:'디자인', task:'시안 확정',      checklist:'회신 시안 검토 → 필요시 수정 요청 → 확정',   dept:'마케팅·디자인팀'},
-  {seq:4, stage:'개발',   task:'게시',           dyn:'pub', checklist:'', /* 자사→게시 및 링크 연결 / 그 외→게시 요청 */ dept:'PUBLISHER'},
+  {seq:4, stage:'개발',   task:'게시·집행',      dyn:'pub', checklist:'', dept:'PUBLISHER'},
   {seq:5, stage:'검수',   task:'노출 검수',      checklist:'노출 상태·랜딩 동작 확인',                   dept:'마케팅'},
-  {seq:6, stage:'오픈',   task:'게시·종료 관리', checklist:'게시 확인 → 종료 후 내림',                   dept:'PUBLISHER'},
+  {seq:6, stage:'오픈',   task:'게시·종료 관리', dyn:'end', checklist:'', dept:'PUBLISHER'},
 ];
-function channelStage3Text(ch){ return ch.type === '자사' ? '게시 및 링크 연결' : '게시 요청'; }
+/* 채널 유형별 문구: 자체=직접 게시 / 주주사=요청·협조전 / 광고=세팅·집행 */
+function channelTaskText(ch, s){
+  if(s.dyn === 'pub'){
+    if(ch.type === '자체')   return '게시 및 링크 연결';
+    if(ch.type === '광고')   return '광고 캠페인 세팅·집행 (소재·타겟·예산)';
+    return '게시 요청 (협조전·변경 요청 등 채널별 절차 준수)';
+  }
+  if(s.dyn === 'end'){
+    if(ch.type === '광고')   return '집행 상태 확인 → 종료 시 광고 중단';
+    return '게시 확인 → 종료 후 내림';
+  }
+  return s.checklist;
+}
 
 /* ── 검수 자동 구성 규칙 (시트 6) ──
    trigger: 'ALWAYS' | 모듈코드 배열(하나라도 선택 시) / channels: 채널코드 배열 */
@@ -480,7 +498,7 @@ const INSPECTIONS = [
   {trigger:['D1','V1'],         text:'종료 리다이렉션 동작 확인',       dept:'개발팀', note:''},
   {trigger:['P4'],              text:'테스트 쿠폰 발급·사용 검증',      dept:'마케팅', note:''},
   {trigger:['P5'],              text:'경품 재고·발송 준비 확인',        dept:'마케팅', note:''},
-  {trigger:'CH', channels:['C9','C10'], text:'제휴처 노출 상태 확인',  dept:'제휴처', note:''},
+  {trigger:'CH', channels:['C1','C2','C3','C4','C5','C6','C14'], text:'주주사·협회 채널 노출 상태 확인', dept:'각 채널 담당', note:''},
   {trigger:['D3'],              text:'팝업 노출·클릭 랜딩 확인',        dept:'마케팅', note:''},
   {trigger:['V2'],              text:'중복 응모 방지·동의 절차 확인',   dept:'개발팀', note:''},
 ];
@@ -493,7 +511,7 @@ const DEP_RULES = [
   {id:'R2', anyModules:['D1','V1'],   add:['P7'],      why:'R2 · D1/V1 선택 → P7 상호 체크'},
   {id:'R3', anyModules:['P4','P5'],   add:['V3'],      why:'R3 · 쿠폰/경품 선택 → V3(백오피스 연동) 자동'},
   {id:'R4', anyModules:['P5'],        add:['O2','O3'], why:'R4 · 경품 선택 → O2·O3(발표·발송) 자동'},
-  {id:'R5', anyChannels:['C9','C10'], add:['P1'],      why:'R5 · 제휴 채널(C9·C10) 노출 → P1(법무 검토) 자동'},
+  {id:'R5', anyChannels:['C1','C2','C3','C4','C5','C6','C14'], add:['P1'], why:'R5 · 주주사·협회 채널 노출 → P1(법무 검토) 자동'},
   {id:'R6', anyModules:['D3','D5'],   add:['V4'],      why:'R6 · 팝업/전시 선택 → V4(게시 개발) 자동'},
   {id:'R7', anyModules:['V2'],        add:['P1'],      why:'R7 · 응모 폼 선택 → P1(법무 검토) 자동'},
 ];
@@ -503,23 +521,23 @@ const PRESETS = [
   {key:'A', name:'이벤트 페이지 캠페인',
     desc:'경품 응모형 · 페이지 신규 제작 · 풀 구성',
     modules:['P1','P2','P3','P5','P7','D1','D2','D3','D4','V1','V2','V3','O2','O3','O4'], channels:[]},
-  {key:'B', name:'협회 제휴 캠페인',
-    desc:'제휴 협회 노출 포함 · 페이지 제작 (채널 C9 포함)',
-    modules:['P1','P3','P7','D1','D2','D4','D6','V1','O4'], channels:['C9']},
+  {key:'B', name:'주주사·협회 제휴 캠페인',
+    desc:'더존·신한 등 주주사 구좌 + 협회 노출 · 페이지 제작',
+    modules:['P1','P3','P7','D1','D2','D4','D6','V1','O4'], channels:['C1','C3','C14']},
   {key:'C', name:'쿠폰·할인 프로모션',
     desc:'쿠폰 + 할인 · 팝업·전시 노출',
     modules:['P3','P4','P4B','P7','D1','D2','D3','D5','V1','V3','V4','O4'], channels:[]},
   {key:'D', name:'콘텐츠 인지 캠페인',
-    desc:'페이지 없이 SNS·뉴스레터 확산 (채널 C6·C7·C8)',
-    modules:['P3','D4','D6','O4'], channels:['C6','C7','C8']},
+    desc:'페이지 없이 광고·바이럴 확산 (메타·네이버·블로그)',
+    modules:['P3','D4','D6','O4'], channels:['C10','C11','C13']},
   {key:'E', name:'직접 선택',
     desc:'고정 모듈(P0·P-T·O1)만 두고 초기화',
     modules:[], channels:[]},
 ];
 
 /* ── 기한(D-) 기본값 — 단계별 시작일 역산 (준비 4주 미만 시 비율 압축) ── */
-const STAGE_ORDER = ['기획','채널','디자인','개발','검수','오픈'];
-const STAGE_DDAY  = {'기획':28,'채널':21,'디자인':21,'개발':14,'검수':7,'오픈':0};
+const STAGE_ORDER = ['기획','디자인','개발','검수','오픈'];
+const STAGE_DDAY  = {'기획':28,'디자인':21,'개발':14,'검수':7,'오픈':0};
 const BASE_PREP_DAYS = 28; // 기준 준비 기간(4주)
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -624,17 +642,17 @@ function buildRows(){
   const pushChannelStage = stage => {
     for(const ch of selCh){
       for(const s of CHANNEL_TASK_SET.filter(x => x.stage === stage)){
-        const checklist = s.dyn === 'pub' ? channelStage3Text(ch) : s.checklist;
+        const checklist = channelTaskText(ch, s);
         const dept = s.dept === 'PUBLISHER' ? ch.publisher : s.dept;
-        push(stage, ch.code+'-'+s.seq, ch.name, checklist, dept, ch.type, ch.code+'-s'+s.seq);
+        const note = ch.note ? ch.type + ' · ' + ch.note : ch.type;
+        push(stage, ch.code+'-'+s.seq, ch.name, checklist, dept, note, ch.code+'-s'+s.seq);
       }
     }
   };
 
-  // 기획
+  // 기획 (채널 노출 확정 포함)
   ['P0','P-T','P1','P2','P3','P4','P4B','P5','P7'].forEach(c => pushModule('기획', c));
-  // 채널
-  pushChannelStage('채널');
+  pushChannelStage('기획');
   // 디자인
   ['D1','D2','D3','D4','D5','D6'].forEach(c => pushModule('디자인', c));
   pushChannelStage('디자인');
@@ -700,15 +718,15 @@ function renderModules(){
     html += '</div>';
     if(g === '기획'){
       html += `<div class="channel-panel">
-        <h4>📡 노출 채널 선택 <span class="hint">(P-T 하위 · 규칙 R9 — 선택 시 채널별 5단계 과업 세트가 각 단계에 자동 배치)</span></h4>
-        <div class="hint">※ 채널 목록은 미확정 초안 — 확정 시 코드 상단 CHANNELS 배열만 갱신하면 됨</div>`;
+        <h4>📡 노출 채널 선택 <span class="hint">(P-T 하위 · 기획 단계에서 함께 확정 — 선택 시 채널별 과업 세트[노출 확정→초안·시안→게시·집행→검수→종료]가 각 단계에 자동 배치)</span></h4>
+        <div class="hint">※ 채널마다 진행 절차가 다름(협조전·변경 요청·광고 세팅 등) — 목록 변경 시 코드 상단 CHANNELS 배열만 갱신</div>`;
       const types = [...new Set(CHANNELS.map(c => c.type))];
       for(const t of types){
         html += `<div class="ch-group"><span>${esc(t)}</span><div class="ch-list">`;
         for(const c of CHANNELS.filter(x => x.type === t)){
           const on = state.channels.has(c.code);
           html += `
-            <label class="ch${on?' checked':''}" title="게시 주체: ${esc(c.publisher)}">
+            <label class="ch${on?' checked':''}" title="게시 주체: ${esc(c.publisher)}${c.note ? ' · ' + esc(c.note) : ''}">
               <input type="checkbox" data-ch="${c.code}" ${on?'checked':''}>
               <span class="code">${c.code}</span> ${esc(c.name)}
             </label>`;
@@ -795,7 +813,7 @@ function renderPreview(){
 }
 
 function stageColor(stage){
-  return {'기획':'#EDF1F5','채널':'#E0E6EC','디자인':'#EDF1F5','개발':'#E0E6EC','검수':'#D6DEE7','오픈':'#C7D2DD'}[stage] || '#EDF1F5';
+  return {'기획':'#EDF1F5','디자인':'#E0E6EC','개발':'#EDF1F5','검수':'#D6DEE7','오픈':'#C7D2DD'}[stage] || '#EDF1F5';
 }
 
 function renderAll(){ renderPresets(); renderModules(); renderPreview(); }
@@ -947,7 +965,7 @@ const COLS = ['A','B','C','D','E','F','G','H'];
 const XF = {DEFAULT:0, TITLE:1, OV_LABEL:2, OV_VALUE:3, HEADER:4,
             STAGE_A:5, STAGE_B:6, STAGE_C:7, STAGE_D:8,
             BODY:9, BODY_C:10, NOTE:11, STATUS:12};
-const STAGE_XF = {'기획':XF.STAGE_A,'채널':XF.STAGE_B,'디자인':XF.STAGE_A,'개발':XF.STAGE_B,'검수':XF.STAGE_C,'오픈':XF.STAGE_D};
+const STAGE_XF = {'기획':XF.STAGE_A,'디자인':XF.STAGE_B,'개발':XF.STAGE_A,'검수':XF.STAGE_C,'오픈':XF.STAGE_D};
 
 function stylesXml(){
   return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
