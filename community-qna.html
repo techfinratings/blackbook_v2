@@ -8,9 +8,17 @@
 <link rel="stylesheet" href="/assets/styles.css">
 <style>
   .read{max-width:800px;margin:0 auto;padding:40px 24px 72px;}
-  .qbody{font-size:15.5px;line-height:1.8;color:#2C313A;white-space:pre-line;}
-  .abody{font-size:15px;line-height:1.8;color:#2C313A;white-space:pre-line;}
-  .out-btn{display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--ink-2);border:1px solid #D8DCE0;border-radius:3px;padding:7px 13px;cursor:pointer;background:none;}
+  .qbody{font-size:16.5px;line-height:1.8;color:#2C313A;white-space:pre-line;}
+  .abody{font-size:16px;line-height:1.8;color:#2C313A;white-space:pre-line;}
+  .out-btn{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:600;color:var(--ink-2);border:1px solid #D8DCE0;border-radius:3px;padding:7px 13px;cursor:pointer;background:none;}
+  .rx-btn{display:inline-flex;align-items:center;gap:7px;font-size:14px;font-weight:600;color:var(--ink-2);
+    border:1px solid #D8DCE0;border-radius:20px;padding:8px 16px;cursor:pointer;background:#fff;
+    transition:border-color .12s,background .12s,transform .1s;}
+  .rx-btn:hover{border-color:var(--ink-3);}
+  .rx-btn:active{transform:scale(.96);}
+  .rx-btn.on{border-color:var(--blue);background:var(--blue-soft);color:var(--blue);}
+  .rx-btn b{font-family:var(--font-mono);font-weight:600;}
+  .rx-btn[disabled]{opacity:.5;cursor:default;}
 </style>
 </head>
 <body>
@@ -24,7 +32,7 @@
   </div></header>
 
   <div class="read">
-    <a href="/community/talk" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);">← QnA</a>
+    <a href="/community/talk" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink-3);">← QnA</a>
     <div id="thread"><div class="mono" style="color:#7E868F;padding:40px 0;">불러오는 중…</div></div>
   </div>
 
@@ -62,9 +70,10 @@
       '<div class="qbody" style="margin-top:18px;">' + esc(q.content) + '</div>' +
       (tags ? '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:18px;">' + tags + '</div>' : '') +
       '<div style="display:flex;align-items:center;gap:13px;margin-top:22px;padding-top:18px;border-top:1px solid var(--rule-hair);">' +
-      '<div class="bt" style="width:36px;height:36px;border-radius:50%;background:#EEF0F2;color:var(--ink-3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;">' + (q.anonymous ? '익' : '회') + '</div>' +
-      '<div style="flex:1;min-width:0;"><div style="font-size:13px;font-weight:700;">' + (q.anonymous ? '익명' : '회원') + '</div></div>' +
-      '<span class="out-btn">공감</span><span class="out-btn">스크랩</span></div></div>';
+      '<div class="bt" style="width:36px;height:36px;border-radius:50%;background:#EEF0F2;color:var(--ink-3);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;">' + (q.anonymous ? '익' : '회') + '</div>' +
+      '<div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:700;">' + (q.anonymous ? '익명' : '회원') + '</div></div>' +
+      '<button class="rx-btn" data-rx="heart"' + (q.id ? '' : ' disabled title="예시 글"') + '>&#10084;&#65039; 공감 <b data-rx-n="heart">' + ((q.reactions && q.reactions.heart) || 0) + '</b></button>' +
+      '<button class="rx-btn" data-rx="like"' + (q.id ? '' : ' disabled title="예시 글"') + '>&#128077; 도움돼요 <b data-rx-n="like">' + ((q.reactions && q.reactions.like) || 0) + '</b></button></div></div>';
   }
   function renderAnswer(a) {
     var wrap = 'padding:22px ' + (a.official ? '20px' : '2px') + ';border-bottom:1px solid #E1E4E8;' + (a.official ? 'background:#F5F7FE;border-left:2px solid #2348D6;' : '');
@@ -73,7 +82,7 @@
     var initial = a.official ? 'CR' : esc((a.author || '?').slice(0, 1));
     return '<div style="' + wrap + '">' +
       '<div style="display:flex;align-items:center;gap:12px;"><div class="' + (a.official ? 'mono' : 'bt') + '" style="' + avatar + '">' + initial + '</div>' +
-      '<div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:7px;"><span style="font-size:13.5px;font-weight:700;">' + esc(a.author) + '</span>' + badge + '</div>' +
+      '<div style="flex:1;min-width:0;"><div style="display:flex;align-items:center;gap:7px;"><span style="font-size:14.5px;font-weight:700;">' + esc(a.author) + '</span>' + badge + '</div>' +
       '<div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:1px;">' + (a.official ? '기업신용평가사 · 운영사' : '실무자') + '</div></div>' +
       '<span class="mono" style="font-size:10.5px;color:#9BA3AB;">' + timeLabel(a.ts) + '</span></div>' +
       '<div class="abody" style="margin-top:14px;">' + esc(a.content) + '</div>' +
@@ -85,19 +94,53 @@
     var ansHtml = answers.length ? answers.map(renderAnswer).join('')
       : '<div class="mono" style="color:#7E868F;padding:20px 0;">아직 답변이 없어요. 첫 답변을 남겨 주세요.</div>';
     thread.innerHTML = renderQuestion(q) +
-      '<div class="sec-head" style="padding-bottom:10px;margin-top:44px;"><h2 class="bt" style="font-size:21px;">답변 <span class="mono" style="font-size:14px;font-weight:500;color:var(--ink-3);">' + answers.length + '</span></h2><span class="mono" style="font-size:11px;color:var(--ink-3);">누구나 답할 수 있어요</span></div>' +
+      '<div class="sec-head" style="padding-bottom:10px;margin-top:44px;"><h2 class="bt" style="font-size:21px;">답변 <span class="mono" style="font-size:15px;font-weight:500;color:var(--ink-3);">' + answers.length + '</span></h2><span class="mono" style="font-size:11px;color:var(--ink-3);">누구나 답할 수 있어요</span></div>' +
       '<div>' + ansHtml + '</div>' +
       '<div style="margin-top:36px;border:1px solid var(--rule-hair);background:#fff;padding:20px;">' +
         '<div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--ink-3);">답변 기입</div>' +
-        '<textarea id="ansText" class="field" placeholder="겪은 것을 한 줄씩. 근거가 되는 조문·사례가 있다면 함께 적어 주세요." style="margin-top:10px;min-height:110px;line-height:1.7;resize:vertical;font-size:14px;"' + (q.id ? '' : ' disabled') + '></textarea>' +
+        '<textarea id="ansText" class="field" placeholder="겪은 것을 한 줄씩. 근거가 되는 조문·사례가 있다면 함께 적어 주세요." style="margin-top:10px;min-height:110px;line-height:1.7;resize:vertical;font-size:15px;"' + (q.id ? '' : ' disabled') + '></textarea>' +
         '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:12px;gap:12px;">' +
-          '<label style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--ink-2);cursor:pointer;"><input id="ansAnon" type="checkbox" style="accent-color:#2348D6;width:15px;height:15px;">익명으로 답변</label>' +
+          '<label style="display:flex;align-items:center;gap:7px;font-size:13.5px;color:var(--ink-2);cursor:pointer;"><input id="ansAnon" type="checkbox" style="accent-color:#2348D6;width:15px;height:15px;">익명으로 답변</label>' +
           '<div style="display:flex;align-items:center;gap:10px;"><span class="mono" id="ansMsg" style="font-size:10.5px;color:var(--ink-3);"></span>' +
-          '<button id="ansSubmit" class="btn-ink" style="font-size:13px;padding:10px 22px;border-radius:3px;border:0;"' + (q.id ? '' : ' disabled title="샘플 글에는 답변할 수 없어요"') + '>답변 기입하기</button></div>' +
+          '<button id="ansSubmit" class="btn-ink" style="font-size:14px;padding:10px 22px;border-radius:3px;border:0;"' + (q.id ? '' : ' disabled title="샘플 글에는 답변할 수 없어요"') + '>답변 기입하기</button></div>' +
         '</div>' +
         (q.id ? '' : '<p class="mono" style="font-size:10px;color:var(--ink-4);margin:10px 0 0;">* 예시 글입니다. 실제 문답에서 답변을 남길 수 있어요.</p>') +
       '</div>';
     if (q.id) wireAnswerForm(q.id);
+    if (q.id) wireReactions(q.id);
+  }
+
+  /* ---- 감정표현: ❤️ 공감 · 👍 도움돼요 (토글) ---- */
+  function voterKey() {
+    var v = localStorage.getItem('bb_voter');
+    if (!v) { v = 'v' + Date.now().toString(36) + Math.random().toString(36).slice(2, 10); localStorage.setItem('bb_voter', v); }
+    return v;
+  }
+  function myReacts(qid) { try { return JSON.parse(localStorage.getItem('bb_rx_' + qid) || '[]'); } catch (e) { return []; } }
+  function setMyReacts(qid, arr) { try { localStorage.setItem('bb_rx_' + qid, JSON.stringify(arr)); } catch (e) {} }
+  function wireReactions(qid) {
+    var mine = myReacts(qid);
+    document.querySelectorAll('.rx-btn[data-rx]').forEach(function (btn) {
+      var kind = btn.getAttribute('data-rx');
+      if (mine.indexOf(kind) >= 0) btn.classList.add('on');
+      btn.addEventListener('click', function () {
+        if (btn.disabled) return;
+        btn.disabled = true;
+        fetch('/api/qna', { method:'POST', headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({ react:true, qid:qid, kind:kind, voter:voterKey() }) })
+          .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+          .then(function (d) {
+            btn.disabled = false;
+            var n = btn.querySelector('[data-rx-n]');
+            var cur = parseInt(n.textContent, 10) || 0;
+            var m = myReacts(qid);
+            if (d.added) { n.textContent = cur + 1; btn.classList.add('on'); if (m.indexOf(kind) < 0) m.push(kind); }
+            else { n.textContent = Math.max(0, cur - 1); btn.classList.remove('on'); m = m.filter(function (k) { return k !== kind; }); }
+            setMyReacts(qid, m);
+          })
+          .catch(function () { btn.disabled = false; });
+      });
+    });
   }
 
   function wireAnswerForm(id) {
@@ -123,7 +166,7 @@
   ]).then(function (rs) {
     var q = (rs[0].items || []).find(function (x) { return x.id === qid; });
     if (!q) { thread.innerHTML = '<div style="padding:60px 0;text-align:center;"><div class="bt" style="font-size:22px;font-weight:700;">삭제되었거나 찾을 수 없는 글이에요</div><p style="color:var(--ink-3);margin-top:10px;"><a href="/community/talk" style="color:var(--blue);">QnA</a>으로 돌아가기</p></div>'; return; }
-    var question = { id:q.id, category:q.category, title:q.title, ts:q.ts, content:q.content, tags:(q.tags ? String(q.tags).split(/[\s,]+/).map(function(t){return t.replace(/^#/,'');}).filter(Boolean) : []), anonymous:q.anonymous };
+    var question = { id:q.id, category:q.category, title:q.title, ts:q.ts, content:q.content, reactions:q.reactions, tags:(q.tags ? String(q.tags).split(/[\s,]+/).map(function(t){return t.replace(/^#/,'');}).filter(Boolean) : []), anonymous:q.anonymous };
     render(question, rs[1].items || []);
   }).catch(function () { render(SAMPLE.question, SAMPLE.answers); });
 })();

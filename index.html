@@ -20,14 +20,14 @@
   .hd-title{font-family:var(--font-display);font-size:34px;line-height:1.35;letter-spacing:-.01em;
     font-weight:700;margin:16px 0 0;}
   .hd-title em{font-style:normal;color:var(--blue);}
-  .hd-sub{font-size:14.5px;color:var(--ink-2);line-height:1.7;margin:13px auto 0;max-width:440px;}
+  .hd-sub{font-size:15.5px;color:var(--ink-2);line-height:1.7;margin:13px auto 0;max-width:440px;}
   /* 최신 QnA 세로 티커 — 위→아래 흐름, 중앙에서 1초 멈춤 */
   .hd-ticker{position:relative;margin-top:26px;height:120px;overflow:hidden;
     -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 26%,#000 74%,transparent 100%);
     mask-image:linear-gradient(180deg,transparent 0,#000 26%,#000 74%,transparent 100%);}
   .hd-ticker-track{display:flex;flex-direction:column;will-change:transform;}
   .hd-ticker-item{display:flex;align-items:center;justify-content:center;gap:9px;height:40px;flex-shrink:0;
-    font-size:14px;font-weight:600;color:var(--ink-3);opacity:.45;transition:opacity .4s,color .4s,transform .4s;
+    font-size:15px;font-weight:600;color:var(--ink-3);opacity:.45;transition:opacity .4s,color .4s,transform .4s;
     white-space:nowrap;overflow:hidden;}
   .hd-ticker-item .tk-cat{font-family:var(--font-mono);font-size:10px;letter-spacing:.05em;flex-shrink:0;}
   .hd-ticker-item .tk-title{overflow:hidden;text-overflow:ellipsis;max-width:420px;}
@@ -85,7 +85,7 @@
   .obj-wiki .tabs i{font-style:normal;font-family:var(--font-mono);font-size:7px;font-weight:600;color:#fff;
     padding:2.5px 5px 2.5px 4px;border-radius:0 3px 3px 0;letter-spacing:.05em;}
   .obj-wiki .bk{font-family:var(--font-mono);font-size:7.5px;letter-spacing:.14em;color:var(--ink-3);}
-  .obj-wiki .word{font-family:var(--font-display);font-size:14px;font-weight:700;color:var(--ink-1);
+  .obj-wiki .word{font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--ink-1);
     margin-top:6px;display:flex;align-items:baseline;gap:5px;}
   .obj-wiki .word span{font-family:var(--font-mono);font-size:7px;font-weight:400;color:var(--blue);}
   .obj-wiki .def{margin-top:6px;}
@@ -106,7 +106,7 @@
   .module{position:relative;background:#fff;border:1px solid var(--rule-hair);border-radius:12px;
     box-shadow:var(--shadow-card);padding:22px 24px;}
 
-  /* segmented tabs (아티클 / 전문가 기고) */
+  /* segmented tabs (아티클 / 리더스 오피니언) */
   .seg{display:flex;gap:7px;margin:16px 0 2px;}
   .seg button{font-size:12px;font-weight:700;padding:6px 13px;border-radius:7px;cursor:pointer;
     white-space:nowrap;border:0;color:var(--ink-3);background:var(--paper-2);}
@@ -163,7 +163,7 @@
     text-align:right;font-size:12px;font-family:var(--font-mono);font-variant-numeric:tabular-nums;}
   .calc-keys{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;padding:12px;}
   .calc-keys button{height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;
-    font-size:14px;font-weight:600;cursor:pointer;font-family:var(--font-mono);border:0;
+    font-size:15px;font-weight:600;cursor:pointer;font-family:var(--font-mono);border:0;
     background:#262A2F;color:#E7EAED;}
   .calc-keys button.op{background:#2E333A;color:#9FB4FF;}
   .calc-keys button.eq{background:var(--blue);color:#fff;}
@@ -267,7 +267,7 @@
           </div>
           <div class="seg" id="contentSeg">
             <button data-seg="article" class="on">아티클</button>
-            <button data-seg="contrib">전문가 기고</button>
+            <button data-seg="contrib">리더스 오피니언</button>
           </div>
 
           <!-- 아티클 view (인블로그 최신 글로 동적 렌더) -->
@@ -282,33 +282,33 @@
               </div>
               <span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:var(--cat-tax);display:block;margin-top:14px;">세무 · 재무</span>
               <h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;color:var(--ink-1);">부채비율만 보던 여신 심사, 현금흐름까지 읽는 법</h3>
-              <p style="font-size:14px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;">재무제표 세 장으로 거래처의 상환 능력을 가늠하는 실무 체크포인트.</p>
+              <p style="font-size:15px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;">재무제표 세 장으로 거래처의 상환 능력을 가늠하는 실무 체크포인트.</p>
               <div class="mono" style="font-size:11px;color:var(--ink-3);margin-top:11px;">크레디뷰 리서치 · 8분 읽기 · 조회 1,240</div>
             </a>
             <div id="homeLedger" style="margin-top:10px;border-top:1px solid var(--rule-hair);">
               <a class="ledger-row" href="/content">
                 <span class="bt ledger-no">02</span>
                 <div style="min-width:0;"><span class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--cat-biz);">경영</span><h3 class="bt" style="font-size:17px;line-height:1.42;font-weight:700;margin:4px 0 0;">런웨이가 6개월 남았다는 신호를 재무팀이 먼저 잡는 5가지 지표</h3></div>
-                <div style="text-align:right;white-space:nowrap;"><div class="mono" style="font-size:12.5px;font-weight:600;">870</div><div class="mono" style="font-size:9.5px;color:var(--ink-3);margin-top:2px;">조회</div></div>
+                <div style="text-align:right;white-space:nowrap;"><div class="mono" style="font-size:13.5px;font-weight:600;">870</div><div class="mono" style="font-size:9.5px;color:var(--ink-3);margin-top:2px;">조회</div></div>
               </a>
               <a class="ledger-row" href="/content">
                 <span class="bt ledger-no">03</span>
                 <div style="min-width:0;"><span class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--cat-acc);">회계</span><h3 class="bt" style="font-size:17px;line-height:1.42;font-weight:700;margin:4px 0 0;">리스 회계처리, 사용권자산 감가 기준을 둘러싼 실무 쟁점</h3></div>
-                <div style="text-align:right;white-space:nowrap;"><div class="mono" style="font-size:12.5px;font-weight:600;">640</div><div class="mono" style="font-size:9.5px;color:var(--ink-3);margin-top:2px;">조회</div></div>
+                <div style="text-align:right;white-space:nowrap;"><div class="mono" style="font-size:13.5px;font-weight:600;">640</div><div class="mono" style="font-size:9.5px;color:var(--ink-3);margin-top:2px;">조회</div></div>
               </a>
             </div>
           </div>
 
-          <!-- 전문가 기고 view — 실제 기고 확보 전까지 Who's Next? 모집 카드 -->
+          <!-- 리더스 오피니언 view — 실제 기고 확보 전까지 Who's Next? 모집 카드 -->
           <div data-view="contrib" style="display:none;">
             <a href="/content" style="display:block;margin-top:16px;cursor:pointer;">
               <div style="width:100%;aspect-ratio:16/8.5;border-radius:10px;border:1px solid var(--rule-hair);position:relative;overflow:hidden;background-image:repeating-linear-gradient(45deg,#EEF0F2 0 16px,#E4E8EC 16px 32px);">
                 <span class="mono" style="position:absolute;left:13px;top:13px;font-size:10px;font-weight:600;color:var(--blue);background:var(--paper-1);padding:4px 9px;border-radius:6px;">이달의 기고</span>
                 <span class="bt" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:26px;font-weight:700;letter-spacing:.02em;color:#9CA4AC;">Who's Next?</span>
               </div>
-              <span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:var(--blue);display:block;margin-top:14px;">전문가 기고 · 매달 한 편</span>
-              <h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;color:var(--ink-1);">다음 기고의 주인공을 찾습니다</h3>
-              <p style="font-size:14px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;">세무사·회계사·현업 재무 리더의 경험을 한 편의 기록으로. 첫 번째 기고자가 되어 주세요.</p>
+              <span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:var(--blue);display:block;margin-top:14px;">리더스 오피니언 · 매달 한 편</span>
+              <h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;color:var(--ink-1);">다음 기고의 주인공을 찾습니다.</h3>
+              <p style="font-size:15px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;">세무사·회계사·현업 재무 리더의 경험을 한 편의 기록으로.<br>첫 번째 기고자가 되어 주세요.</p>
               <div class="mono" style="font-size:11px;color:var(--ink-3);margin-top:11px;">기고 제안 · service@techfinratings.com</div>
             </a>
           </div>
@@ -334,7 +334,7 @@
               <div data-qrecent></div>
             </div>
           </div>
-          <a href="/community/talk" class="btn-ink" style="display:block;margin-top:16px;font-size:13px;padding:12px;border-radius:2px;">문답 기입하기</a>
+          <a href="/community/talk" class="btn-ink" style="display:block;margin-top:16px;font-size:14px;padding:12px;border-radius:2px;">문답 기입하기</a>
         </section>
       </div>
 
@@ -375,8 +375,8 @@
           <div style="border:1.5px dashed #C6CCD2;border-radius:12px;padding:26px 20px;">
             <div style="width:40px;height:40px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:24px;font-weight:600;line-height:1;">+</div>
             <h3 class="bt" style="font-size:18px;font-weight:700;margin:14px 0 0;">이 자리는 아직 비어 있어요</h3>
-            <p style="font-size:13px;color:var(--ink-2);line-height:1.6;margin:9px 0 0;">어떤 내용이 있으면 더 좋을까요?<br>이 공간은 <b style="color:var(--ink-1);">여러분의 의견</b>으로 채워집니다.</p>
-            <button class="btn-blue" data-open-feedback style="margin-top:16px;font-size:12.5px;padding:10px 18px;display:inline-block;border:0;cursor:pointer;">의견 보내기</button>
+            <p style="font-size:14px;color:var(--ink-2);line-height:1.6;margin:9px 0 0;">어떤 내용이 있으면 더 좋을까요?<br>이 공간은 <b style="color:var(--ink-1);">여러분의 의견</b>으로 채워집니다.</p>
+            <button class="btn-blue" data-open-feedback style="margin-top:16px;font-size:13.5px;padding:10px 18px;display:inline-block;border:0;cursor:pointer;">의견 보내기</button>
           </div>
         </section>
       </div>
@@ -390,9 +390,9 @@
       <div style="position:relative;">
         <span class="mono" style="font-size:11px;letter-spacing:.14em;color:var(--blue);">INDEX 05 — COMING SOON</span>
         <h3 class="bt" style="font-size:30px;font-weight:700;margin:13px 0 9px;">우리 회사가 받을 수 있는 정책자금, 한 번에</h3>
-        <p style="color:var(--ink-4);font-size:14.5px;margin:0;max-width:520px;line-height:1.65;">업종·규모·재무 상태로 맞는 정책자금을 추려주는 정책자금 파인더가 곧 펼쳐집니다. 사전예약하면 가장 먼저 알려드릴게요.</p>
+        <p style="color:var(--ink-4);font-size:15.5px;margin:0;max-width:520px;line-height:1.65;">업종·규모·재무 상태로 맞는 정책자금을 추려주는 정책자금 파인더가 곧 펼쳐집니다. 사전예약하면 가장 먼저 알려드릴게요.</p>
       </div>
-      <a href="/finder" class="btn-blue" style="position:relative;flex-shrink:0;border-radius:0;font-size:14px;padding:15px 28px;display:flex;align-items:center;gap:9px;white-space:nowrap;">사전예약 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:16px;height:16px;"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
+      <a href="/finder" class="btn-blue" style="position:relative;flex-shrink:0;border-radius:0;font-size:15px;padding:15px 28px;display:flex;align-items:center;gap:9px;white-space:nowrap;">사전예약 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" style="width:16px;height:16px;"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg></a>
     </div>
   </section>
 
@@ -402,7 +402,7 @@
       <div style="display:flex;justify-content:space-between;gap:48px;flex-wrap:wrap;">
         <div style="max-width:320px;">
           <img src="/assets/logo_white.png" style="height:20px;margin-bottom:15px;" alt="BLACK BOOK">
-          <p style="font-size:12.5px;line-height:1.75;margin:0;">재무·회계 실무자가 매일 한 줄씩 채워가는 장부이자 커뮤니티. <b style="color:#D2D7DD;white-space:nowrap;">크레디뷰</b>가 펴냅니다.</p>
+          <p style="font-size:13.5px;line-height:1.75;margin:0;">재무·회계 실무자가 매일 한 줄씩 채워가는 장부이자 커뮤니티. <b style="color:#D2D7DD;white-space:nowrap;">크레디뷰</b>가 펴냅니다.</p>
         </div>
         <div style="display:flex;gap:54px;flex-wrap:wrap;">
           <div style="display:flex;flex-direction:column;gap:11px;"><span class="mono" style="font-size:10px;letter-spacing:.08em;color:#6A7079;margin-bottom:3px;">커뮤니티</span><a href="/content">콘텐츠</a><a href="/guide">실무백과</a><a href="/community/talk">QnA</a><a href="/archive">자료실</a><a href="/calendar">캘린더</a></div>
@@ -464,14 +464,14 @@
       <span data-fb-close style="font-size:24px;color:#9BA3AB;cursor:pointer;line-height:1;">×</span>
     </div>
     <div style="padding:22px 24px 24px;">
-      <p style="font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:0 0 14px;">어떤 콘텐츠·기능이 있으면 좋을지, 불편한 점은 없는지 편하게 남겨 주세요. 여러분의 의견으로 이 공간을 채웁니다.</p>
+      <p style="font-size:14.5px;color:var(--ink-2);line-height:1.6;margin:0 0 14px;">어떤 콘텐츠·기능이 있으면 좋을지, 불편한 점은 없는지 편하게 남겨 주세요. 여러분의 의견으로 이 공간을 채웁니다.</p>
       <textarea id="fbText" class="field" placeholder="의견을 자유롭게 적어 주세요." style="min-height:120px;line-height:1.7;resize:vertical;"></textarea>
-      <input id="fbEmail" class="field mono" type="email" inputmode="email" placeholder="이메일 (선택 · 답변 받을 주소)" style="margin-top:10px;font-size:13px;">
+      <input id="fbEmail" class="field mono" type="email" inputmode="email" placeholder="이메일 (선택 · 답변 받을 주소)" style="margin-top:10px;font-size:14px;">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;">
         <span class="mono" id="fbMsg" style="font-size:10.5px;color:var(--ink-3);"></span>
         <div style="display:flex;gap:10px;">
           <span data-fb-close class="btn-outline" style="padding:10px 18px;">취소</span>
-          <button id="fbSubmit" class="btn-blue" style="font-size:13px;padding:10px 22px;border-radius:3px;border:0;">보내기</button>
+          <button id="fbSubmit" class="btn-blue" style="font-size:14px;padding:10px 22px;border-radius:3px;border:0;">보내기</button>
         </div>
       </div>
     </div>

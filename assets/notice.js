@@ -37,8 +37,8 @@
       '.notice-overlay.open{display:block;}' +
       '.notice-meta{display:grid;grid-template-columns:104px 1fr;gap:12px 18px;margin:24px 0;padding:22px 0;border-top:1px solid var(--rule-hair);border-bottom:1px solid var(--rule-hair);}' +
       '.notice-meta dt{font-family:var(--font-mono);font-size:11px;color:var(--ink-3);letter-spacing:.04em;}' +
-      '.notice-meta dd{margin:0;font-size:14.5px;color:var(--ink-1);line-height:1.6;}' +
-      '.notice-summary{font-size:15.5px;line-height:1.85;color:#2C313A;white-space:pre-line;}';
+      '.notice-meta dd{margin:0;font-size:15.5px;color:var(--ink-1);line-height:1.6;}' +
+      '.notice-summary{font-size:16.5px;line-height:1.85;color:#2C313A;white-space:pre-line;}';
     document.head.appendChild(style);
 
     overlay = document.createElement('div');
@@ -79,7 +79,7 @@
     if (e.kind === 'policy' && e.summary) {
       summary = '<div class="notice-summary">' + esc(htmlToText(e.summary)) + '</div>';
       var applyText = htmlToText(e.apply);
-      if (applyText) summary += '<div style="margin-top:22px;"><div class="mono" style="font-size:11px;color:#7E868F;margin-bottom:6px;">신청 방법</div><div style="font-size:14px;line-height:1.7;color:#2C313A;white-space:pre-line;">' + esc(applyText) + '</div></div>';
+      if (applyText) summary += '<div style="margin-top:22px;"><div class="mono" style="font-size:11px;color:#7E868F;margin-bottom:6px;">신청 방법</div><div style="font-size:15px;line-height:1.7;color:#2C313A;white-space:pre-line;">' + esc(applyText) + '</div></div>';
     } else if (e.kind === 'policy') {
       summary = '<div class="notice-summary">기업마당에 공고된 정책자금 사업입니다. 상세 자격요건·제출서류는 아래 원문에서 확인하세요.</div>';
     } else if (e.kind === 'update') {
@@ -89,10 +89,10 @@
     }
 
     var linkLabel = e.kind === 'policy' ? '기업마당 원문 보기' : (e.kind === 'update' ? '법제처에서 보기' : '홈택스에서 보기');
-    var linkBtn = e.link ? '<div><a href="' + esc(e.link) + '" target="_blank" rel="noopener" class="btn-blue" style="display:inline-flex;align-items:center;gap:8px;font-size:13px;padding:12px 22px;border-radius:3px;margin-top:28px;">' + linkLabel + ' <span style="font-size:15px;">↗</span></a></div>' : '';
+    var linkBtn = e.link ? '<div><a href="' + esc(e.link) + '" target="_blank" rel="noopener" class="btn-blue" style="display:inline-flex;align-items:center;gap:8px;font-size:14px;padding:12px 22px;border-radius:3px;margin-top:28px;">' + linkLabel + ' <span style="font-size:16px;">↗</span></a></div>' : '';
 
     bodyEl.innerHTML =
-      '<button data-notice-back style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);background:none;border:0;cursor:pointer;padding:0;">← 돌아가기</button>' +
+      '<button data-notice-back style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink-3);background:none;border:0;cursor:pointer;padding:0;">← 돌아가기</button>' +
       '<div style="display:flex;align-items:center;gap:10px;margin-top:22px;">' +
         '<span style="color:' + cat.color + ';background:' + cat.soft + ';font-size:11px;font-weight:700;padding:5px 11px;border-radius:6px;">' + esc(cat.label) + '</span>' +
         '<span class="mono" style="font-size:11px;color:#7E868F;">' + dateStr + '</span></div>' +

@@ -51,10 +51,10 @@ ${jsonld.map(o => `<script type="application/ld+json">${JSON.stringify(o)}</scri
   .gbody ul{padding-left:20px;margin:0 0 20px;} .gbody li{margin:0 0 10px;line-height:1.7;}
   .dl-table{width:100%;border-collapse:collapse;margin:6px 0 4px;}
   .dl-table td{padding:13px 4px;border-bottom:1px solid var(--rule-hair);vertical-align:top;}
-  .dl-when{white-space:nowrap;width:120px;font-weight:700;color:var(--blue);font-family:var(--font-mono);font-size:13.5px;}
-  .dl-what{font-size:14.5px;color:var(--ink-1);}
+  .dl-when{white-space:nowrap;width:120px;font-weight:700;color:var(--blue);font-family:var(--font-mono);font-size:14.5px;}
+  .dl-what{font-size:15.5px;color:var(--ink-1);}
   .faq-q{font-weight:700;font-size:16px;color:var(--ink-1);margin:22px 0 8px;}
-  .faq-a{font-size:15px;color:var(--ink-2);line-height:1.75;margin:0;}
+  .faq-a{font-size:16px;color:var(--ink-2);line-height:1.75;margin:0;}
   .gcard{display:block;border:1px solid var(--rule-hair);background:#fff;border-radius:12px;padding:22px 22px 20px;box-shadow:var(--shadow-card);transition:border-color .15s;}
   .gcard:hover{border-color:var(--ink-3);}
   .grid-guides{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
@@ -95,26 +95,44 @@ function renderHub(base) {
       { '@type': 'ListItem', position: 2, name: '실무백과', item: canonical }
     ]
   }];
-  const cards = GUIDES.map(g => `
+  // 카테고리별 분류 — 노출 순서 고정, 항목이 있는 카테고리만 섹션으로
+  const CAT_ORDER = ['세무', '회계', '재무', '법령', '실무', '경영'];
+  const card = g => `
     <a class="gcard" href="/guide/${esc(g.slug)}">
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;">
         <span class="mono" style="font-size:10px;color:var(--ink-3);">GUIDE ${esc(g.no)}</span>
         <span class="mono" style="font-size:10px;font-weight:600;color:${catColor(g.cat)};">${esc(g.cat)}</span>
       </div>
       <div class="bt" style="font-size:20px;font-weight:700;line-height:1.35;">${esc(g.title)}</div>
-      <p style="font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:9px 0 14px;">${esc(clamp(g.lead, 90))}</p>
+      <p style="font-size:14.5px;color:var(--ink-2);line-height:1.6;margin:9px 0 14px;">${esc(clamp(g.lead, 90))}</p>
       <div class="mono" style="font-size:11px;color:var(--blue);font-weight:600;">안내 보기 →</div>
-    </a>`).join('');
+    </a>`;
+  const cats = CAT_ORDER.filter(c => GUIDES.some(g => g.cat === c))
+    .concat([...new Set(GUIDES.map(g => g.cat))].filter(c => !CAT_ORDER.includes(c)));
+  const sections = cats.map(c => {
+    const items = GUIDES.filter(g => g.cat === c);
+    return `
+    <section style="margin-top:36px;">
+      <div class="sec-head" style="padding-bottom:9px;">
+        <h2 class="bt" style="font-size:20px;display:flex;align-items:center;gap:9px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:${catColor(c)};display:inline-block;"></span>${esc(c)}
+        </h2>
+        <span class="mono" style="font-size:11px;color:var(--ink-3);">${items.length}개 항목</span>
+      </div>
+      <div class="grid-guides" style="margin-top:18px;">${items.map(card).join('')}</div>
+    </section>`;
+  }).join('');
 
   return head('실무백과', desc, canonical, ld) + `
   <div class="wrap" style="max-width:960px;padding-top:44px;">
     <div class="eyebrow">INDEX 06 — 실무백과</div>
     <h1 class="page-title" style="font-size:38px;margin-top:12px;">찾아보는 실무백과</h1>
-    <p class="page-intro" style="max-width:620px;margin:10px 0 0;">세무 신고처럼 주기가 있는 일부터 실무에서 자주 막히는 지점까지, 필요할 때 꺼내 보도록 정리했습니다. 신고가 있는 주제에는 <b>실제 기한</b>을 함께 담았습니다.</p>
-    <div class="grid-guides" style="margin:34px 0 20px;">${cards}</div>
+    <p class="page-intro" style="max-width:620px;margin:10px 0 0;">세무 신고처럼 주기가 있는 일부터 실무에서 자주 막히는 지점까지, 카테고리별로 정리했습니다. 신고가 있는 주제에는 <b>실제 기한</b>을 함께 담았습니다.</p>
+    ${sections}
+    <div style="margin:20px 0 0;"></div>
     <div class="callout" style="margin:12px 0 64px;display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-      <div><div style="font-weight:700;font-size:15px;">이번 달 신고 일정이 궁금하다면</div><div style="font-size:13px;color:var(--ink-2);margin-top:3px;">세무·회계·정책자금 일정을 한눈에.</div></div>
-      <a href="/calendar" class="btn-blue" style="padding:11px 20px;font-size:13px;white-space:nowrap;">캘린더 보기 →</a>
+      <div><div style="font-weight:700;font-size:16px;">이번 달 신고 일정이 궁금하다면</div><div style="font-size:14px;color:var(--ink-2);margin-top:3px;">세무·회계·정책자금 일정을 한눈에.</div></div>
+      <a href="/calendar" class="btn-blue" style="padding:11px 20px;font-size:14px;white-space:nowrap;">캘린더 보기 →</a>
     </div>
   </div>` + FOOT;
 }
@@ -138,7 +156,7 @@ function renderDetail(g, base) {
 
   // 다른 가이드 내부 링크(SEO)
   const others = GUIDES.filter(x => x.slug !== g.slug).map(x =>
-    `<a href="/guide/${esc(x.slug)}" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-2);border:1px solid #D8DCE0;border-radius:3px;padding:8px 13px;">${esc(x.title.replace(/\s*(신고 )?안내$/, ''))}</a>`
+    `<a href="/guide/${esc(x.slug)}" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink-2);border:1px solid #D8DCE0;border-radius:3px;padding:8px 13px;">${esc(x.title.replace(/\s*(신고 )?안내$/, ''))}</a>`
   ).join('');
 
   const ld = [{
@@ -165,22 +183,22 @@ function renderDetail(g, base) {
 
   return head(g.title, desc, canonical, ld) + `
   <article class="read" style="padding-top:44px;padding-bottom:64px;">
-    <a href="/guide" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);">← 실무백과</a>
+    <a href="/guide" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink-3);">← 실무백과</a>
     <div style="display:flex;align-items:center;gap:10px;margin-top:22px;flex-wrap:wrap;">
       <span class="mono" style="font-size:10px;color:var(--ink-3);">GUIDE ${esc(g.no)}</span>
       <span class="mono" style="font-size:10px;font-weight:600;color:${catColor(g.cat)};border:1px solid ${catColor(g.cat)};border-radius:3px;padding:3px 8px;">${esc(g.cat)}</span>
     </div>
     <h1 class="bt" style="font-size:38px;line-height:1.3;font-weight:700;letter-spacing:-.01em;margin:12px 0 0;">${esc(g.title)}</h1>
     <p style="font-size:18px;color:var(--ink-2);line-height:1.6;margin:16px 0 0;">${esc(g.lead)}</p>
-    <div style="margin-top:20px;padding:14px 16px;background:var(--paper-2);border-radius:8px;font-size:13.5px;color:var(--ink-2);"><b style="color:var(--ink-1);">누가</b> · ${esc(g.who)}</div>
+    <div style="margin-top:20px;padding:14px 16px;background:var(--paper-2);border-radius:8px;font-size:14.5px;color:var(--ink-2);"><b style="color:var(--ink-1);">누가</b> · ${esc(g.who)}</div>
 
     <div class="gbody" style="margin-top:8px;">${bodyBlocks}</div>
 
     <h2 class="bt" style="font-size:24px;font-weight:700;margin:40px 0 6px;">신고기한</h2>
     <table class="dl-table"><tbody>${dlRows}</tbody></table>
     <div class="callout" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
-      <div><div style="font-weight:700;font-size:15px;">이 일정, 캘린더에서 확인하세요</div><div style="font-size:13px;color:var(--ink-2);margin-top:3px;">이번 달 세무·회계 신고 일정을 한눈에.</div></div>
-      <a href="/calendar" class="btn-blue" style="padding:11px 20px;font-size:13px;white-space:nowrap;">캘린더 보기 →</a>
+      <div><div style="font-weight:700;font-size:16px;">이 일정, 캘린더에서 확인하세요</div><div style="font-size:14px;color:var(--ink-2);margin-top:3px;">이번 달 세무·회계 신고 일정을 한눈에.</div></div>
+      <a href="/calendar" class="btn-blue" style="padding:11px 20px;font-size:14px;white-space:nowrap;">캘린더 보기 →</a>
     </div>
 
     <h2 class="bt" style="font-size:24px;font-weight:700;margin:38px 0 8px;">자주 묻는 질문</h2>
@@ -193,7 +211,7 @@ function renderDetail(g, base) {
 
     <div class="side-cta" style="margin-top:34px;border-radius:12px;">
       <div class="bt" style="font-size:17px;font-weight:700;line-height:1.5;">관련 서식이 필요하신가요?</div>
-      <p style="font-size:12.5px;color:var(--ink-4);line-height:1.65;margin:8px 0 16px;">신고에 바로 쓰는 엑셀·서식 자료를 자료실에서 받아보세요.</p>
+      <p style="font-size:13.5px;color:var(--ink-4);line-height:1.65;margin:8px 0 16px;">신고에 바로 쓰는 엑셀·서식 자료를 자료실에서 받아보세요.</p>
       <a href="/archive" class="btn" style="display:inline-block;padding:11px 22px;">자료실 가기 →</a>
     </div>
   </article>` + FOOT;

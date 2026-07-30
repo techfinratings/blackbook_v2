@@ -16,10 +16,10 @@
   .a-btn.ink{background:var(--ink-1);color:#fff;} .a-btn.blue{background:var(--blue);color:#fff;}
   .a-btn.ghost{background:none;border:1px solid #D8DCE0;color:var(--ink-2);}
   .a-btn.danger{background:none;border:1px solid #E4B4B0;color:#B4322B;}
-  table.a-tbl{width:100%;border-collapse:collapse;font-size:13px;}
+  table.a-tbl{width:100%;border-collapse:collapse;font-size:14px;}
   table.a-tbl th{text-align:left;font-family:var(--font-mono);font-size:10.5px;color:var(--ink-3);padding:8px 10px;border-bottom:1px solid var(--rule-hair);white-space:nowrap;}
   table.a-tbl td{padding:9px 10px;border-bottom:1px solid var(--rule-soft);vertical-align:top;}
-  .a-field{width:100%;border:1px solid #D8DCE0;border-radius:3px;padding:10px 12px;font-family:inherit;font-size:14px;outline:none;}
+  .a-field{width:100%;border:1px solid #D8DCE0;border-radius:3px;padding:10px 12px;font-family:inherit;font-size:15px;outline:none;}
   .a-field:focus{border-color:var(--blue);}
   .pill{font-family:var(--font-mono);font-size:9.5px;font-weight:600;padding:2px 7px;border-radius:3px;}
 </style>
@@ -183,7 +183,7 @@
       panel.innerHTML = form + list;
       if (!document.getElementById('afStyle')) {
         var st = document.createElement('style'); st.id = 'afStyle';
-        st.textContent = '.a-field{border:1px solid #D8DCE0;border-radius:3px;padding:9px 11px;font-family:inherit;font-size:13px;color:var(--ink-1);outline:none;background:#fff;}.a-field:focus{border-color:var(--blue);}';
+        st.textContent = '.a-field{border:1px solid #D8DCE0;border-radius:3px;padding:9px 11px;font-family:inherit;font-size:14px;color:var(--ink-1);outline:none;background:#fff;}.a-field:focus{border-color:var(--blue);}';
         document.head.appendChild(st);
       }
       document.getElementById('afSubmit').addEventListener('click', function () {
@@ -214,7 +214,7 @@
     api('guideFlags').then(function (d) {
       var rows = d.flags || [];
       if (!rows.length) {
-        panel.innerHTML = '<div class="a-card"><p style="font-size:13.5px;color:#49505A;margin:0;line-height:1.7;">검토할 항목이 없습니다.<br>매일 새벽 크론이 법제처 개정 법령을 감지하면, 관련 실무백과 항목이 여기에 <b>검토 필요</b>로 표시됩니다. 내용 확인·수정 후 [확인 처리]를 누르면 목록에서 사라집니다.</p></div>';
+        panel.innerHTML = '<div class="a-card"><p style="font-size:14.5px;color:#49505A;margin:0;line-height:1.7;">검토할 항목이 없습니다.<br>매일 새벽 크론이 법제처 개정 법령을 감지하면, 관련 실무백과 항목이 여기에 <b>검토 필요</b>로 표시됩니다. 내용 확인·수정 후 [확인 처리]를 누르면 목록에서 사라집니다.</p></div>';
         return;
       }
       panel.innerHTML = '<div class="a-card" style="overflow-x:auto;"><table class="a-tbl"><thead><tr><th>감지일</th><th>백과 항목</th><th>관련 개정 법령</th><th>시행일</th><th></th></tr></thead><tbody>' +
@@ -243,7 +243,7 @@
       var ansHtml = mine.map(function (a) {
         return '<div style="border-top:1px solid var(--rule-soft);padding:10px 0;display:flex;gap:10px;align-items:flex-start;">' +
           '<span class="pill" style="background:' + (a.official ? '#EDF0FD' : '#EEF0F2') + ';color:' + (a.official ? '#2348D6' : '#49505A') + ';">' + (a.official ? '운영사' : esc(a.author)) + '</span>' +
-          '<div style="flex:1;min-width:0;font-size:13px;line-height:1.6;color:#2C313A;white-space:pre-line;' + (a.hidden ? 'opacity:.5;text-decoration:line-through;' : '') + '">' + esc(a.content) + '</div>' +
+          '<div style="flex:1;min-width:0;font-size:14px;line-height:1.6;color:#2C313A;white-space:pre-line;' + (a.hidden ? 'opacity:.5;text-decoration:line-through;' : '') + '">' + esc(a.content) + '</div>' +
           '<button class="a-btn ghost" data-a-hide="' + a.row + '" data-v="' + (a.hidden ? '' : 'N') + '">' + (a.hidden ? '표시' : '숨김') + '</button>' +
           '<button class="a-btn danger" data-a-del="' + a.row + '">삭제</button></div>';
       }).join('');
@@ -257,7 +257,7 @@
           '<button class="a-btn danger" data-q-del="' + q.row + '">삭제</button>' +
         '</div>' +
         '<h3 class="bt" style="font-size:18px;font-weight:700;margin:10px 0 6px;">' + esc(q.title) + '</h3>' +
-        '<div style="font-size:13.5px;color:#49505A;line-height:1.6;white-space:pre-line;">' + esc(q.content) + '</div>' +
+        '<div style="font-size:14.5px;color:#49505A;line-height:1.6;white-space:pre-line;">' + esc(q.content) + '</div>' +
         (ansHtml ? '<div style="margin-top:10px;">' + ansHtml + '</div>' : '') +
         '<div style="margin-top:14px;border-top:1.5px solid var(--rule-hair);padding-top:14px;">' +
           '<div class="mono" style="font-size:10px;letter-spacing:.06em;color:var(--blue);margin-bottom:6px;">크레디뷰 공식 답변 작성</div>' +
