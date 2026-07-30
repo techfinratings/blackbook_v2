@@ -16,9 +16,10 @@
 -->
 <style>
   :root{
-    --tint:#EFF4FF; --tint2:#DBE7FB; --tint3:#C7D9F8; --accent:#2563EB; --accent-d:#1D4ED8;
-    --ink:#1E2A3B; --ink-soft:#5B6B7F; --line:#E4E9F1; --bg:#ECF1F8; --white:#FFFFFF;
-    --auto:#B45309; --danger:#C2410C;
+    --tint:#F7F4E8; --tint2:#F3EDD6; --tint3:#EBDFAF; --accent:#1A1A1A; --accent-d:#000000;
+    --yellow:#F2CF2A; --yellow-d:#E4BE12;
+    --ink:#1A1A1A; --ink-soft:#6E6A5E; --line:#E6E3DA; --bg:#F4F2EC; --white:#FFFFFF;
+    --auto:#9A6700; --danger:#B54708;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{font-size:15px;}
@@ -33,44 +34,44 @@
   .head-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
   .brand{display:flex; align-items:center; gap:12px;}
   .logo{
-    width:40px; height:40px; border-radius:11px; flex:none;
-    background:linear-gradient(135deg,#3B82F6,#1D4ED8); color:#fff; font-weight:bold; font-size:.8rem;
-    display:flex; align-items:center; justify-content:center; box-shadow:0 3px 8px rgba(37,99,235,.35);
+    width:40px; height:40px; border-radius:9px; flex:none;
+    background:#1A1A1A; color:var(--yellow); font-weight:bold; font-size:.78rem;
+    display:flex; align-items:center; justify-content:center;
   }
   header h1{font-size:1.12rem; color:var(--ink); letter-spacing:-.02em;}
   header p{font-size:.75rem; color:var(--ink-soft); margin-top:1px;}
 
   /* ── SOP 플로우 밴드 ───────────────────── */
   .sop-flow{
-    display:flex; align-items:center; margin-top:14px; background:#fff; border:1px solid #EDF0F3;
-    border-radius:12px; padding:13px 18px; overflow-x:auto;
-    box-shadow:0 1px 2px rgba(16,24,40,.05), 0 2px 6px rgba(16,24,40,.06);
+    display:flex; align-items:center; margin-top:14px; background:#fff; border:1px solid var(--line);
+    border-radius:8px; padding:13px 18px; overflow-x:auto;
   }
   .sf-box{
     flex:1; min-width:84px; text-align:center; border-radius:8px; padding:10px 6px;
     font-weight:bold; font-size:.92rem; white-space:nowrap;
   }
   .sf-box span{display:block; font-weight:normal; font-size:.68rem; margin-top:2px; opacity:.85;}
-  .sf-box.s1{background:#EFF4FF; color:#1D4ED8;}
-  .sf-box.s2{background:#DBE7FB; color:#1D4ED8;}
-  .sf-box.s3{background:#B9CFF5; color:#1E3A8A;}
-  .sf-box.s4{background:#6D9BEF; color:#FFFFFF;}
-  .sf-box.s5{background:linear-gradient(135deg,#3B82F6,#1D4ED8); color:#FFFFFF; box-shadow:0 3px 8px rgba(37,99,235,.3);}
+  .sf-box{border-radius:6px;}
+  .sf-box.s1{background:#FCF3D9; color:#6B5B1E;}
+  .sf-box.s2{background:#F9E7B8; color:#6B5B1E;}
+  .sf-box.s3{background:#F7DC96; color:#4A3E12;}
+  .sf-box.s4{background:#F2C230; color:#3D2F00;}
+  .sf-box.s5{background:#C79A00; color:#FFFFFF;}
   .sf-arrow{flex:none; width:80px; text-align:center; color:var(--ink-soft); font-size:.68rem; line-height:1.3;}
   .sf-arrow b{display:block; color:var(--accent-d); font-size:.95rem;}
 
   /* ── 카드 공통 ─────────────────────────── */
   section.card{
-    background:var(--white); border:1px solid #EDF0F3; border-radius:12px; overflow:hidden;
-    box-shadow:0 1px 2px rgba(16,24,40,.05), 0 2px 6px rgba(16,24,40,.06);
+    background:var(--white); border:1px solid var(--line); border-radius:8px; overflow:hidden;
+    box-shadow:0 1px 2px rgba(26,26,26,.03);
   }
   section.card > h2{
-    font-size:.95rem; padding:11px 16px; background:#FFFFFF; border-bottom:1px solid var(--line); color:var(--ink);
-    display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+    font-size:1rem; padding:12px 16px 10px; background:#FFFFFF; border-bottom:1px solid var(--line); color:var(--ink);
   }
+  section.card > h2 .hint{display:block; margin-top:2px;}
   section.card > h2 .step{
-    background:var(--tint); color:var(--accent-d); font-size:.7rem; border-radius:20px; padding:2px 10px; font-weight:bold;
-    letter-spacing:.03em;
+    display:block; background:none; color:#8A8574; font-size:.62rem; font-weight:bold;
+    letter-spacing:.16em; padding:0; margin-bottom:3px; border-radius:0;
   }
   .card-body{padding:14px 16px 16px;}
   .hint{font-size:.75rem; color:var(--ink-soft); font-weight:normal;}
@@ -99,24 +100,21 @@
     display:flex; align-items:center; gap:10px; border:1.5px solid var(--line); background:#FBFCFD; border-radius:8px;
     padding:8px 12px; cursor:pointer; text-align:left; font:inherit; transition:all .12s;
   }
-  .preset-btn:hover{border-color:var(--accent); background:var(--tint); box-shadow:0 2px 6px rgba(62,92,118,.14); transform:translateY(-1px);}
-  .preset-btn.active{border-color:var(--accent-d); background:var(--tint2); box-shadow:0 0 0 2px var(--tint3);}
+  .preset-btn:hover{border-color:#1A1A1A; background:#FCFBF6;}
+  .preset-btn.active{border-color:#1A1A1A; background:#FCFAF0;}
   .preset-btn .pk{
     color:#FFFFFF; font-weight:bold; font-size:.78rem; border-radius:8px; flex:none;
     width:26px; height:26px; display:inline-flex; align-items:center; justify-content:center; align-self:center;
   }
-  .preset-btn:nth-child(1) .pk{background:#2563EB;}
-  .preset-btn:nth-child(2) .pk{background:#7C3AED;}
-  .preset-btn:nth-child(3) .pk{background:#059669;}
-  .preset-btn:nth-child(4) .pk{background:#EA580C;}
-  .preset-btn:nth-child(5) .pk{background:#64748B;}
+  .preset-btn .pk{background:#1A1A1A;}
+  .preset-btn.active .pk{background:var(--yellow-d); color:#1A1A1A;}
   .preset-btn .pn{font-weight:bold; font-size:.85rem; white-space:nowrap;}
   .preset-btn .pd{font-size:.72rem; color:var(--ink-soft); line-height:1.35;}
 
   /* ── 모듈 체크박스 ─────────────────────── */
-  .mod-stage{background:#F5F7FA; border:1px solid #E7EBEF; border-radius:10px; padding:10px 12px 12px; margin-bottom:10px;}
+  .mod-stage{background:#FAF9F4; border:1px solid var(--line); border-radius:8px; padding:10px 12px 12px; margin-bottom:10px;}
   .mod-stage:last-child{margin-bottom:0;}
-  .mod-stage > h3{font-size:.82rem; color:var(--accent-d); border-left:4px solid var(--accent); padding-left:8px; margin-bottom:8px;}
+  .mod-stage > h3{font-size:.82rem; color:var(--ink); border-left:3px solid var(--yellow-d); padding-left:8px; margin-bottom:8px;}
   .mod-list{display:flex; flex-wrap:wrap; gap:7px;}
   .mod{
     display:inline-flex; align-items:center; gap:6px; border:1.5px solid var(--line); border-radius:7px;
@@ -129,7 +127,7 @@
   .mod.checked{background:var(--tint2); border-color:var(--accent-d);}
   .mod.fixed{background:var(--tint3); border-color:var(--accent-d); cursor:not-allowed;}
   .mod.fixed .lock{font-size:.7rem;}
-  .mod.auto{background:#FFF8EC; border-style:dashed; border-color:#E3B368;}
+  .mod.auto{background:#FCFAF2; border-style:dashed; border-color:#C9A75C;}
   .mod .auto-badge{font-size:.66rem; background:var(--auto); color:#fff; border-radius:3px; padding:0 5px; cursor:help;}
   .auto-reasons{margin-top:10px; font-size:.74rem; color:var(--auto); background:#FFF8EC; border:1px dashed #E3B368; border-radius:8px; padding:8px 12px; display:none;}
   .auto-reasons.visible{display:block;}
@@ -154,39 +152,41 @@
   /* ── 우측 결과 패널 ────────────────────── */
   .result-panel{
     display:flex; flex-direction:column; max-height:calc(100vh - 28px);
-    border-top:3px solid var(--accent);
-    box-shadow:0 2px 4px rgba(16,24,40,.06), 0 8px 24px rgba(16,24,40,.12);
+    border-top:3px solid var(--yellow);
+    box-shadow:0 2px 10px rgba(26,26,26,.06);
   }
   .result-head{
     display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:10px 14px; background:#FBFCFE; border-bottom:1px solid var(--line); flex:none;
+    padding:10px 14px 0; background:#FFFFFF; border-bottom:1px solid var(--line); flex:none;
   }
-  .tabs{display:flex; gap:2px; background:#E9EEF6; border-radius:10px; padding:3px;}
+  .tabs{display:flex; gap:16px;}
   .tab{
-    font:inherit; font-size:.82rem; font-weight:bold; border:none; background:transparent;
-    border-radius:8px; padding:6px 13px; cursor:pointer; color:var(--ink-soft);
+    font:inherit; font-size:.85rem; font-weight:bold; border:none; background:none;
+    border-bottom:2px solid transparent; border-radius:0; padding:6px 2px 5px; cursor:pointer; color:var(--ink-soft);
   }
-  .tab:hover{color:var(--accent-d);}
-  .tab.active{background:#fff; color:var(--accent-d); box-shadow:0 1px 3px rgba(16,24,40,.14);}
+  .tab:hover{color:var(--ink);}
+  .tab.active{color:var(--ink); border-bottom-color:var(--yellow-d);}
   .tab .cnt{font-weight:normal; font-size:.74rem; opacity:.85;}
   button.dl{
-    background:linear-gradient(135deg,#3B82F6,#1D4ED8); color:#FFFFFF; border:none; border-radius:10px;
-    font:inherit; font-weight:bold; font-size:.85rem; padding:9px 18px; cursor:pointer; box-shadow:0 3px 10px rgba(37,99,235,.35);
+    background:var(--yellow); color:#1A1A1A; border:1px solid #D9BC10; border-radius:7px;
+    font:inherit; font-weight:bold; font-size:.85rem; padding:9px 18px; cursor:pointer;
     white-space:nowrap;
   }
+  button.dl:hover{background:var(--yellow-d);}
   button.dl:hover{filter:brightness(1.08);}
   button.dl:active{transform:translateY(1px);}
   .result-meta{padding:8px 12px 0; flex:none;}
-  .stat-tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:8px;}
-  .stt{background:#F8FAFD; border:1px solid var(--line); border-radius:11px; padding:7px 11px;}
-  .stt b{display:block; font-size:1.08rem; color:var(--ink); line-height:1.25;}
-  .stt span{font-size:.67rem; color:var(--ink-soft);}
+  .stat-tiles{display:grid; grid-template-columns:repeat(4,1fr); gap:0; border:1px solid var(--line); border-radius:8px; overflow:hidden; background:#fff;}
+  .stt{padding:9px 12px; border-right:1px solid var(--line);}
+  .stt:last-child{border-right:none;}
+  .stt b{display:block; font-size:1.22rem; color:var(--ink); line-height:1.2;}
+  .stt span{font-size:.64rem; color:var(--ink-soft); letter-spacing:.06em;}
   .stat-sub{font-size:.71rem; color:var(--ink-soft); margin-top:5px;}
   .dl-file{font-size:.73rem; color:var(--ink-soft); margin-top:2px;}
   .dl-msg{font-size:.76rem; color:var(--danger); margin-top:2px;}
-  .notice{font-size:.75rem; background:#EFF4FF; border:1px solid #C7D9F8; color:#27508F; border-radius:6px; padding:6px 11px; margin:7px 12px 0; display:none; flex:none;}
+  .notice{font-size:.75rem; background:#FAF6E4; border:1px solid #E5D689; color:#6B5B1E; border-radius:6px; padding:6px 11px; margin:7px 12px 0; display:none; flex:none;}
   .notice.visible{display:block;}
-  .tab-pane{flex:1; overflow:auto; padding:12px 14px 14px; min-height:200px; background:#F4F6F9;}
+  .tab-pane{flex:1; overflow:auto; padding:12px 14px 14px; min-height:200px; background:#F7F5EF;}
 
   /* ── 미리보기 표 ───────────────────────── */
   .tbl-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:8px; background:#fff; box-shadow:0 1px 3px rgba(16,24,40,.07);}
@@ -227,7 +227,7 @@
   .cal-day .dn{font-size:.7rem; color:var(--ink-soft);}
   .cal-day.out{background:#F7F8FA;}
   .cal-day.out .dn{color:#C5CCD3;}
-  .cal-day.in-period{background:#EDF4FF;}
+  .cal-day.in-period{background:#FBF7E3;}
   .cal-day.today{outline:2px solid var(--accent); outline-offset:-2px;}
   .cal-day.sun > .dn{color:#C25450;}
   .cal-day.sat > .dn{color:#4A7CB5;}
@@ -238,7 +238,7 @@
   .cal-flag{display:block; margin-top:2px; font-size:.68rem; font-weight:bold; color:var(--accent-d); white-space:nowrap;}
   .cal-chip[draggable="true"]{cursor:grab;}
   .cal-chip[draggable="true"]:active{cursor:grabbing;}
-  .cal-day.dragover{outline:2px dashed var(--accent); outline-offset:-2px; background:#DFEBFC;}
+  .cal-day.dragover{outline:2px dashed #1A1A1A; outline-offset:-2px; background:#F7EFC9;}
 
   /* ── 요청 쪽지 (우측 패널 내 1열) ────────── */
   .note-grid{display:grid; grid-template-columns:1fr; gap:11px;}
@@ -989,7 +989,7 @@ function renderPreview(){
 }
 
 function stageColor(stage){
-  return {'기획':'#EFF4FF','디자인':'#DBE7FB','개발':'#EFF4FF','검수':'#C7D9F8','오픈':'#A8C4F4'}[stage] || '#EFF4FF';
+  return {'기획':'#FCF3D9','디자인':'#F9E7B8','개발':'#FCF3D9','검수':'#F7DC96','오픈':'#F2C230'}[stage] || '#FCF3D9';
 }
 
 /* ═══════════════════════════════════════════════════════════════════════════
@@ -1547,23 +1547,23 @@ function stylesXml(){
 <fonts count="5">
 <font><sz val="10"/><name val="맑은 고딕"/><family val="3"/></font>
 <font><b/><sz val="10"/><name val="맑은 고딕"/><family val="3"/></font>
-<font><b/><sz val="14"/><color rgb="FFFFFFFF"/><name val="맑은 고딕"/><family val="3"/></font>
+<font><b/><sz val="14"/><color rgb="FF3D2F00"/><name val="맑은 고딕"/><family val="3"/></font>
 <font><sz val="9"/><color rgb="FF5B6773"/><name val="맑은 고딕"/><family val="3"/></font>
 <font><b/><sz val="10"/><color rgb="FF26303A"/><name val="맑은 고딕"/><family val="3"/></font>
 </fonts>
 <fills count="8">
 <fill><patternFill patternType="none"/></fill>
 <fill><patternFill patternType="gray125"/></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FF2563EB"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFE3EDFB"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFEFF4FF"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFDBE7FB"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFC7D9F8"/></patternFill></fill>
-<fill><patternFill patternType="solid"><fgColor rgb="FFA8C4F4"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF2C230"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF9E7B8"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFFCF3D9"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF9E7B8"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF7DC96"/></patternFill></fill>
+<fill><patternFill patternType="solid"><fgColor rgb="FFF2C230"/></patternFill></fill>
 </fills>
 <borders count="2">
 <border><left/><right/><top/><bottom/><diagonal/></border>
-<border><left style="thin"><color rgb="FFC9D6EA"/></left><right style="thin"><color rgb="FFC9D6EA"/></right><top style="thin"><color rgb="FFC9D6EA"/></top><bottom style="thin"><color rgb="FFC9D6EA"/></bottom><diagonal/></border>
+<border><left style="thin"><color rgb="FFD9CFA8"/></left><right style="thin"><color rgb="FFD9CFA8"/></right><top style="thin"><color rgb="FFD9CFA8"/></top><bottom style="thin"><color rgb="FFD9CFA8"/></bottom><diagonal/></border>
 </borders>
 <cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs>
 <cellXfs count="13">
