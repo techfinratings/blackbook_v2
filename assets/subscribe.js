@@ -22,13 +22,13 @@
       '<h3 class="bt" style="font-size:20px;font-weight:700;margin:5px 0 0;">메일로 소식 받기</h3></div>' +
       '<span data-sub-close style="font-size:24px;color:#9BA3AB;cursor:pointer;line-height:1;">×</span></div>' +
       '<div style="padding:22px 24px 24px;">' +
-      '<p style="font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:0 0 14px;">새 콘텐츠·실무백과·신고 일정 소식을 이메일로 보내 드립니다. 지금은 이메일만 남겨 주세요.</p>' +
-      '<input data-sub-email class="field mono" type="email" inputmode="email" placeholder="name@company.co.kr" style="font-size:13px;">' +
+      '<p style="font-size:14.5px;color:var(--ink-2);line-height:1.6;margin:0 0 14px;">새 콘텐츠·실무백과·신고 일정 소식을 이메일로 보내 드립니다. 지금은 이메일만 남겨 주세요.</p>' +
+      '<input data-sub-email class="field mono" type="email" inputmode="email" placeholder="name@company.co.kr" style="font-size:14px;">' +
       '<label style="display:flex;align-items:flex-start;gap:8px;font-size:12px;color:#7E868F;margin-top:12px;cursor:pointer;line-height:1.5;">' +
       '<input data-sub-agree type="checkbox" style="accent-color:#2348D6;width:14px;height:14px;flex-shrink:0;margin-top:2px;"><span><b style="color:var(--ink-2);">[필수]</b> 소식·마케팅 정보 수신 및 개인정보 수집·이용에 동의합니다.</span></label>' +
       '<div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:16px;">' +
       '<span class="mono" data-sub-msg style="font-size:10.5px;color:var(--ink-3);"></span>' +
-      '<button data-sub-submit class="btn-blue" style="font-size:13px;padding:10px 22px;border-radius:3px;border:0;">구독하기</button>' +
+      '<button data-sub-submit class="btn-blue" style="font-size:14px;padding:10px 22px;border-radius:3px;border:0;">구독하기</button>' +
       '</div></div></div>';
     document.body.appendChild(modal);
 
@@ -59,8 +59,8 @@
             '<div style="padding:44px 32px;text-align:center;">' +
             '<div style="width:44px;height:44px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:22px;">✓</div>' +
             '<h3 class="bt" style="font-size:21px;font-weight:700;margin:16px 0 0;">구독 완료</h3>' +
-            '<p style="font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:10px 0 20px;">' + mail.replace(/[<>&]/g, '') + '<br>다음 소식부터 메일로 보내 드릴게요.</p>' +
-            '<button class="btn-ink" data-sub-close style="font-size:13px;padding:11px 24px;border-radius:3px;border:0;cursor:pointer;">확인</button></div>';
+            '<p style="font-size:14.5px;color:var(--ink-2);line-height:1.6;margin:10px 0 20px;">' + mail.replace(/[<>&]/g, '') + '<br>다음 소식부터 메일로 보내 드릴게요.</p>' +
+            '<button class="btn-ink" data-sub-close style="font-size:14px;padding:11px 24px;border-radius:3px;border:0;cursor:pointer;">확인</button></div>';
           dialog.querySelector('[data-sub-close]').addEventListener('click', close);
         })
         .catch(function () { submit.disabled = false; msg.style.color = '#B4322B'; msg.textContent = '등록에 실패했어요. 잠시 후 다시 시도해 주세요.'; });

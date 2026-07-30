@@ -31,14 +31,20 @@ module.exports = async (req, res) => {
     res.setHeader('Cache-Control', 's-maxage=15, stale-while-revalidate=60');
     if (sb.ready()) {
       try {
-        const [qs, ans] = await Promise.all([
+        const [qs, ans, reacts] = await Promise.all([
           sb.select('qna_questions?hidden=eq.false&order=created_at.desc&select=*'),
           sb.select('qna_answers?hidden=eq.false&select=question_ts,official'),
+          sb.select('qna_reactions?select=question_ts,kind').catch(() => []),   // 테이블 미생성 시 0으로
         ]);
         const stat = {};
         (ans || []).forEach(a => {
           if (!stat[a.question_ts]) stat[a.question_ts] = { count: 0, official: false };
           stat[a.question_ts].count++; if (a.official) stat[a.question_ts].official = true;
+        });
+        const rstat = {};
+        (reacts || []).forEach(r => {
+          if (!rstat[r.question_ts]) rstat[r.question_ts] = { heart: 0, like: 0 };
+          if (rstat[r.question_ts][r.kind] != null) rstat[r.question_ts][r.kind]++;
         });
         const items = (qs || []).filter(q => q.title).map(q => {
           const key = q.legacy_ts || String(q.id);
@@ -48,6 +54,7 @@ module.exports = async (req, res) => {
             category: q.category || '', title: q.title, content: q.content || '',
             tags: q.tags || '', anonymous: !!q.anonymous,
             ans: s.count, official: s.official,
+            reactions: rstat[key] || { heart: 0, like: 0 },
           };
         });
         return res.status(200).json({ items });
@@ -84,6 +91,29 @@ module.exports = async (req, res) => {
   let body = req.body;
   if (typeof body === 'string') { try { body = JSON.parse(body); } catch (e) { body = {}; } }
   body = body || {};
+
+  // 감정표현 토글 — POST { react:true, qid, kind:'heart'|'like', voter }
+  if (body.react) {
+    const qid = String(body.qid || '').trim();
+    const kind = String(body.kind || '');
+    const voter = String(body.voter || '').slice(0, 64);
+    if (!sb.ready()) { res.status(503).json({ error: 'Supabase 미설정' }); return; }
+    if (!qid || !voter || ['heart', 'like'].indexOf(kind) < 0) { res.status(400).json({ error: 'bad reaction' }); return; }
+    try {
+      await sb.insert('qna_reactions', [{ question_ts: qid, kind, voter_key: voter }]);
+      return res.status(200).json({ ok: true, added: true });
+    } catch (e) {
+      // 유니크 충돌 = 이미 누름 → 취소(토글 오프)
+      try {
+        await sb.rest('qna_reactions?question_ts=eq.' + encodeURIComponent(qid) + '&kind=eq.' + kind + '&voter_key=eq.' + encodeURIComponent(voter), {
+          method: 'DELETE', headers: { Prefer: 'return=minimal' },
+        });
+        return res.status(200).json({ ok: true, added: false });
+      } catch (e2) {
+        return res.status(500).json({ error: '처리 실패' });
+      }
+    }
+  }
 
   const title = String(body.title || '').trim();
   const content = String(body.content || '').trim();

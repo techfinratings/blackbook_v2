@@ -132,7 +132,7 @@
           var col = CAT_COLOR[q.cat] || '#2348D6';
           return '<a href="/community/talk" style="display:flex;gap:9px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #E1E4E8;cursor:pointer;">' +
             '<span class="mono" style="font-size:9.5px;color:' + col + ';flex-shrink:0;margin-top:3px;">' + q.cat + '</span>' +
-            '<div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;line-height:1.45;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + q.q + '</div>' +
+            '<div style="min-width:0;"><div style="font-size:14.5px;font-weight:600;line-height:1.45;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">' + q.q + '</div>' +
             '<span class="mono" style="font-size:10px;color:#7E868F;">답변 ' + q.ans + ' · ' + q.t + '</span></div></a>';
         }).join('');
       }
@@ -240,7 +240,7 @@
         return '<div class="ev-row" data-ev="' + e._idx + '" style="cursor:pointer;">' +
           '<span class="mono" style="font-size:11px;font-weight:600;color:#181B1E;width:40px;flex-shrink:0;">' + pad(month) + '.' + pad(e.day) + '</span>' +
           '<span style="width:7px;height:7px;border-radius:50%;background:' + cat.color + ';margin-top:5px;flex-shrink:0;"></span>' +
-          '<div style="min-width:0;"><div style="font-size:13.5px;font-weight:600;line-height:1.4;">' + esc(e.title) + '</div>' +
+          '<div style="min-width:0;"><div style="font-size:14.5px;font-weight:600;line-height:1.4;">' + esc(e.title) + '</div>' +
           '<span class="mono" style="font-size:10px;color:#7E868F;">' + cat.label + '</span></div></div>';
       }).join('');
     }
@@ -288,7 +288,7 @@
       var top = files.slice().sort(function (a, b) { return b._dk - a._dk || b.dl - a.dl; }).slice(0, 4);
       wrap.innerHTML = top.map(function (f) {
         return '<a class="file-row" href="/archive"><span class="file-chip mono" style="background:' + BBArchive.typeColor(f.type) + ';">' + esc(f.type || 'FILE') + '</span>' +
-          '<span style="font-size:13.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.name) + '</span>' +
+          '<span style="font-size:14.5px;font-weight:600;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + esc(f.name) + '</span>' +
           '<span class="mono" style="font-size:11px;color:var(--ink-3);">' + esc(f.date || '') + '</span></a>';
       }).join('');
     });
@@ -315,7 +315,7 @@
       hero.innerHTML = cover +
         '<span class="mono" style="font-size:10.5px;letter-spacing:.06em;color:var(--cat-tax);display:block;margin-top:14px;">최신 발행</span>' +
         '<h3 class="bt" style="font-size:22px;line-height:1.4;font-weight:700;margin:6px 0 0;color:var(--ink-1);">' + esc(top.title) + '</h3>' +
-        (top.description ? '<p style="font-size:14px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + esc(top.description) + '</p>' : '') +
+        (top.description ? '<p style="font-size:15px;color:var(--ink-2);margin:9px 0 0;line-height:1.6;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + esc(top.description) + '</p>' : '') +
         '<div class="mono" style="font-size:11px;color:var(--ink-3);margin-top:11px;">크레디뷰 리서치 · ' + esc(top.date || '') + '</div>';
 
       // 02·03 원장 리스트 = 다음 최신 글
@@ -366,8 +366,8 @@
             '<div style="padding:48px 32px;text-align:center;">' +
             '<div style="width:44px;height:44px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;margin:0 auto;font-size:22px;">✓</div>' +
             '<h3 class="bt" style="font-size:22px;font-weight:700;margin:16px 0 0;">의견 고맙습니다</h3>' +
-            '<p style="font-size:13.5px;color:var(--ink-2);line-height:1.6;margin:10px 0 20px;">소중한 의견이 접수되었습니다. 더 나은 블랙북으로 채워 나가겠습니다.</p>' +
-            '<button class="btn-ink" data-fb-close style="font-size:13px;padding:11px 24px;border-radius:3px;border:0;cursor:pointer;">확인</button></div>';
+            '<p style="font-size:14.5px;color:var(--ink-2);line-height:1.6;margin:10px 0 20px;">소중한 의견이 접수되었습니다. 더 나은 블랙북으로 채워 나가겠습니다.</p>' +
+            '<button class="btn-ink" data-fb-close style="font-size:14px;padding:11px 24px;border-radius:3px;border:0;cursor:pointer;">확인</button></div>';
           dialog.querySelector('[data-fb-close]').addEventListener('click', close);
         })
         .catch(function () { fbSubmit.disabled = false; fbMsg.style.color = '#B4322B'; fbMsg.textContent = '전송에 실패했어요. 잠시 후 다시 시도해 주세요.'; });

@@ -164,29 +164,29 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
   .abody a{color:var(--blue);text-decoration:underline;}
   .abody blockquote{font-family:var(--font-display);margin:34px 0;padding:4px 0 4px 24px;border-left:3px solid var(--blue);font-size:22px;line-height:1.55;font-weight:700;color:var(--ink-1);}
   .abody ul,.abody ol{padding-left:22px;margin:0 0 22px;} .abody li{margin:0 0 8px;line-height:1.7;}
-  .abody pre{background:var(--paper-2);border-radius:8px;padding:16px;overflow-x:auto;font-family:var(--font-mono);font-size:13.5px;}
+  .abody pre{background:var(--paper-2);border-radius:8px;padding:16px;overflow-x:auto;font-family:var(--font-mono);font-size:14.5px;}
   .abody code{font-family:var(--font-mono);font-size:.9em;background:var(--paper-2);padding:2px 5px;border-radius:3px;}
   /* 리치 요소 — 인블로그 콜아웃·표·구분선·임베드 */
   .abody div[class*="callout"],.abody aside,.abody .notice{
     background:var(--blue-soft);border:1px solid rgba(35,72,214,.14);border-left:3px solid var(--blue);
-    border-radius:0 8px 8px 0;padding:16px 18px;margin:26px 0;font-size:15.5px;line-height:1.75;}
+    border-radius:0 8px 8px 0;padding:16px 18px;margin:26px 0;font-size:16.5px;line-height:1.75;}
   .abody div[class*="callout"] p:last-child,.abody aside p:last-child{margin-bottom:0;}
   .abody hr{border:0;border-top:1px solid var(--rule-hair);margin:36px 0;}
-  .abody table{border-collapse:collapse;width:100%;font-size:14.5px;margin:24px 0;display:block;overflow-x:auto;}
+  .abody table{border-collapse:collapse;width:100%;font-size:15.5px;margin:24px 0;display:block;overflow-x:auto;}
   .abody th{font-weight:700;color:var(--ink-1);background:var(--paper-2);}
   .abody th,.abody td{border:1px solid var(--rule-hair);padding:9px 13px;text-align:left;line-height:1.6;}
-  .abody figure{margin:24px 0;} .abody figcaption{font-size:12.5px;color:var(--ink-3);text-align:center;margin-top:8px;}
+  .abody figure{margin:24px 0;} .abody figcaption{font-size:13.5px;color:var(--ink-3);text-align:center;margin-top:8px;}
   .abody iframe,.abody video{max-width:100%;border:0;border-radius:10px;}
   .abody mark{background:#FBF0C8;padding:1px 3px;border-radius:2px;}
   /* 좌측 고정 목차 (인블로그 UX) */
   .read-grid{display:grid;grid-template-columns:210px minmax(0,760px);gap:44px;justify-content:center;
     padding:0 24px;}
   .read-grid .read{max-width:none;margin:0;padding:0;}
-  .toc{position:sticky;top:88px;align-self:start;font-size:13px;line-height:1.5;
+  .toc{position:sticky;top:88px;align-self:start;font-size:14px;line-height:1.5;
     border-left:1px solid var(--rule-hair);padding:2px 0 2px 16px;max-height:calc(100vh - 120px);overflow-y:auto;}
   .toc-h{font-family:var(--font-mono);font-size:10px;letter-spacing:.12em;color:var(--ink-3);margin-bottom:10px;}
   .toc a{display:block;color:var(--ink-3);padding:4px 0;font-weight:500;border:0;}
-  .toc a.toc-l3{padding-left:12px;font-size:12.5px;}
+  .toc a.toc-l3{padding-left:12px;font-size:13.5px;}
   .toc a:hover{color:var(--ink-1);}
   .toc a.on{color:var(--blue);font-weight:700;}
   @media (max-width:1080px){.read-grid{display:block;padding:0;}.read-grid .read{max-width:760px;margin:0 auto;padding:0 24px;}.toc{display:none;}}
@@ -205,7 +205,7 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
   <div class="${hasToc ? 'read-grid' : ''}" style="padding-top:46px;padding-bottom:64px;">
   ${tocHtml}
   <article class="read">
-    <a href="/content" style="display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--ink-3);">← 콘텐츠 · 아티클</a>
+    <a href="/content" style="display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:600;color:var(--ink-3);">← 콘텐츠 · 아티클</a>
     <div style="display:flex;align-items:center;gap:11px;margin-top:24px;flex-wrap:wrap;">
       <span class="mono" style="font-size:10px;font-weight:600;letter-spacing:.06em;color:var(--ink-1);border:1px solid var(--ink-1);border-radius:3px;padding:4px 9px;">아티클</span>
       <span class="mono" style="font-size:11.5px;letter-spacing:.06em;color:var(--ink-3);">크레디뷰 리서치</span>
@@ -213,8 +213,8 @@ ${img ? `<meta name="twitter:image" content="${esc(img)}">` : ''}
     <h1 class="bt" style="font-size:42px;line-height:1.28;font-weight:700;letter-spacing:-.01em;margin:12px 0 0;">${esc(displayTitle)}</h1>
     ${post.description ? `<p style="font-size:18px;color:var(--ink-2);line-height:1.6;margin:20px 0 0;">${esc(post.description)}</p>` : ''}
     <div style="display:flex;align-items:center;gap:14px;margin-top:26px;padding:18px 0;border-top:1px solid var(--rule-hair);border-bottom:1px solid var(--rule-hair);">
-      <div style="width:40px;height:40px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;flex-shrink:0;">CR</div>
-      <div style="min-width:0;flex:1;"><div style="font-size:13.5px;font-weight:700;">크레디뷰 리서치</div><div class="mono" style="font-size:11.5px;color:var(--ink-3);margin-top:2px;">${esc(post.date || '')}</div></div>
+      <div style="width:40px;height:40px;border-radius:50%;background:var(--blue-soft);color:var(--blue);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:15px;flex-shrink:0;">CR</div>
+      <div style="min-width:0;flex:1;"><div style="font-size:14.5px;font-weight:700;">크레디뷰 리서치</div><div class="mono" style="font-size:11.5px;color:var(--ink-3);margin-top:2px;">${esc(post.date || '')}</div></div>
     </div>
     ${hero}
     <div class="abody">${body}</div>
