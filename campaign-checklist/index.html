@@ -140,6 +140,27 @@
   tr.auto-row td.no-cell::after{content:' ⚙'; color:var(--auto);}
   .empty-msg{padding:28px; text-align:center; color:var(--ink-soft); font-size:.85rem;}
 
+  /* ── 요청 쪽지 ─────────────────────────── */
+  .note-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
+  .note-card{border:1px solid var(--line); border-radius:8px; background:#FBFCFD; overflow:hidden;}
+  .note-head{display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 12px; background:var(--tint); border-bottom:1px solid var(--line);}
+  .note-head b{font-size:.85rem;}
+  .note-head .to{font-size:.72rem; color:var(--ink-soft);}
+  .note-btns{display:flex; gap:6px;}
+  .note-btns button{
+    font:inherit; font-size:.74rem; border:1px solid var(--line); background:#fff; border-radius:5px;
+    padding:3px 9px; cursor:pointer; white-space:nowrap;
+  }
+  .note-btns button:hover{border-color:var(--accent); color:var(--accent-d);}
+  .note-btns button.copied{background:var(--accent); color:#fff; border-color:var(--accent);}
+  .note-card textarea{
+    width:100%; border:none; background:transparent; font:inherit; font-size:.8rem; line-height:1.5;
+    padding:10px 12px; min-height:230px; resize:vertical; color:var(--ink);
+  }
+  .note-card textarea:focus{outline:2px solid var(--accent); background:#fff;}
+  .note-edited{font-size:.68rem; color:var(--auto);}
+  @media (max-width:900px){ .note-grid{grid-template-columns:1fr;} }
+
   /* ── 다운로드 바 ───────────────────────── */
   .dl-bar{
     position:fixed; left:0; right:0; bottom:0; background:rgba(246,247,249,.97); border-top:2px solid var(--accent);
@@ -241,6 +262,14 @@
       </div>
       <div class="notice" id="compressNotice"></div>
       <div class="tbl-scroll" id="previewBox"></div>
+    </div>
+  </section>
+
+  <!-- 6. 요청 쪽지 -->
+  <section class="card" id="secNotes">
+    <h2><span class="step">STEP 5</span> 요청 쪽지 <span class="hint">선택 결과·일정에 맞춰 수신처별 자동 생성 — 내용 수정 후 [복사]하여 전달 (수정본은 유지, ↺로 재생성)</span></h2>
+    <div class="card-body">
+      <div class="note-grid" id="notesArea"></div>
     </div>
   </section>
 
@@ -547,6 +576,7 @@ const state = {
   excluded: new Set(),      // 자동 체크를 사용자가 명시적으로 해제한 모듈
   channels: new Set(),      // 선택된 노출 채널 (C코드)
   overrides: new Map(),     // 행별 수정값: uid → {dept, due}
+  noteOverrides: new Map(), // 요청 쪽지 수정본: noteId → text
   activePreset: null,
 };
 
@@ -809,10 +839,212 @@ function renderPreview(){
   // 파일명 미리표시
   const nm = $('inpName').value.trim();
   $('dlFileName').textContent = '파일명: ' + (nm ? excelFileName(nm) : '(캠페인명 입력 시 표시)');
+
+  renderNotes();
 }
 
 function stageColor(stage){
   return {'기획':'#EDF1F5','디자인':'#E0E6EC','개발':'#EDF1F5','검수':'#D6DEE7','오픈':'#C7D2DD'}[stage] || '#EDF1F5';
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   [요청 쪽지 자동 생성] — 선택 모듈·채널·일정 기반 수신처별 쪽지 초안
+   문구 수정은 아래 buildNotes() 안의 템플릿 문자열만 고치면 됨
+   ═══════════════════════════════════════════════════════════════════════════ */
+function dueDateText(stageN){
+  const pi = prepInfo();
+  const n = Math.max(0, Math.round(stageN * pi.scale));
+  if(!pi.start) return `D-${n}`;
+  const d = new Date(pi.start); d.setDate(d.getDate() - n);
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')} (D-${n})`;
+}
+function buildNotes(){
+  const {active} = computeEffective();
+  const name   = $('inpName').value.trim() || '(캠페인명)';
+  const start  = $('inpStart').value || '(시작일)';
+  const end    = $('inpEnd').value || '(종료일)';
+  const period = `${start} ~ ${end}`;
+  const selCh  = CHANNELS.filter(c => state.channels.has(c.code));
+  const dueDesign = dueDateText(STAGE_DDAY['디자인']);
+  const dueDev    = dueDateText(STAGE_DDAY['개발']);
+  const dueQA     = dueDateText(STAGE_DDAY['검수']);
+  const notes = [];
+
+  // ① 디자인팀 제작 요청
+  const dItems = [];
+  const chNames = codes => selCh.filter(c => codes.includes(c.code)).map(c => c.name).join(', ');
+  if(active.has('D1')) dItems.push('- D1 이벤트 페이지 (웹·모바일 반응형)');
+  if(active.has('D2')) dItems.push('- D2 배너' + (chNames(['C1','C2','C3','C4','C5','C6','C7','C8','C9','C14']) ? ': ' + chNames(['C1','C2','C3','C4','C5','C6','C7','C8','C9','C14']) : ''));
+  if(active.has('D3')) dItems.push('- D3 롤링배너: 크레디뷰 로그인 전(C8)');
+  if(active.has('D4')) dItems.push('- D4 오픈그래프 이미지');
+  if(active.has('D5')) dItems.push('- D5 팝업' + (chNames(['C1','C5','C7','C8','C9','C14']) ? ': ' + chNames(['C1','C5','C7','C8','C9','C14']) : ''));
+  if(active.has('D6')) dItems.push('- D6 전시관리 이미지 (웹·모바일)');
+  if(active.has('D7')) dItems.push('- D7 광고 소재' + (chNames(['C10','C11','C12','C13']) ? ': ' + chNames(['C10','C11','C12','C13']) : ''));
+  if(dItems.length){
+    notes.push({id:'design', title:'디자인 제작 요청', to:'디자인팀 · 아마란스 [기업등급플랫폼 구축] 미팅룸',
+body:`[디자인 제작 요청] ${name}
+
+안녕하세요, 마케팅팀입니다.
+아래 캠페인 소재 디자인 제작을 요청드립니다.
+
+■ 캠페인: ${name} (${period})
+■ 요청 소재
+${dItems.join('\n')}
+■ 초안(요청서): 첨부 참조 — 구성·문구·참고 소재 포함
+■ 시안 회신 요청일: ${dueDesign}
+
+구좌별 규격은 첨부 요청서를 확인 부탁드립니다.
+수정 요청이 있을 수 있는 점 양해 부탁드립니다. 감사합니다.`});
+  }
+
+  // ② 개발팀 개발·게시 요청
+  const devCh = selCh.filter(c => c.publisher.includes('개발팀') || c.publisher.includes('백오피스'));
+  if(active.has('V1') || active.has('V4') || devCh.length){
+    const devLines = [];
+    if(active.has('V1')){
+      devLines.push('- 이벤트 페이지 개발·게시 (기능 명세·확정 디자인 별첨)');
+      devLines.push('- 페이지 URL 확정 및 종료 처리·리다이렉션 설정');
+    }
+    if(devCh.length) devLines.push('- 게시 구좌: ' + devCh.map(c => `${c.name}(${c.publisher})`).join(', '));
+    notes.push({id:'dev', title:'개발·게시 요청', to:'개발팀',
+body:`[개발 요청] ${name}
+
+안녕하세요, 마케팅팀입니다.
+아래 캠페인 관련 개발·게시를 요청드립니다.
+
+■ 캠페인: ${name} (${period})
+■ 요청 내용
+${devLines.join('\n')}
+■ 배포 희망일: ${dueDev}
+■ QA 예정일: ${dueQA} — 페이지·기능 정상 작동 확인
+
+상세 기능 명세는 첨부를 확인 부탁드립니다. 감사합니다.`});
+  }
+
+  // ③ 법무 검토 요청
+  if(active.has('P2')){
+    const p8line = active.has('P8') ? '\n- 응모 폼(네이버폼) 개인정보 수집·이용 동의 문구' : '';
+    notes.push({id:'legal', title:'법무 검토 요청', to:'법무실 (결재문서 첨부)',
+body:`[법무 검토 요청] ${name}
+
+안녕하세요, 마케팅팀입니다.
+아래 캠페인 안내 문구 및 약관 검토를 요청드립니다.
+
+■ 캠페인: ${name} (${period})
+■ 검토 대상
+- 공지·유의사항 문구 (첨부)
+- 약관·개인정보 수집 동의 문구${p8line}
+■ 회신 요청일: ${dueDesign} — 오픈 일정상 기한 내 회신 부탁드립니다.
+
+결재문서 첨부하여 정식 요청드립니다. 감사합니다.`});
+  }
+
+  // ④ 위하고 협업플랫폼 협조전 (C1)
+  if(state.channels.has('C1')){
+    notes.push({id:'wehago', title:'협조전 — 더존 4종 배너·팝업', to:'위하고 협업플랫폼',
+body:`[협조전] 더존 4종 배너·팝업 교체 요청 — ${name}
+
+수신: 위하고 협업플랫폼 담당자
+발신: 테크핀레이팅스 마케팅팀
+
+${name} 캠페인 진행에 따라 더존 4종 배너 및 팝업 소재 교체를 요청드립니다.
+
+■ 게시 기간: ${period}
+■ 교체 대상: 더존 4종 배너 + 팝업 (소재·링크 URL 별첨)
+■ 게시 요청일: ${dueDev}
+■ 종료 후 처리: ${end} 이후 기존 소재로 원복 요청
+
+협조 부탁드립니다. 감사합니다.`});
+  }
+
+  // ⑤ 홍보실 변경 요청 (C2)
+  if(state.channels.has('C2')){
+    notes.push({id:'pr', title:'배너 변경 요청 — 더존 고객센터', to:'홍보실',
+body:`[배너 변경 요청] 더존 온라인 고객센터 — ${name}
+
+안녕하세요, 마케팅팀입니다.
+${name} 캠페인 진행에 따라 더존 온라인 고객센터 배너 변경을 요청드립니다.
+
+■ 게시 기간: ${period}
+■ 소재·링크 URL: 별첨
+■ 게시 요청일: ${dueDev}
+■ 종료 후 처리: ${end} 이후 기존 배너로 원복 요청
+
+확인 부탁드립니다. 감사합니다.`});
+  }
+
+  // ⑥ 신한은행 게시 요청 (C3~C6)
+  const shinhan = selCh.filter(c => ['C3','C4','C5','C6'].includes(c.code));
+  if(shinhan.length){
+    notes.push({id:'shinhan', title:'게시 요청 — 신한은행 구좌', to:'신한은행 담당자',
+body:`[게시 요청] 신한은행 구좌 — ${name}
+
+안녕하세요, 테크핀레이팅스 마케팅팀입니다.
+${name} 캠페인 관련 아래 구좌 게시를 요청드립니다.
+
+■ 요청 구좌
+${shinhan.map(c => '- ' + c.name).join('\n')}
+■ 게시 기간: ${period}
+■ 게시 요청일: ${dueDev}
+■ 종료 후 내림: ${end} 이후
+
+소재·링크 URL은 첨부를 확인 부탁드립니다. 감사합니다.`});
+  }
+
+  // ⑦ 협회 게시 요청 (C14)
+  if(state.channels.has('C14')){
+    notes.push({id:'assoc', title:'게시 요청 — 협회 노출', to:'협회 담당자',
+body:`[게시 요청] 협회 배너·팝업 — ${name}
+
+안녕하세요, 테크핀레이팅스 마케팅팀입니다.
+${name} 캠페인 관련 배너·팝업 게시를 요청드립니다.
+
+■ 게시 기간: ${period}
+■ 소재: 협회 규격에 맞춰 제작·별첨 (배너·팝업)
+■ 게시 요청일: ${dueDev}
+■ 종료 후 내림: ${end} 이후
+
+게시 가능 여부와 일정 회신 부탁드립니다. 감사합니다.`});
+  }
+  return notes;
+}
+
+function renderNotes(){
+  const notes = buildNotes();
+  const box = $('notesArea');
+  if(!notes.length){
+    box.innerHTML = '<div class="empty-msg" style="grid-column:1/-1;">모듈·채널을 선택하면 필요한 요청 쪽지가 자동 생성됩니다.</div>';
+    return;
+  }
+  box.innerHTML = notes.map(n => {
+    const edited = state.noteOverrides.has(n.id);
+    const body = edited ? state.noteOverrides.get(n.id) : n.body;
+    return `<div class="note-card">
+      <div class="note-head">
+        <div><b>${esc(n.title)}</b> <span class="to">→ ${esc(n.to)}</span> ${edited ? '<span class="note-edited">✎ 수정됨</span>' : ''}</div>
+        <div class="note-btns">
+          <button type="button" data-regen="${n.id}" title="자동 생성 내용으로 되돌리기">↺</button>
+          <button type="button" data-copy="${n.id}">📋 복사</button>
+        </div>
+      </div>
+      <textarea data-note="${n.id}" spellcheck="false">${esc(body)}</textarea>
+    </div>`;
+  }).join('');
+}
+
+async function copyNoteText(id, btn){
+  const ta = document.querySelector(`textarea[data-note="${id}"]`);
+  if(!ta) return;
+  let ok = false;
+  try{ await navigator.clipboard.writeText(ta.value); ok = true; }
+  catch(e){
+    ta.select();
+    try{ ok = document.execCommand('copy'); }catch(e2){}
+    window.getSelection().removeAllRanges();
+  }
+  btn.textContent = ok ? '✓ 복사됨' : '복사 실패';
+  btn.classList.add('copied');
+  setTimeout(() => { btn.textContent = '📋 복사'; btn.classList.remove('copied'); }, 1500);
 }
 
 function renderAll(){ renderPresets(); renderModules(); renderPreview(); }
@@ -826,6 +1058,7 @@ $('presetRow').addEventListener('click', e => {
   state.excluded.clear();
   state.channels = new Set(p.channels);
   state.overrides.clear();
+  state.noteOverrides.clear();
   state.activePreset = p.key;
   renderAll();
 });
@@ -861,6 +1094,18 @@ $('previewBox').addEventListener('input', e => {
   const ov = state.overrides.get(uid) || {};
   ov[field] = td.textContent.trim();
   state.overrides.set(uid, ov);
+});
+
+/* 요청 쪽지: 복사·재생성·수정 저장 */
+$('notesArea').addEventListener('click', e => {
+  const cp = e.target.closest('[data-copy]');
+  if(cp){ copyNoteText(cp.dataset.copy, cp); return; }
+  const rg = e.target.closest('[data-regen]');
+  if(rg){ state.noteOverrides.delete(rg.dataset.regen); renderNotes(); }
+});
+$('notesArea').addEventListener('input', e => {
+  const ta = e.target.closest('textarea[data-note]');
+  if(ta) state.noteOverrides.set(ta.dataset.note, ta.value);
 });
 
 /* 캠페인 정보 변경 → 기한 재계산 */
