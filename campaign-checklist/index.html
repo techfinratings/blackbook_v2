@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>마케팅 캠페인 SOP 체크리스트 생성기 v3.0</title>
+<title>마케팅 캠페인 운영 SOP v3.0</title>
 <!--
   ============================================================================
   마케팅 캠페인 SOP — 모듈형 체크리스트 생성기 (단일 HTML 파일)
@@ -33,8 +33,25 @@
   .head-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
   header h1{font-size:1.15rem; color:#FFFFFF; letter-spacing:-.02em;}
   header p{font-size:.76rem; color:#C9D6E2; margin-top:2px;}
-  .flowsteps{font-size:.74rem; color:#DCE6EF; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); border-radius:20px; padding:5px 14px; white-space:nowrap;}
-  .flowsteps b{color:#fff;}
+
+  /* ── SOP 플로우 밴드 ───────────────────── */
+  .sop-flow{
+    display:flex; align-items:center; margin-top:14px; background:#fff; border:1px solid #EDF0F3;
+    border-radius:12px; padding:13px 18px; overflow-x:auto;
+    box-shadow:0 1px 2px rgba(16,24,40,.05), 0 2px 6px rgba(16,24,40,.06);
+  }
+  .sf-box{
+    flex:1; min-width:84px; text-align:center; border-radius:8px; padding:10px 6px;
+    font-weight:bold; font-size:.92rem; white-space:nowrap;
+  }
+  .sf-box span{display:block; font-weight:normal; font-size:.68rem; margin-top:2px; opacity:.85;}
+  .sf-box.s1{background:#EDF1F5; color:#3E5C76;}
+  .sf-box.s2{background:#D6DEE7; color:#33495D;}
+  .sf-box.s3{background:#B9C9D8; color:#26303A;}
+  .sf-box.s4{background:#6E8FAC; color:#FFFFFF;}
+  .sf-box.s5{background:#3E5C76; color:#FFFFFF;}
+  .sf-arrow{flex:none; width:80px; text-align:center; color:var(--ink-soft); font-size:.68rem; line-height:1.3;}
+  .sf-arrow b{display:block; color:var(--accent-d); font-size:.95rem;}
 
   /* ── 카드 공통 ─────────────────────────── */
   section.card{
@@ -170,6 +187,14 @@
   td.editable:focus{outline:2px solid var(--accent); background:#fff;}
   td.editable:empty::before{content:'—'; color:#C9BD97;}
   tr.auto-row td.no-cell::after{content:' ⚙'; color:var(--auto);}
+  tr.custom-row td{background:#FDFCF7;}
+  .ct-del{border:none; background:none; color:#B54708; cursor:pointer; font-size:.72rem; padding:0 2px;}
+  .ct-del:hover{font-weight:bold;}
+  tr.ct-add td{border:1px dashed var(--line); background:#FAFBFC; padding:2px 6px;}
+  .ct-add-btn{
+    font:inherit; font-size:.72rem; color:var(--accent-d); background:none; border:none; cursor:pointer; padding:2px 4px;
+  }
+  .ct-add-btn:hover{text-decoration:underline;}
   .empty-msg{padding:28px; text-align:center; color:var(--ink-soft); font-size:.83rem;}
 
   /* ── 로드맵 캘린더 ─────────────────────── */
@@ -193,6 +218,9 @@
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:help; color:#26303A;
   }
   .cal-flag{display:block; margin-top:2px; font-size:.68rem; font-weight:bold; color:var(--accent-d); white-space:nowrap;}
+  .cal-chip[draggable="true"]{cursor:grab;}
+  .cal-chip[draggable="true"]:active{cursor:grabbing;}
+  .cal-day.dragover{outline:2px dashed var(--accent); outline-offset:-2px; background:#E9F1F8;}
 
   /* ── 요청 쪽지 (우측 패널 내 1열) ────────── */
   .note-grid{display:grid; grid-template-columns:1fr; gap:11px;}
@@ -242,14 +270,26 @@
 <header>
   <div class="wrap head-inner">
     <div>
-      <h1>마케팅 캠페인 SOP — 모듈형 체크리스트 생성기 <small style="font-weight:normal;font-size:.75rem;">v3.0</small></h1>
-      <p>2026.06.22 상세 SOP 기준 · 사업전략팀</p>
+      <h1>마케팅 캠페인 운영 SOP <small style="font-weight:normal;font-size:.75rem;">v3.0</small></h1>
+      <p>마케팅 이벤트를 기획 → 디자인 → 개발요청 → 백오피스운영 → 오픈/사후관리 진행을 위한 표준 가이드 · 사업전략팀</p>
     </div>
-    <div class="flowsteps"><b>①</b> 캠페인 정보 → <b>②</b> 프리셋 → <b>③</b> 모듈·채널 조정 → <b>④</b> 체크리스트·쪽지 확인 → <b>⑤</b> Excel</div>
   </div>
 </header>
 
 <div class="wrap">
+
+  <!-- SOP 진행 플로우 (기획→디자인→개발→검수→오픈) -->
+  <div class="sop-flow">
+    <div class="sf-box s1">기획<span>1주차</span></div>
+    <div class="sf-arrow"><b>→</b>초안 전달</div>
+    <div class="sf-box s2">디자인<span>2주차</span></div>
+    <div class="sf-arrow"><b>→</b>시안 확정</div>
+    <div class="sf-box s3">개발<span>3주차</span></div>
+    <div class="sf-arrow"><b>→</b>QA</div>
+    <div class="sf-box s4">검수<span>4주차</span></div>
+    <div class="sf-arrow"><b>→</b>사전 준비 완료</div>
+    <div class="sf-box s5">오픈<span>D-Day</span></div>
+  </div>
 
   <!-- 캠페인 정보 (상단 가로 바) -->
   <section class="card" id="secInfo">
@@ -620,6 +660,8 @@ const state = {
   channels: new Set(),      // 선택된 노출 채널 (C코드)
   overrides: new Map(),     // 행별 수정값: uid → {dept, due}
   noteOverrides: new Map(), // 요청 쪽지 수정본: noteId → text
+  customTasks: [],          // 수기 추가 과업: {uid, no, stage, task, checklist, dept, due, note}
+  ctSeq: 1,
   activePreset: null,
 };
 
@@ -722,15 +764,26 @@ function buildRows(){
     }
   };
 
+  // 수기 추가 과업 (해당 단계 끝에 배치)
+  const pushCustom = stage => {
+    for(const ct of state.customTasks.filter(c => c.stage === stage)){
+      rows.push({stage, no:ct.no, task:ct.task, checklist:ct.checklist, dept:ct.dept,
+                 due:ct.due, status:'미착수', note:ct.note, uid:ct.uid, auto:false, custom:true});
+    }
+  };
+
   // 기획 (채널 노출 확정 포함)
   ['P0','P1','P2','P3','P4','P5','P7','P8','P10'].forEach(c => pushModule('기획', c));
   pushChannelStage('기획');
+  pushCustom('기획');
   // 디자인
   ['D1','D2','D3','D4','D5','D6','D7'].forEach(c => pushModule('디자인', c));
   pushChannelStage('디자인');
+  pushCustom('디자인');
   // 개발
   ['V1','V2','V3','V4'].forEach(c => pushModule('개발', c));
   pushChannelStage('개발');
+  pushCustom('개발');
   // 검수 (자동 구성)
   let qa = 0;
   for(const ins of INSPECTIONS){
@@ -744,9 +797,11 @@ function buildRows(){
       ins.text, ins.dept, ins.note, 'QA:'+ins.text);
   }
   pushChannelStage('검수');
+  pushCustom('검수');
   // 오픈
   ['O1','O2','O3','O4'].forEach(c => pushModule('오픈', c));
   pushChannelStage('오픈');
+  pushCustom('오픈');
   return {rows, active, reasons, pi};
 }
 
@@ -864,9 +919,20 @@ function renderPreview(){
     const first = i === 0 || rows[i-1].stage !== r.stage;
     let span = 1;
     if(first){ while(i + span < rows.length && rows[i+span].stage === r.stage) span++; }
-    html += `<tr${r.auto ? ' class="auto-row"' : ''}>`;
+    html += `<tr${r.auto ? ' class="auto-row"' : ''}${r.custom ? ' class="custom-row"' : ''}>`;
     if(first) html += `<td class="stage-cell" rowspan="${span}" style="background:${stageColor(r.stage)}">${r.stage}</td>`;
-    html += `
+    if(r.custom){
+      html += `
+      <td class="no-cell">✎ <button class="ct-del" data-del="${esc(r.uid)}" title="행 삭제">✕</button></td>
+      <td class="task-cell editable" contenteditable="true" data-uid="${esc(r.uid)}" data-field="task">${esc(r.task)}</td>
+      <td class="editable" contenteditable="true" data-uid="${esc(r.uid)}" data-field="checklist">${esc(r.checklist)}</td>
+      <td class="editable" contenteditable="true" data-uid="${esc(r.uid)}" data-field="dept">${esc(r.dept)}</td>
+      <td class="editable" contenteditable="true" data-uid="${esc(r.uid)}" data-field="due">${esc(r.due)}</td>
+      <td class="status-cell">${r.status}</td>
+      <td class="note-cell editable" contenteditable="true" data-uid="${esc(r.uid)}" data-field="note">${esc(r.note)}</td>
+    </tr>`;
+    }else{
+      html += `
       <td class="no-cell">${esc(r.no)}</td>
       <td class="task-cell">${esc(r.task)}</td>
       <td>${esc(r.checklist)}</td>
@@ -875,6 +941,11 @@ function renderPreview(){
       <td class="status-cell">${r.status}</td>
       <td class="note-cell">${esc(r.note)}</td>
     </tr>`;
+    }
+    // 단계 그룹 끝: 수기 추가 버튼
+    if(i === rows.length - 1 || rows[i+1].stage !== r.stage){
+      html += `<tr class="ct-add"><td colspan="8"><button type="button" class="ct-add-btn" data-addstage="${esc(r.stage)}">＋ ${esc(r.stage)} 단계에 과업 직접 추가</button></td></tr>`;
+    }
   }
   html += '</tbody></table>';
   $('previewBox').innerHTML = html;
@@ -917,13 +988,13 @@ function buildNotes(){
   // ① 디자인팀 제작 요청
   const dItems = [];
   const chNames = codes => selCh.filter(c => codes.includes(c.code)).map(c => c.name).join(', ');
-  if(active.has('D1')) dItems.push('- D1 이벤트 페이지 (웹·모바일 반응형)');
-  if(active.has('D2')) dItems.push('- D2 배너' + (chNames(['C1','C2','C3','C4','C5','C6','C7','C8','C9','C14']) ? ': ' + chNames(['C1','C2','C3','C4','C5','C6','C7','C8','C9','C14']) : ''));
-  if(active.has('D3')) dItems.push('- D3 롤링배너: 크레디뷰 로그인 전(C8)');
-  if(active.has('D4')) dItems.push('- D4 오픈그래프 이미지');
-  if(active.has('D5')) dItems.push('- D5 팝업' + (chNames(['C1','C5','C7','C8','C9','C14']) ? ': ' + chNames(['C1','C5','C7','C8','C9','C14']) : ''));
-  if(active.has('D6')) dItems.push('- D6 전시관리 이미지 (웹·모바일)');
-  if(active.has('D7')) dItems.push('- D7 광고 소재' + (chNames(['C10','C11','C12','C13']) ? ': ' + chNames(['C10','C11','C12','C13']) : ''));
+  if(active.has('D1')) dItems.push('- 이벤트 페이지 (웹·모바일 반응형)');
+  if(active.has('D2')) dItems.push('- 배너' + (chNames(['C1','C2','C3','C4','C5','C6','C7','C8','C9','C14']) ? ': ' + chNames(['C1','C2','C3','C4','C5','C6','C7','C8','C9','C14']) : ''));
+  if(active.has('D3')) dItems.push('- 롤링배너: 크레디뷰 로그인 전 영역');
+  if(active.has('D4')) dItems.push('- 오픈그래프 이미지');
+  if(active.has('D5')) dItems.push('- 팝업' + (chNames(['C1','C5','C7','C8','C9','C14']) ? ': ' + chNames(['C1','C5','C7','C8','C9','C14']) : ''));
+  if(active.has('D6')) dItems.push('- 전시관리 이미지 (웹·모바일)');
+  if(active.has('D7')) dItems.push('- 광고 소재' + (chNames(['C10','C11','C12','C13']) ? ': ' + chNames(['C10','C11','C12','C13']) : ''));
   if(dItems.length){
     notes.push({id:'design', title:'디자인 제작 요청', to:'디자인팀 · 아마란스 [기업등급플랫폼 구축] 미팅룸',
 body:`[디자인 제작 요청] ${name}
@@ -1017,38 +1088,51 @@ ${name} 캠페인 진행에 따라 더존 온라인 고객센터 배너 변경�
 확인 부탁드립니다. 감사합니다.`});
   }
 
-  // ⑥ 신한은행 게시 요청 (C3~C6)
+  // ⑥ 신한은행 게시 요청 (C3~C6) — 외부 채널: 이메일 양식
   const shinhan = selCh.filter(c => ['C3','C4','C5','C6'].includes(c.code));
   if(shinhan.length){
-    notes.push({id:'shinhan', title:'게시 요청 — 신한은행 구좌', to:'신한은행 담당자',
-body:`[게시 요청] 신한은행 구좌 — ${name}
+    notes.push({id:'shinhan', title:'이메일 — 신한은행 게시 요청', to:'신한은행 담당자 (이메일 발송)',
+body:`제목: [테크핀레이팅스] ${name} 캠페인 배너·팝업 게시 요청
 
-안녕하세요, 테크핀레이팅스 마케팅팀입니다.
-${name} 캠페인 관련 아래 구좌 게시를 요청드립니다.
+안녕하세요, 담당자님.
+테크핀레이팅스 마케팅팀 (담당자명)입니다.
 
-■ 요청 구좌
-${shinhan.map(c => '- ' + c.name).join('\n')}
-■ 게시 기간: ${period}
-■ 게시 요청일: ${dueDev}
-■ 종료 후 내림: ${end} 이후
+당사에서 진행하는 「${name}」 캠페인 관련하여 아래와 같이 게시를 요청드립니다.
 
-소재·링크 URL은 첨부를 확인 부탁드립니다. 감사합니다.`});
+- 게시 영역
+${shinhan.map(c => '  · ' + c.name).join('\n')}
+- 게시 기간: ${period}
+- 게시 희망일: ${dueDev}
+- 종료 후 내림: ${end} 이후
+- 소재·랜딩 URL: 첨부 파일 참조
+
+게시 가능 여부와 일정 회신 부탁드립니다.
+감사합니다.
+
+테크핀레이팅스 마케팅팀 (담당자명) 드림
+(연락처 / 이메일)`});
   }
 
-  // ⑦ 협회 게시 요청 (C14)
+  // ⑦ 협회 게시 요청 (C14) — 외부 채널: 이메일 양식
   if(state.channels.has('C14')){
-    notes.push({id:'assoc', title:'게시 요청 — 협회 노출', to:'협회 담당자',
-body:`[게시 요청] 협회 배너·팝업 — ${name}
+    notes.push({id:'assoc', title:'이메일 — 협회 게시 요청', to:'협회 담당자 (이메일 발송)',
+body:`제목: [테크핀레이팅스] ${name} 캠페인 배너·팝업 게시 요청
 
-안녕하세요, 테크핀레이팅스 마케팅팀입니다.
-${name} 캠페인 관련 배너·팝업 게시를 요청드립니다.
+안녕하세요, 담당자님.
+테크핀레이팅스 마케팅팀 (담당자명)입니다.
 
-■ 게시 기간: ${period}
-■ 소재: 협회 규격에 맞춰 제작·별첨 (배너·팝업)
-■ 게시 요청일: ${dueDev}
-■ 종료 후 내림: ${end} 이후
+당사에서 진행하는 「${name}」 캠페인 관련하여 배너·팝업 게시를 요청드립니다.
 
-게시 가능 여부와 일정 회신 부탁드립니다. 감사합니다.`});
+- 게시 기간: ${period}
+- 소재: 협회 규격에 맞춰 제작하여 첨부드립니다 (배너·팝업)
+- 게시 희망일: ${dueDev}
+- 종료 후 내림: ${end} 이후
+
+게시 가능 여부와 일정 회신 부탁드립니다.
+감사합니다.
+
+테크핀레이팅스 마케팅팀 (담당자명) 드림
+(연락처 / 이메일)`});
   }
   return notes;
 }
@@ -1091,11 +1175,14 @@ function renderRoadmap(){
   const key = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 
   // 행 → 날짜 배정: 기한 텍스트의 D-n 해석 (수정분 반영), '종료 후' 과업은 종료일 배치
-  const byDate = new Map(); // key → Map(stage → [과업명])
+  const byDate = new Map(); // key → Map(버킷 → {labels, uids, after})
   for(const r of rows){
-    let d;
+    let d, after = false;
     if(end && r.note.includes('종료 후')){
-      d = new Date(end);
+      d = new Date(end); after = true;
+    }else if(/D\+(\d+)/.test(r.due)){
+      const k2 = +/D\+(\d+)/.exec(r.due)[1];
+      d = new Date(start); d.setDate(d.getDate() + k2);
     }else if(/D-?Day/i.test(r.due)){
       d = new Date(start);
     }else{
@@ -1106,8 +1193,11 @@ function renderRoadmap(){
     const k = key(d);
     if(!byDate.has(k)) byDate.set(k, new Map());
     const stages = byDate.get(k);
-    if(!stages.has(r.stage)) stages.set(r.stage, []);
-    stages.get(r.stage).push(`${r.no} ${r.task || r.checklist}`);
+    const bucket = r.stage + (after ? '†' : '');
+    if(!stages.has(bucket)) stages.set(bucket, {labels:[], uids:[], after});
+    const g = stages.get(bucket);
+    g.labels.push(`${r.no} ${r.task || r.checklist}`);
+    g.uids.push(r.uid);
   }
 
   // 표시 범위: 가장 이른 기한 ~ 종료일(없으면 시작일)
@@ -1149,17 +1239,18 @@ function renderRoadmap(){
       const inPeriod = end && k >= startK && k <= endK;
       const cls = ['cal-day', dow === 0 ? 'sun' : '', dow === 6 ? 'sat' : '',
                    inPeriod ? 'in-period' : '', k === todayK ? 'today' : ''].filter(Boolean).join(' ');
-      html += `<div class="${cls}"><span class="dn">${dayNum}</span>`;
+      html += `<div class="${cls}" data-date="${k}"><span class="dn">${dayNum}</span>`;
       if(k === startK) html += '<span class="cal-flag">🚀 오픈</span>';
       if(endK && k === endK) html += '<span class="cal-flag">🏁 종료</span>';
       const stages = byDate.get(k);
       if(stages){
         for(const st of STAGE_ORDER){
-          if(!stages.has(st)) continue;
-          const tasks = stages.get(st);
-          const isAfterEnd = endK && k === endK && st === '오픈' && tasks.some(t => /O[234]|당첨|발송|리포트/.test(t));
-          const label = `${st} ${tasks.length}`;
-          html += `<span class="cal-chip" style="background:${stageColor(st)}" title="${esc(tasks.slice(0,20).join('\n'))}${tasks.length > 20 ? ' …' : ''}">${esc(label)}${isAfterEnd ? ' (종료 후)' : ''}</span>`;
+          for(const suffix of ['', '†']){
+            const g = stages.get(st + suffix);
+            if(!g) continue;
+            const drag = g.after ? '' : ` draggable="true" data-uids="${esc(g.uids.join(','))}"`;
+            html += `<span class="cal-chip"${drag} style="background:${stageColor(st)}" title="${esc(g.labels.slice(0,20).join('\n'))}${g.labels.length > 20 ? ' …' : ''}">${esc(st + ' ' + g.labels.length)}${g.after ? ' (종료 후)' : ''}</span>`;
+          }
         }
       }
       html += '</div>';
@@ -1167,7 +1258,7 @@ function renderRoadmap(){
     html += '</div></div>';
     cur.setMonth(cur.getMonth() + 1);
   }
-  html += '<div class="hint">※ 칩에 마우스를 올리면 해당 일자의 과업 목록이 표시됩니다. 기한(D-)을 체크리스트에서 수정하면 캘린더에 즉시 반영됩니다. \'종료 후\' 과업(발표·발송·리포트)은 종료일에 배치됩니다.</div>';
+  html += '<div class="hint">※ 칩을 <b>마우스로 끌어 다른 날짜에 놓으면</b> 해당 과업들의 기한이 그 날짜로 이동합니다(체크리스트·Excel에 즉시 반영). 칩에 마우스를 올리면 과업 목록이 표시됩니다. \'종료 후\' 과업(발표·발송·리포트)은 종료일에 고정 배치됩니다.</div>';
   box.innerHTML = html;
 }
 
@@ -1198,6 +1289,7 @@ $('presetRow').addEventListener('click', e => {
   state.channels = new Set(p.channels);
   state.overrides.clear();
   state.noteOverrides.clear();
+  state.customTasks = [];
   state.activePreset = p.key;
   renderAll();
 });
@@ -1225,14 +1317,76 @@ $('moduleArea').addEventListener('change', e => {
   }
 });
 
-/* 인라인 편집 저장 */
+/* 인라인 편집 저장 (수기 행은 customTasks에 직접 저장) */
 $('previewBox').addEventListener('input', e => {
   const td = e.target.closest('td.editable');
   if(!td) return;
   const uid = td.dataset.uid, field = td.dataset.field;
+  if(uid.startsWith('CT')){
+    const ct = state.customTasks.find(c => c.uid === uid);
+    if(ct) ct[field] = td.textContent.trim();
+    return;
+  }
   const ov = state.overrides.get(uid) || {};
   ov[field] = td.textContent.trim();
   state.overrides.set(uid, ov);
+});
+
+/* 수기 과업 추가·삭제 */
+$('previewBox').addEventListener('click', e => {
+  const del = e.target.closest('[data-del]');
+  if(del){
+    state.customTasks = state.customTasks.filter(c => c.uid !== del.dataset.del);
+    renderPreview();
+    return;
+  }
+  const add = e.target.closest('[data-addstage]');
+  if(add){
+    const stage = add.dataset.addstage;
+    const pi = prepInfo();
+    const n = state.ctSeq++;
+    state.customTasks.push({uid:'CT'+n, no:'수기-'+n, stage,
+      task:'(과업명 입력)', checklist:'(내용 입력)', dept:'마케팅', due:defaultDue(stage, pi), note:''});
+    renderPreview();
+  }
+});
+
+/* 로드맵: 칩 드래그로 일정 이동 */
+$('roadmapArea').addEventListener('dragstart', e => {
+  const chip = e.target.closest('.cal-chip[draggable="true"]');
+  if(chip) e.dataTransfer.setData('text/plain', chip.dataset.uids || '');
+});
+$('roadmapArea').addEventListener('dragover', e => {
+  const day = e.target.closest('.cal-day[data-date]');
+  if(day){ e.preventDefault(); day.classList.add('dragover'); }
+});
+$('roadmapArea').addEventListener('dragleave', e => {
+  const day = e.target.closest('.cal-day');
+  if(day) day.classList.remove('dragover');
+});
+$('roadmapArea').addEventListener('drop', e => {
+  const day = e.target.closest('.cal-day[data-date]');
+  if(!day) return;
+  e.preventDefault();
+  day.classList.remove('dragover');
+  const uids = (e.dataTransfer.getData('text/plain') || '').split(',').filter(Boolean);
+  const start = parseDate($('inpStart').value);
+  if(!uids.length || !start) return;
+  const target = new Date(day.dataset.date + 'T00:00:00');
+  const diff = Math.round((start - target) / 86400000);
+  const label = diff > 0 ? 'D-' + diff : (diff === 0 ? 'D-Day' : 'D+' + (-diff));
+  const text = `${label} (${fmtMD(target)})`;
+  for(const uid of uids){
+    if(uid.startsWith('CT')){
+      const ct = state.customTasks.find(c => c.uid === uid);
+      if(ct) ct.due = text;
+    }else{
+      const ov = state.overrides.get(uid) || {};
+      ov.due = text;
+      state.overrides.set(uid, ov);
+    }
+  }
+  renderPreview();
 });
 
 /* 결과 패널 탭 전환 */
@@ -1564,7 +1718,7 @@ function buildWorkbook(){
 </Relationships>`},
     {name:'docProps/core.xml', text:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <cp:coreProperties xmlns:cp="http://schemas.openxmlformats.org/package/2006/metadata/core-properties" xmlns:dc="http://purl.org/dc/elements/1.1/">
-<dc:title>${xesc(name)} 캠페인 체크리스트</dc:title><dc:creator>마케팅 캠페인 SOP 생성기 v3.0</dc:creator>
+<dc:title>${xesc(name)} 캠페인 체크리스트</dc:title><dc:creator>마케팅 캠페인 운영 SOP v3.0</dc:creator>
 </cp:coreProperties>`},
     {name:'docProps/app.xml', text:`<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <Properties xmlns="http://schemas.openxmlformats.org/officeDocument/2006/extended-properties"><Application>Campaign SOP Checklist Generator</Application></Properties>`},
