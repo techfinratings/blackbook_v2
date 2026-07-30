@@ -17,212 +17,235 @@
 <style>
   :root{
     --tint:#EDF1F5; --tint2:#E0E6EC; --tint3:#D6DEE7; --accent:#3E5C76; --accent-d:#2E4759;
-    --ink:#26303A; --ink-soft:#5B6773; --line:#DFE3E8; --bg:#F6F7F9; --white:#FFFFFF;
+    --ink:#26303A; --ink-soft:#5B6773; --line:#DFE3E8; --bg:#F3F5F7; --white:#FFFFFF;
     --auto:#9A6700; --danger:#B54708;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
   html{font-size:15px;}
   body{
     font-family:"Malgun Gothic","맑은 고딕","Apple SD Gothic Neo","Noto Sans KR",Dotum,sans-serif;
-    background:var(--bg); color:var(--ink); line-height:1.55; padding-bottom:90px;
+    background:var(--bg); color:var(--ink); line-height:1.5; padding-bottom:40px;
   }
-  .wrap{max-width:1180px; margin:0 auto; padding:0 20px;}
+  .wrap{max-width:1420px; margin:0 auto; padding:0 20px;}
 
   /* ── 헤더 ─────────────────────────────── */
-  header{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-d) 100%); padding:22px 0 18px; box-shadow:0 2px 8px rgba(0,0,0,.08);}
-  header h1{font-size:1.35rem; color:#FFFFFF; letter-spacing:-.02em;}
-  header p{font-size:.85rem; color:#C9D6E2; margin-top:3px;}
+  header{background:linear-gradient(135deg,var(--accent) 0%,var(--accent-d) 100%); padding:14px 0 13px; box-shadow:0 2px 8px rgba(0,0,0,.1);}
+  .head-inner{display:flex; align-items:center; justify-content:space-between; gap:16px; flex-wrap:wrap;}
+  header h1{font-size:1.15rem; color:#FFFFFF; letter-spacing:-.02em;}
+  header p{font-size:.76rem; color:#C9D6E2; margin-top:2px;}
+  .flowsteps{font-size:.74rem; color:#DCE6EF; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2); border-radius:20px; padding:5px 14px; white-space:nowrap;}
+  .flowsteps b{color:#fff;}
 
-  /* ── 섹션 카드 ─────────────────────────── */
-  section.card{background:var(--white); border:1px solid var(--line); border-radius:10px; margin-top:18px; overflow:hidden;}
+  /* ── 카드 공통 ─────────────────────────── */
+  section.card{background:var(--white); border:1px solid var(--line); border-radius:10px; overflow:hidden;}
   section.card > h2{
-    font-size:.98rem; padding:11px 16px; background:var(--tint); border-bottom:1px solid var(--line); color:var(--ink);
-    display:flex; align-items:center; gap:8px;
+    font-size:.92rem; padding:9px 14px; background:var(--tint); border-bottom:1px solid var(--line); color:var(--ink);
+    display:flex; align-items:center; gap:8px; flex-wrap:wrap;
   }
   section.card > h2 .step{
-    background:var(--accent); color:#FFFFFF; font-size:.75rem; border-radius:20px; padding:1px 9px; font-weight:bold;
+    background:var(--accent); color:#FFFFFF; font-size:.72rem; border-radius:20px; padding:1px 9px; font-weight:bold;
   }
-  .card-body{padding:16px;}
-  .hint{font-size:.78rem; color:var(--ink-soft);}
+  .card-body{padding:14px;}
+  .hint{font-size:.75rem; color:var(--ink-soft); font-weight:normal;}
 
-  /* ── 1. 캠페인 정보 ────────────────────── */
-  .info-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
-  .field label{display:block; font-size:.82rem; font-weight:bold; margin-bottom:5px;}
+  /* ── 캠페인 정보 (상단 가로 바) ─────────── */
+  #secInfo{margin-top:14px;}
+  .info-grid{display:grid; grid-template-columns:2fr 1.6fr .9fr .9fr 1.2fr; gap:12px; align-items:start;}
+  .field label{display:block; font-size:.78rem; font-weight:bold; margin-bottom:4px;}
   .field label .req{color:var(--danger);}
   .field input,.field select{
-    width:100%; padding:8px 10px; border:1px solid var(--line); border-radius:6px; font:inherit; font-size:.9rem; background:#FFFFFF;
+    width:100%; padding:7px 10px; border:1px solid var(--line); border-radius:6px; font:inherit; font-size:.87rem; background:#FFFFFF;
   }
   .field input:focus,.field select:focus{outline:2px solid var(--accent); border-color:var(--accent);}
-  .type-chips{display:flex; gap:7px; flex-wrap:wrap; padding:3px 0;}
+  .type-chips{display:flex; gap:6px; flex-wrap:wrap; padding:2px 0;}
   .tchip{
-    display:inline-flex; align-items:center; gap:6px; border:1.5px solid var(--line); border-radius:6px;
-    padding:7px 12px; background:#FFFFFF; cursor:pointer; user-select:none; font-size:.87rem;
+    display:inline-flex; align-items:center; gap:5px; border:1.5px solid var(--line); border-radius:6px;
+    padding:6px 10px; background:#FFFFFF; cursor:pointer; user-select:none; font-size:.84rem;
   }
   .tchip:hover{border-color:var(--accent);}
   .tchip:has(input:checked){background:var(--tint2); border-color:var(--accent);}
   .tchip input{accent-color:var(--accent); width:14px; height:14px; cursor:pointer;}
   #budgetField{display:none;}
   #budgetField.visible{display:block;}
-  #budgetField .why{font-size:.72rem; color:var(--auto); margin-top:3px;}
+  #budgetField .why{font-size:.68rem; color:var(--auto); margin-top:3px;}
 
-  /* ── 2. 프리셋 ─────────────────────────── */
-  .preset-row{display:grid; grid-template-columns:repeat(5,1fr); gap:10px;}
+  /* ── 2단 레이아웃 ──────────────────────── */
+  .layout{display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.08fr); gap:16px; margin-top:14px; align-items:start;}
+  .col-left{display:flex; flex-direction:column; gap:14px; min-width:0;}
+  .col-right{position:sticky; top:14px; min-width:0;}
+
+  /* ── 프리셋 (좌측, 세로 슬림) ───────────── */
+  .preset-row{display:flex; flex-direction:column; gap:7px;}
   .preset-btn{
-    border:1.5px solid var(--line); background:#FFFFFF; border-radius:8px; padding:10px 12px; cursor:pointer;
-    text-align:left; font:inherit; transition:all .12s;
+    display:flex; align-items:baseline; gap:10px; border:1.5px solid var(--line); background:#FFFFFF; border-radius:8px;
+    padding:8px 12px; cursor:pointer; text-align:left; font:inherit; transition:all .12s;
   }
   .preset-btn:hover{border-color:var(--accent); background:var(--tint);}
   .preset-btn.active{border-color:var(--accent-d); background:var(--tint2); box-shadow:0 0 0 2px var(--tint3);}
-  .preset-btn .pk{display:inline-block; background:var(--accent); color:#FFFFFF; font-weight:bold; font-size:.78rem; border-radius:4px; padding:0 7px; margin-bottom:5px;}
-  .preset-btn .pn{display:block; font-weight:bold; font-size:.86rem;}
-  .preset-btn .pd{display:block; font-size:.72rem; color:var(--ink-soft); margin-top:3px; line-height:1.4;}
+  .preset-btn .pk{background:var(--accent); color:#FFFFFF; font-weight:bold; font-size:.76rem; border-radius:4px; padding:0 7px; flex:none;}
+  .preset-btn .pn{font-weight:bold; font-size:.85rem; white-space:nowrap;}
+  .preset-btn .pd{font-size:.72rem; color:var(--ink-soft); line-height:1.35;}
 
-  /* ── 3. 모듈 체크박스 ──────────────────── */
-  .mod-stage{margin-bottom:14px;}
+  /* ── 모듈 체크박스 ─────────────────────── */
+  .mod-stage{margin-bottom:13px;}
   .mod-stage:last-child{margin-bottom:0;}
-  .mod-stage > h3{font-size:.85rem; color:var(--ink-soft); border-left:4px solid var(--accent); padding-left:8px; margin-bottom:8px;}
-  .mod-list{display:flex; flex-wrap:wrap; gap:8px;}
+  .mod-stage > h3{font-size:.82rem; color:var(--ink-soft); border-left:4px solid var(--accent); padding-left:8px; margin-bottom:7px;}
+  .mod-list{display:flex; flex-wrap:wrap; gap:7px;}
   .mod{
-    display:inline-flex; align-items:center; gap:7px; border:1.5px solid var(--line); border-radius:7px;
-    padding:7px 11px; background:#FFFFFF; cursor:pointer; user-select:none; font-size:.85rem; position:relative;
+    display:inline-flex; align-items:center; gap:6px; border:1.5px solid var(--line); border-radius:7px;
+    padding:6px 10px; background:#FFFFFF; cursor:pointer; user-select:none; font-size:.82rem; position:relative;
   }
   .mod:hover{border-color:var(--accent);}
   .mod input{accent-color:var(--accent-d); width:15px; height:15px; cursor:pointer;}
-  .mod .code{font-weight:bold; color:var(--accent-d); font-size:.78rem;}
+  .mod .code{font-weight:bold; color:var(--accent-d); font-size:.75rem;}
   .mod.checked{background:var(--tint2); border-color:var(--accent-d);}
   .mod.fixed{background:var(--tint3); border-color:var(--accent-d); cursor:not-allowed;}
-  .mod.fixed .lock{font-size:.72rem;}
+  .mod.fixed .lock{font-size:.7rem;}
   .mod.auto{background:#FBF7EC; border-style:dashed; border-color:#C9A75C;}
-  .mod .auto-badge{
-    font-size:.68rem; background:var(--auto); color:#fff; border-radius:3px; padding:0 5px; cursor:help;
-  }
-  .auto-reasons{margin-top:10px; font-size:.76rem; color:var(--auto); background:#FBF7EC; border:1px dashed #D9C48A; border-radius:6px; padding:8px 12px; display:none;}
+  .mod .auto-badge{font-size:.66rem; background:var(--auto); color:#fff; border-radius:3px; padding:0 5px; cursor:help;}
+  .auto-reasons{margin-top:10px; font-size:.74rem; color:var(--auto); background:#FBF7EC; border:1px dashed #D9C48A; border-radius:6px; padding:8px 12px; display:none;}
   .auto-reasons.visible{display:block;}
   .auto-reasons li{margin-left:16px;}
 
   /* ── 채널 패널 ─────────────────────────── */
-  .channel-panel{margin-top:12px; border:1px solid var(--line); border-radius:8px; background:#FAFBFC; padding:12px 14px;}
-  .channel-panel > h4{font-size:.83rem; margin-bottom:4px;}
-  .channel-panel > .hint{margin-bottom:8px;}
-  .ch-group{margin-top:8px;}
-  .ch-group > span{font-size:.74rem; font-weight:bold; color:var(--ink-soft); display:block; margin-bottom:5px;}
-  .ch-list{display:flex; flex-wrap:wrap; gap:7px;}
+  .channel-panel{margin-top:12px; border:1px solid var(--line); border-radius:8px; background:#FAFBFC; padding:11px 13px;}
+  .channel-panel > h4{font-size:.8rem; margin-bottom:3px;}
+  .channel-panel > .hint{margin-bottom:7px; display:block;}
+  .ch-group{margin-top:7px;}
+  .ch-group > span{font-size:.72rem; font-weight:bold; color:var(--ink-soft); display:block; margin-bottom:4px;}
+  .ch-list{display:flex; flex-wrap:wrap; gap:6px;}
   .ch{
-    display:inline-flex; align-items:center; gap:6px; border:1px solid var(--line); border-radius:6px;
-    padding:5px 9px; background:#fff; cursor:pointer; font-size:.8rem; user-select:none;
+    display:inline-flex; align-items:center; gap:5px; border:1px solid var(--line); border-radius:6px;
+    padding:4px 8px; background:#fff; cursor:pointer; font-size:.77rem; user-select:none;
   }
   .ch:hover{border-color:var(--accent);}
   .ch.checked{background:var(--tint2); border-color:var(--accent-d);}
   .ch input{accent-color:var(--accent-d); cursor:pointer;}
-  .ch .code{font-weight:bold; color:var(--accent-d); font-size:.72rem;}
+  .ch .code{font-weight:bold; color:var(--accent-d); font-size:.7rem;}
 
-  /* ── 5. 미리보기 ───────────────────────── */
-  .preview-head{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px; margin-bottom:10px;}
-  .preview-stats{font-size:.82rem; color:var(--ink-soft);}
-  .preview-stats b{color:var(--accent-d); font-size:1rem;}
-  .notice{font-size:.78rem; background:#EEF3F7; border:1px solid #C7D2DD; color:#33495D; border-radius:6px; padding:7px 12px; margin-bottom:10px; display:none;}
-  .notice.visible{display:block;}
-  .tbl-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
-  table.preview{border-collapse:collapse; width:100%; font-size:.8rem; background:#fff;}
-  table.preview th{
-    background:var(--tint3); color:#26303A; padding:7px 8px; border:1px solid var(--line);
-    position:sticky; top:0; white-space:nowrap; font-size:.78rem;
+  /* ── 우측 결과 패널 ────────────────────── */
+  .result-panel{display:flex; flex-direction:column; max-height:calc(100vh - 28px);}
+  .result-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:8px 12px; background:var(--tint); border-bottom:1px solid var(--line); flex:none;
   }
-  table.preview td{border:1px solid var(--line); padding:6px 8px; vertical-align:top;}
-  td.stage-cell{font-weight:bold; text-align:center; vertical-align:middle; white-space:nowrap; width:52px;}
-  td.no-cell{white-space:nowrap; color:var(--ink-soft); font-size:.75rem; width:56px; text-align:center;}
+  .tabs{display:flex; gap:6px;}
+  .tab{
+    font:inherit; font-size:.84rem; font-weight:bold; border:1.5px solid var(--line); background:#fff;
+    border-radius:7px; padding:6px 14px; cursor:pointer; color:var(--ink-soft);
+  }
+  .tab:hover{border-color:var(--accent); color:var(--accent-d);}
+  .tab.active{background:var(--accent); border-color:var(--accent-d); color:#fff;}
+  .tab .cnt{font-weight:normal; font-size:.74rem; opacity:.85;}
+  button.dl{
+    background:linear-gradient(135deg,var(--accent),var(--accent-d)); color:#FFFFFF; border:none; border-radius:7px;
+    font:inherit; font-weight:bold; font-size:.85rem; padding:8px 18px; cursor:pointer; box-shadow:0 2px 6px rgba(62,92,118,.3);
+    white-space:nowrap;
+  }
+  button.dl:hover{filter:brightness(1.08);}
+  button.dl:active{transform:translateY(1px);}
+  .result-meta{padding:8px 12px 0; flex:none;}
+  .preview-stats{font-size:.78rem; color:var(--ink-soft);}
+  .preview-stats b{color:var(--accent-d); font-size:.95rem;}
+  .dl-file{font-size:.73rem; color:var(--ink-soft); margin-top:2px;}
+  .dl-msg{font-size:.76rem; color:var(--danger); margin-top:2px;}
+  .notice{font-size:.75rem; background:#EEF3F7; border:1px solid #C7D2DD; color:#33495D; border-radius:6px; padding:6px 11px; margin:7px 12px 0; display:none; flex:none;}
+  .notice.visible{display:block;}
+  .tab-pane{flex:1; overflow:auto; padding:10px 12px 12px; min-height:200px;}
+
+  /* ── 미리보기 표 ───────────────────────── */
+  .tbl-scroll{overflow-x:auto; border:1px solid var(--line); border-radius:8px;}
+  table.preview{border-collapse:collapse; width:100%; font-size:.76rem; background:#fff;}
+  table.preview th{
+    background:var(--tint3); color:#26303A; padding:6px 7px; border:1px solid var(--line);
+    position:sticky; top:0; white-space:nowrap; font-size:.74rem; z-index:1;
+  }
+  table.preview td{border:1px solid var(--line); padding:5px 7px; vertical-align:top;}
+  td.stage-cell{font-weight:bold; text-align:center; vertical-align:middle; white-space:nowrap; width:46px;}
+  td.no-cell{white-space:nowrap; color:var(--ink-soft); font-size:.71rem; width:52px; text-align:center;}
   td.task-cell{font-weight:bold; white-space:nowrap;}
   td.status-cell{text-align:center; color:#8A8A8A; white-space:nowrap;}
-  td.note-cell{color:var(--ink-soft); font-size:.75rem;}
-  td.editable{background:#F7F9FB; cursor:text; min-width:80px;}
+  td.note-cell{color:var(--ink-soft); font-size:.71rem;}
+  td.editable{background:#F7F9FB; cursor:text; min-width:76px;}
   td.editable:focus{outline:2px solid var(--accent); background:#fff;}
   td.editable:empty::before{content:'—'; color:#C9BD97;}
   tr.auto-row td.no-cell::after{content:' ⚙'; color:var(--auto);}
-  .empty-msg{padding:28px; text-align:center; color:var(--ink-soft); font-size:.85rem;}
+  .empty-msg{padding:28px; text-align:center; color:var(--ink-soft); font-size:.83rem;}
 
-  /* ── 요청 쪽지 ─────────────────────────── */
-  .note-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px;}
+  /* ── 요청 쪽지 (우측 패널 내 1열) ────────── */
+  .note-grid{display:grid; grid-template-columns:1fr; gap:11px;}
   .note-card{border:1px solid var(--line); border-radius:8px; background:#FBFCFD; overflow:hidden;}
-  .note-head{display:flex; justify-content:space-between; align-items:center; gap:8px; padding:8px 12px; background:var(--tint); border-bottom:1px solid var(--line);}
-  .note-head b{font-size:.85rem;}
-  .note-head .to{font-size:.72rem; color:var(--ink-soft);}
+  .note-head{display:flex; justify-content:space-between; align-items:center; gap:8px; padding:7px 11px; background:var(--tint); border-bottom:1px solid var(--line);}
+  .note-head b{font-size:.83rem;}
+  .note-head .to{font-size:.7rem; color:var(--ink-soft);}
   .note-btns{display:flex; gap:6px;}
   .note-btns button{
-    font:inherit; font-size:.74rem; border:1px solid var(--line); background:#fff; border-radius:5px;
+    font:inherit; font-size:.72rem; border:1px solid var(--line); background:#fff; border-radius:5px;
     padding:3px 9px; cursor:pointer; white-space:nowrap;
   }
   .note-btns button:hover{border-color:var(--accent); color:var(--accent-d);}
   .note-btns button.copied{background:var(--accent); color:#fff; border-color:var(--accent);}
   .note-card textarea{
-    width:100%; border:none; background:transparent; font:inherit; font-size:.8rem; line-height:1.5;
-    padding:10px 12px; min-height:230px; resize:vertical; color:var(--ink);
+    width:100%; border:none; background:transparent; font:inherit; font-size:.78rem; line-height:1.5;
+    padding:9px 11px; min-height:210px; resize:vertical; color:var(--ink);
   }
   .note-card textarea:focus{outline:2px solid var(--accent); background:#fff;}
-  .note-edited{font-size:.68rem; color:var(--auto);}
-  @media (max-width:900px){ .note-grid{grid-template-columns:1fr;} }
+  .note-edited{font-size:.66rem; color:var(--auto);}
 
-  /* ── 다운로드 바 ───────────────────────── */
-  .dl-bar{
-    position:fixed; left:0; right:0; bottom:0; background:rgba(246,247,249,.97); border-top:2px solid var(--accent);
-    padding:12px 0; z-index:50; box-shadow:0 -4px 14px rgba(0,0,0,.06);
+  /* ── 반응형 ───────────────────────────── */
+  @media (max-width:1100px){
+    .layout{grid-template-columns:1fr;}
+    .col-right{position:static;}
+    .result-panel{max-height:none;}
+    .info-grid{grid-template-columns:repeat(2,1fr);}
   }
-  .dl-inner{max-width:1180px; margin:0 auto; padding:0 20px; display:flex; align-items:center; justify-content:space-between; gap:14px;}
-  .dl-msg{font-size:.8rem; color:var(--danger); flex:1;}
-  .dl-file{font-size:.78rem; color:var(--ink-soft);}
-  button.dl{
-    background:linear-gradient(135deg,var(--accent),var(--accent-d)); color:#FFFFFF; border:none; border-radius:8px;
-    font:inherit; font-weight:bold; font-size:.95rem; padding:11px 26px; cursor:pointer; box-shadow:0 2px 6px rgba(62,92,118,.3);
-  }
-  button.dl:hover{filter:brightness(1.06);}
-  button.dl:active{transform:translateY(1px);}
 
-  /* ── 인쇄 ─────────────────────────────── */
+  /* ── 인쇄: 체크리스트만 ─────────────────── */
   @media print{
-    header,.dl-bar,#secInfo,#secPreset,#secModule{display:none;}
+    header,#secInfo,.col-left,.result-head,.result-meta,.notice,#paneNotes{display:none !important;}
     body{background:#fff; padding:0;}
-    section.card{border:none; margin:0;}
+    .layout{display:block; margin:0;}
+    .col-right{position:static;}
+    section.card{border:none;}
+    .result-panel{max-height:none;}
+    .tab-pane{overflow:visible; padding:0;}
+    #panePreview{display:block !important;}
     .tbl-scroll{overflow:visible; border:none;}
     table.preview th{position:static;}
-  }
-  @media (max-width:900px){
-    .info-grid{grid-template-columns:repeat(2,1fr);}
-    .preset-row{grid-template-columns:repeat(2,1fr);}
   }
 </style>
 </head>
 <body>
 
 <header>
-  <div class="wrap">
-    <h1>마케팅 캠페인 SOP — 모듈형 체크리스트 생성기 <small style="font-weight:normal;font-size:.8rem;">v3.0</small></h1>
-    <p>2026.06.22 상세 SOP 기준 · 모듈 선택 → 과업 단위 체크리스트 자동 생성 → 인쇄형 Excel 다운로드 · 사업전략팀</p>
+  <div class="wrap head-inner">
+    <div>
+      <h1>마케팅 캠페인 SOP — 모듈형 체크리스트 생성기 <small style="font-weight:normal;font-size:.75rem;">v3.0</small></h1>
+      <p>2026.06.22 상세 SOP 기준 · 사업전략팀</p>
+    </div>
+    <div class="flowsteps"><b>①</b> 캠페인 정보 → <b>②</b> 프리셋 → <b>③</b> 모듈·채널 조정 → <b>④</b> 체크리스트·쪽지 확인 → <b>⑤</b> Excel</div>
   </div>
 </header>
 
 <div class="wrap">
 
-  <!-- 1. 캠페인 정보 -->
+  <!-- 캠페인 정보 (상단 가로 바) -->
   <section class="card" id="secInfo">
-    <h2><span class="step">STEP 1</span> 캠페인 정보 입력</h2>
+    <h2><span class="step">STEP 1</span> 캠페인 정보</h2>
     <div class="card-body">
       <div class="info-grid">
-        <div class="field" style="grid-column:span 2;">
+        <div class="field">
           <label>캠페인명 <span class="req">*</span></label>
           <input type="text" id="inpName" placeholder="예) 2026 하반기 신규가입 이벤트" maxlength="60">
         </div>
-        <div class="field" style="grid-column:span 2;">
-          <label>캠페인 유형 <span class="req">*</span> <span class="hint" style="font-weight:normal;">(중복 선택 가능)</span></label>
+        <div class="field">
+          <label>캠페인 유형 <span class="req">*</span> <span class="hint">(중복 선택)</span></label>
           <div class="type-chips" id="typeChips">
             <label class="tchip"><input type="checkbox" value="인지">인지</label>
             <label class="tchip"><input type="checkbox" value="도달">도달</label>
             <label class="tchip"><input type="checkbox" value="전환">전환</label>
             <label class="tchip"><input type="checkbox" value="리텐션">리텐션</label>
           </div>
-        </div>
-        <div class="field" id="budgetField">
-          <label>예산 총액 (원)</label>
-          <input type="number" id="inpBudget" min="0" step="10000" placeholder="예) 3000000">
-          <div class="why">※ P3(예산 수립) 모듈 선택으로 표시됨</div>
         </div>
         <div class="field">
           <label>시작일 <span class="req">*</span></label>
@@ -232,58 +255,61 @@
           <label>종료일 <span class="req">*</span></label>
           <input type="date" id="inpEnd">
         </div>
+        <div class="field" id="budgetField">
+          <label>예산 총액 (원)</label>
+          <input type="number" id="inpBudget" min="0" step="10000" placeholder="예) 3000000">
+          <div class="why">※ P3(예산 수립) 선택 시 표시</div>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- 2. 프리셋 -->
-  <section class="card" id="secPreset">
-    <h2><span class="step">STEP 2</span> 프리셋 선택 <span class="hint">클릭 시 해당 모듈 일괄 선택 · 이후 개별 수정 가능 (수정 시 종속 규칙 재적용)</span></h2>
-    <div class="card-body">
-      <div class="preset-row" id="presetRow"></div>
-    </div>
-  </section>
+  <!-- 좌: 설정 / 우: 결과 -->
+  <div class="layout">
 
-  <!-- 3. 모듈 + 4. 채널 -->
-  <section class="card" id="secModule">
-    <h2><span class="step">STEP 3</span> 모듈 선택 <span class="hint">🔒 고정 모듈은 해제 불가 · ⚙ 자동 체크는 종속 규칙에 의해 선택됨 (해제 가능, 해제 시 경고 표시)</span></h2>
-    <div class="card-body">
-      <div id="moduleArea"></div>
-      <ul class="auto-reasons" id="autoReasons"></ul>
-    </div>
-  </section>
+    <div class="col-left">
+      <section class="card" id="secPreset">
+        <h2><span class="step">STEP 2</span> 프리셋 <span class="hint">클릭 시 일괄 선택 · 이후 개별 수정 가능</span></h2>
+        <div class="card-body">
+          <div class="preset-row" id="presetRow"></div>
+        </div>
+      </section>
 
-  <!-- 5. 미리보기 -->
-  <section class="card" id="secPreview">
-    <h2><span class="step">STEP 4</span> 체크리스트 미리보기 <span class="hint">협업부서·기한(D-) 셀은 클릭하여 직접 수정 가능</span></h2>
-    <div class="card-body">
-      <div class="preview-head">
-        <div class="preview-stats" id="previewStats"></div>
-      </div>
-      <div class="notice" id="compressNotice"></div>
-      <div class="tbl-scroll" id="previewBox"></div>
+      <section class="card" id="secModule">
+        <h2><span class="step">STEP 3</span> 모듈·채널 선택 <span class="hint">🔒 고정 · ⚙ 자동 체크(해제 가능, 해제 시 경고)</span></h2>
+        <div class="card-body">
+          <div id="moduleArea"></div>
+          <ul class="auto-reasons" id="autoReasons"></ul>
+        </div>
+      </section>
     </div>
-  </section>
 
-  <!-- 6. 요청 쪽지 -->
-  <section class="card" id="secNotes">
-    <h2><span class="step">STEP 5</span> 요청 쪽지 <span class="hint">선택 결과·일정에 맞춰 수신처별 자동 생성 — 내용 수정 후 [복사]하여 전달 (수정본은 유지, ↺로 재생성)</span></h2>
-    <div class="card-body">
-      <div class="note-grid" id="notesArea"></div>
-    </div>
-  </section>
+    <aside class="col-right">
+      <section class="card result-panel" id="secResult">
+        <div class="result-head">
+          <div class="tabs">
+            <button type="button" class="tab active" data-tab="preview">📋 체크리스트 <span class="cnt" id="tabCntPrev"></span></button>
+            <button type="button" class="tab" data-tab="notes">✉ 요청 쪽지 <span class="cnt" id="tabCntNotes"></span></button>
+          </div>
+          <button class="dl" id="btnDownload">⬇ Excel 다운로드</button>
+        </div>
+        <div class="result-meta">
+          <div class="preview-stats" id="previewStats"></div>
+          <div class="dl-file" id="dlFileName">파일명: (캠페인명 입력 시 표시)</div>
+          <div class="dl-msg" id="dlMsg"></div>
+        </div>
+        <div class="notice" id="compressNotice"></div>
+        <div class="tab-pane" id="panePreview">
+          <div class="tbl-scroll" id="previewBox"></div>
+        </div>
+        <div class="tab-pane" id="paneNotes" hidden>
+          <div class="note-grid" id="notesArea"></div>
+        </div>
+      </section>
+    </aside>
 
-</div>
-
-<!-- 다운로드 바 -->
-<div class="dl-bar">
-  <div class="dl-inner">
-    <div>
-      <div class="dl-file" id="dlFileName">파일명: (캠페인명 입력 시 표시)</div>
-      <div class="dl-msg" id="dlMsg"></div>
-    </div>
-    <button class="dl" id="btnDownload">⬇ Excel 다운로드 (.xlsx)</button>
   </div>
+
 </div>
 
 <script>
@@ -790,6 +816,7 @@ function renderModules(){
 function renderPreview(){
   const {rows, active, pi} = buildRows();
   const chCount = state.channels.size;
+  $('tabCntPrev').textContent = rows.length ? `(${rows.length})` : '';
   $('previewStats').innerHTML =
     `총 <b>${rows.length}</b>개 과업 · 모듈 <b>${[...active].length}</b>개 · 채널 <b>${chCount}</b>개` +
     STAGE_ORDER.map(s => {
@@ -1011,6 +1038,7 @@ ${name} 캠페인 관련 배너·팝업 게시를 요청드립니다.
 
 function renderNotes(){
   const notes = buildNotes();
+  $('tabCntNotes').textContent = notes.length ? `(${notes.length})` : '';
   const box = $('notesArea');
   if(!notes.length){
     box.innerHTML = '<div class="empty-msg" style="grid-column:1/-1;">모듈·채널을 선택하면 필요한 요청 쪽지가 자동 생성됩니다.</div>';
@@ -1095,6 +1123,13 @@ $('previewBox').addEventListener('input', e => {
   ov[field] = td.textContent.trim();
   state.overrides.set(uid, ov);
 });
+
+/* 결과 패널 탭 전환 */
+document.querySelectorAll('.tab[data-tab]').forEach(btn => btn.addEventListener('click', () => {
+  document.querySelectorAll('.tab[data-tab]').forEach(b => b.classList.toggle('active', b === btn));
+  $('panePreview').hidden = btn.dataset.tab !== 'preview';
+  $('paneNotes').hidden = btn.dataset.tab !== 'notes';
+}));
 
 /* 요청 쪽지: 복사·재생성·수정 저장 */
 $('notesArea').addEventListener('click', e => {
