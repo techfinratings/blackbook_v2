@@ -1,6 +1,6 @@
 // Inblog 포스트 프록시 — 발행(published)건만 반환
 // Vercel 환경변수: INBLOG_API_KEY
-const { fetchPublished, rawSample } = require('../lib/inblog');
+const { fetchPublished, rawSample, classifyCat } = require('../lib/inblog');
 
 module.exports = async (req, res) => {
   res.setHeader('Access-Control-Allow-Origin', '*');
@@ -29,6 +29,7 @@ module.exports = async (req, res) => {
     const posts = list.map(p => ({
       id: p.id, title: p.title, slug: p.slug,
       description: p.description, date: p.date, image: p.image,
+      cat: classifyCat(p.title, p.keywords),   // 콘텐츠 카테고리 필터용
     }));
     res.status(200).json({ posts });
   } catch (err) {

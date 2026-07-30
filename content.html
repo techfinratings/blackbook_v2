@@ -32,14 +32,14 @@
     <h1 class="page-title" style="font-size:38px;margin-top:12px;">콘텐츠</h1>
     <p class="page-intro" style="max-width:660px;margin:9px 0 0;">크레디뷰가 직접 쓴 <b style="color:var(--ink-1);">아티클</b>과, 현업 전문가가 매달 한 편씩 채우는 <b style="color:var(--ink-1);">리더스 오피니언</b>.<br>실무에서 막힐 때 가장 먼저 펼치는 두 갈래의 기록.</p>
     <div class="tabbar" id="seg" style="margin-top:26px;">
-      <button data-seg="article" class="on">아티클<span class="cnt">· 7</span></button>
+      <button data-seg="article" class="on">아티클<span class="cnt" id="artCnt"></span></button>
       <button data-seg="contrib">리더스 오피니언</button>
     </div>
   </div>
 
   <!-- ARTICLE -->
   <div class="wrap" data-view="article" style="padding-top:30px;padding-bottom:72px;">
-    <a class="hero-article" id="artHero" href="/content-detail">
+    <a class="hero-article" id="artHero" href="/content">
       <div style="width:100%;aspect-ratio:16/9;border-radius:12px;background:var(--blue);position:relative;overflow:hidden;">
         <svg viewBox="0 0 760 428" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%"><g stroke="rgba(255,255,255,.5)" stroke-width="3" fill="none"><path d="M40 340 L180 288 L320 306 L460 176 L600 224 L730 104"/></g><g fill="#fff"><circle cx="180" cy="288" r="6"/><circle cx="460" cy="176" r="6"/><circle cx="730" cy="104" r="6"/></g><g fill="rgba(255,255,255,.14)"><rect x="60" y="352" width="44" height="64" rx="4"/><rect x="126" y="326" width="44" height="90" rx="4"/><rect x="192" y="372" width="44" height="44" rx="4"/></g></svg>
       </div>
@@ -50,12 +50,12 @@
         </div>
         <h2 class="bt" style="font-size:29px;line-height:1.36;font-weight:700;margin:14px 0 0;">부채비율만 보던 여신 심사, 현금흐름까지 읽는 법</h2>
         <p style="font-size:15.5px;color:var(--ink-2);margin:12px 0 0;line-height:1.65;">재무제표 세 장으로 거래처의 상환 능력을 가늠하는 실무 체크포인트. 숫자 뒤에 숨은 신호를 읽는 크레디뷰 리서치의 관점.</p>
-        <div class="mono" style="font-size:11.5px;color:var(--ink-3);margin-top:16px;">크레디뷰 리서치 · 8분 읽기 · 조회 1,240</div>
+        <div class="mono" style="font-size:11.5px;color:var(--ink-3);margin-top:16px;">크레디뷰 리서치</div>
       </div>
     </a>
     <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;" id="filters"></div>
     <div class="art-grid" id="artGrid"></div>
-    <div style="display:flex;justify-content:center;margin-top:44px;"><button class="btn-outline">더 펼치기 ↓</button></div>
+    <div style="display:flex;justify-content:center;margin-top:44px;"><button class="btn-outline" id="moreBtn" style="display:none;">더 펼치기 ↓</button></div>
   </div>
 
   <!-- 리더스 오피니언 — 실제 기고 확보 전까지 Who's Next? 모집 카드 -->
@@ -84,39 +84,43 @@
 (function () {
   var esc = function (s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); };
   var COL = { 세무:'#C2611B', 회계:'#1F8455', 법령:'#6A3FC0', 재무:'#2348D6', 경영:'#181B1E', 정책자금:'#2348D6' };
-  var ARTICLES = [
-    { cat:'경영', title:'런웨이가 6개월 남았다는 신호를 재무팀이 먼저 잡는 5가지 지표', read:'6분', views:'870' },
-    { cat:'회계', title:'리스 회계처리, 사용권자산 감가 기준을 둘러싼 실무 쟁점', read:'7분', views:'640' },
-    { cat:'세무', title:'2025년 달라지는 법인세 신고, 놓치기 쉬운 항목', read:'5분', views:'1,510' },
-    { cat:'법령', title:'중대재해처벌법 개정, 재무·관리팀이 확인할 세 가지', read:'6분', views:'520' },
-    { cat:'재무', title:'운전자본을 30일 줄이면 이자비용은 얼마나 빠지나', read:'8분', views:'980' },
-    { cat:'정책자금', title:'2025년 하반기 정책자금 캘린더 — 놓치기 쉬운 신청 마감', read:'4분', views:'1,120' }
-  ];
-  var FILTERS = ['전체','세무','회계','법령','재무','경영','정책자금'];
+  var FILTERS = ['전체','세무','회계','재무','법령','경영','정책자금'];
   var filter = '전체';
+  var PAGE = 12;                 // 더 펼치기 단위
+  var shown = PAGE;
+  var allPosts = null;           // 인블로그 실데이터
 
   var grid = document.getElementById('artGrid');
   var fWrap = document.getElementById('filters');
+  var moreBtn = document.getElementById('moreBtn');
 
   function renderFilters() {
     fWrap.innerHTML = FILTERS.map(function (f) {
       return '<button class="filter' + (f === filter ? ' on' : '') + '" data-f="' + f + '">' + f + '</button>';
     }).join('');
   }
+  function card(p) {
+    var cover = p.image
+      ? '<div class="cover" style="aspect-ratio:16/10;background-image:none;"><img src="' + esc(p.image) + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>'
+      : '<div class="cover" style="aspect-ratio:16/10;"><span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;letter-spacing:.12em;color:#9CA4AC;">BLACK BOOK</span></div>';
+    return '<a href="/p/' + encodeURIComponent(p.slug || p.id) + '" style="display:block;cursor:pointer;">' + cover +
+      '<div class="mono" style="font-size:10px;letter-spacing:.06em;margin-top:13px;color:' + (COL[p.cat] || '#2348D6') + ';">' + esc(p.cat || '아티클') + '</div>' +
+      '<h3 class="bt" style="font-size:18px;line-height:1.44;font-weight:700;margin:7px 0 0;">' + esc(p.title) + '</h3>' +
+      '<div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:10px;">크레디뷰 리서치 · ' + esc(p.date || '') + '</div></a>';
+  }
   function renderGrid() {
-    var list = ARTICLES.filter(function (a) { return filter === '전체' || a.cat === filter; });
-    grid.innerHTML = list.map(function (a) {
-      return '<a href="/content-detail" style="display:block;cursor:pointer;">' +
-        '<div class="cover" style="aspect-ratio:16/10;"><span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;letter-spacing:.12em;color:#9CA4AC;">COVER</span></div>' +
-        '<div class="mono" style="font-size:10px;letter-spacing:.06em;margin-top:13px;color:' + (COL[a.cat] || '#181B1E') + ';">' + a.cat + '</div>' +
-        '<h3 class="bt" style="font-size:18px;line-height:1.44;font-weight:700;margin:7px 0 0;">' + a.title + '</h3>' +
-        '<div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:10px;">크레디뷰 리서치 · ' + a.read + ' 읽기 · 조회 ' + a.views + '</div></a>';
-    }).join('') || '<div class="mono" style="color:#7E868F;padding:20px 0;">해당 카테고리 글이 없습니다.</div>';
+    if (!allPosts) { grid.innerHTML = '<div class="mono" style="color:#7E868F;padding:26px 0;">글을 불러오는 중…</div>'; moreBtn.style.display = 'none'; return; }
+    var rest = allPosts.slice(1);   // 첫 글은 히어로
+    var list = filter === '전체' ? rest : rest.filter(function (p) { return p.cat === filter; });
+    grid.innerHTML = list.slice(0, shown).map(card).join('') ||
+      '<div class="mono" style="color:#7E868F;padding:20px 0;">해당 카테고리 글이 없습니다.</div>';
+    moreBtn.style.display = list.length > shown ? '' : 'none';
   }
   fWrap.addEventListener('click', function (e) {
     var b = e.target.closest('[data-f]'); if (!b) return;
-    filter = b.getAttribute('data-f'); renderFilters(); renderGrid();
+    filter = b.getAttribute('data-f'); shown = PAGE; renderFilters(); renderGrid();
   });
+  moreBtn.addEventListener('click', function () { shown += PAGE; renderGrid(); });
   document.getElementById('seg').addEventListener('click', function (e) {
     var b = e.target.closest('[data-seg]'); if (!b) return;
     var k = b.getAttribute('data-seg');
@@ -126,16 +130,16 @@
 
   renderFilters(); renderGrid();
 
-  // 실데이터: Inblog 포스트 (INBLOG_API_KEY 없으면 샘플 유지). 캐시 즉시 + 최신 갱신.
-  // 2단계 로딩: ?limit=13(첫 페이지만, 빠름)으로 먼저 그리고 → 전체 목록으로 보강
+  // 실데이터: Inblog 포스트. 2단계 로딩 — ?limit=13(빠름) 먼저, 전체 목록으로 보강
   var fetchQuick = function () { return fetch('/api/posts?limit=13').then(function (r) { return r.ok ? r.json() : null; }); };
   var fetchPosts = function () { return fetch('/api/posts').then(function (r) { return r.ok ? r.json() : null; }); };
   var applyPosts = function (d) {
     if (!d || !d.posts || !d.posts.length) return;
-    fWrap.style.display = 'none'; // 포스트에는 카테고리 필드가 없어 필터 숨김
+    allPosts = d.posts;
+    var cnt = document.getElementById('artCnt');
+    if (cnt) cnt.textContent = '· ' + allPosts.length;
 
-    var posts = d.posts;
-    var top = posts[0];
+    var top = allPosts[0];
     var hero = document.getElementById('artHero');
     if (hero) {
       hero.setAttribute('href', '/p/' + encodeURIComponent(top.slug || top.id));
@@ -146,23 +150,14 @@
         '<div>' +
           '<div style="display:flex;align-items:center;gap:10px;">' +
             '<span class="badge-ink">아티클</span>' +
-            '<span class="mono" style="font-size:11px;letter-spacing:.06em;color:var(--cat-tax);">최신 발행</span>' +
+            '<span class="mono" style="font-size:11px;letter-spacing:.06em;color:' + (COL[top.cat] || '#2348D6') + ';">' + esc(top.cat || '최신 발행') + '</span>' +
           '</div>' +
           '<h2 class="bt" style="font-size:29px;line-height:1.36;font-weight:700;margin:14px 0 0;">' + esc(top.title) + '</h2>' +
           (top.description ? '<p style="font-size:15.5px;color:var(--ink-2);margin:12px 0 0;line-height:1.65;">' + esc(top.description) + '</p>' : '') +
           '<div class="mono" style="font-size:11.5px;color:var(--ink-3);margin-top:16px;">크레디뷰 리서치 · ' + esc(top.date || '') + '</div>' +
         '</div>';
     }
-
-    grid.innerHTML = posts.slice(1).map(function (p) {
-      var cover = p.image
-        ? '<div class="cover" style="aspect-ratio:16/10;background-image:none;"><img src="' + esc(p.image) + '" alt="" loading="lazy" style="width:100%;height:100%;object-fit:cover;"></div>'
-        : '<div class="cover" style="aspect-ratio:16/10;"><span class="mono" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:10px;letter-spacing:.12em;color:#9CA4AC;">COVER</span></div>';
-      return '<a href="/p/' + encodeURIComponent(p.slug || p.id) + '" style="display:block;cursor:pointer;">' + cover +
-        '<div class="mono" style="font-size:10px;letter-spacing:.06em;margin-top:13px;color:#2348D6;">아티클</div>' +
-        '<h3 class="bt" style="font-size:18px;line-height:1.44;font-weight:700;margin:7px 0 0;">' + esc(p.title) + '</h3>' +
-        '<div class="mono" style="font-size:10.5px;color:#7E868F;margin-top:10px;">크레디뷰 리서치 · ' + esc(p.date || '') + '</div></a>';
-    }).join('');
+    renderGrid();
   };
   // 빠른 첫 페인트(캐시 또는 limit 요청) → 전체 목록으로 백그라운드 보강
   if (window.bbSWR) {
