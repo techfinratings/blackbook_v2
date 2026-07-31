@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="ring" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8FA6F3"/><stop offset="1" stop-color="#4A67D9"/>
+    </linearGradient>
+    <linearGradient id="handle" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#6F8AEA"/><stop offset="1" stop-color="#3E5BCE"/>
+    </linearGradient>
+    <radialGradient id="lens" cx=".38" cy=".3" r=".9">
+      <stop offset="0" stop-color="#FBFCFF"/><stop offset="1" stop-color="#DCE3F7"/>
+    </radialGradient>
+  </defs>
+  <!-- 손잡이 -->
+  <rect x="59" y="50" width="21" height="14" rx="7" fill="#8AA1F1" transform="rotate(-45 69.5 58)"/>
+  <rect x="61" y="56" width="17" height="38" rx="8.5" fill="url(#handle)" transform="rotate(-45 69.5 58)"/>
+  <!-- 렌즈 테두리 · 렌즈 -->
+  <circle cx="40" cy="38" r="26" fill="none" stroke="url(#ring)" stroke-width="13"/>
+  <circle cx="40" cy="38" r="20" fill="url(#lens)"/>
+  <!-- 하이라이트 -->
+  <path d="M27 31c2-6.5 8.5-10.5 15-10.5" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round" fill="none" opacity=".92"/>
+  <path d="M18.5 26c2-4.5 5.5-8 10-10" stroke="#B7C5F7" stroke-width="4" stroke-linecap="round" fill="none" opacity=".8"/>
+</svg>

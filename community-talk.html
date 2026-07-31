@@ -42,8 +42,7 @@
   </div></header>
 
   <div class="wrap" style="max-width:1020px;padding-top:40px;">
-    <div class="eyebrow">INDEX 02 — QnA</div>
-    <div style="margin-top:12px;">
+    <div>
       <h1 class="page-title" style="font-size:38px;">QnA</h1>
       <p class="page-intro" style="max-width:560px;margin:9px 0 0;">막힌 자리에서 동료에게 묻고, 겪은 것을 한 줄씩 기입하는 문답 장부.<br>실무자와 운영사 크레디뷰(기업신용평가사)가 함께 답을 채웁니다.</p>
     </div>
@@ -81,7 +80,7 @@
 <div class="modal-backdrop" id="compose" style="display:none;">
   <div class="modal-dialog" data-dialog>
     <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 24px;border-bottom:1.5px solid var(--ink-1);">
-      <div><div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--blue);">INDEX 02 · QnA</div><h3 class="bt" style="font-size:24px;font-weight:700;margin:5px 0 0;">질문하기</h3></div>
+      <div><div class="mono" style="font-size:10px;letter-spacing:.1em;color:var(--blue);">QnA</div><h3 class="bt" style="font-size:24px;font-weight:700;margin:5px 0 0;">질문하기</h3></div>
       <span data-close-compose style="font-size:24px;color:#9BA3AB;cursor:pointer;line-height:1;">×</span>
     </div>
     <div style="padding:22px 24px 24px;display:flex;flex-direction:column;gap:16px;">
@@ -109,22 +108,13 @@
 <script>
 (function () {
   var COL = { 세무:'#C2611B', 회계:'#1F8455', 법령:'#6A3FC0', 실무:'#2348D6', 경영:'#181B1E' };
-  var DATA = [
-    { cat:'세무', official:true,  ans:2, views:'128', mins:15,   author:'익명 · 세무담당', title:'관계회사 대여금, 업무무관 가지급금으로 보는 기준이 어디까지인가요?', snippet:'특수관계자 간 자금 대여인데 이자를 받고 있어도 업무무관으로 보는지 실무 경험이 궁금합니다.', tags:['가지급금','특수관계자'] },
-    { cat:'실무', official:false, ans:1, views:'96',  mins:60,   author:'김대리 · 재무팀', title:'거래처 신용등급이 두 단계 떨어졌는데 여신 한도 어떻게 조정하세요?', snippet:'주 거래처 등급이 갑자기 하락했습니다. 한도 축소 기준과 통보 방식 다들 어떻게 하시는지.', tags:['여신','신용등급'] },
-    { cat:'세무', official:true,  ans:1, views:'240', mins:180,  author:'이과장 · 회계', title:'가업승계 증여세 특례, 사후관리 요건 실무 경험 있으신 분?', snippet:'5년 사후관리 중 고용유지 요건을 못 맞출 것 같은데 추징 규모가 어느 정도인지 궁금합니다.', tags:['가업승계','증여세'] },
-    { cat:'회계', official:true,  ans:1, views:'182', mins:300,  author:'익명 · 결산담당', title:'리스 회계처리, 사용권자산 감가 기준 다들 어떻게 잡으세요?', snippet:'리스기간과 내용연수가 다를 때 상각 기준을 어디에 맞추는지 실무 사례가 필요합니다.', tags:['리스','사용권자산'] },
-    { cat:'법령', official:false, ans:0, views:'54',  mins:12,   author:'박주임 · 관리', title:'중대재해처벌법 적용 사업장, 재무·관리팀이 챙길 항목이 있을까요?', snippet:'안전관리 예산 편성과 증빙 관리 측면에서 재무팀이 준비할 게 있는지 궁금합니다.', tags:['중대재해','컴플라이언스'] },
-    { cat:'실무', official:false, ans:1, views:'310', mins:40,   author:'최팀장 · 재무', title:'결산 마감 일정 관리, 부서별 체크리스트 템플릿 공유 가능하신 분?', snippet:'분기 결산마다 부서 취합이 늦어집니다. 쓰시는 체크리스트나 캘린더 공유 부탁드려요.', tags:['결산','템플릿'] },
-    { cat:'세무', official:false, ans:1, views:'88',  mins:60,   author:'익명', title:'외화환산손익 인식 시점, 결산일 기준 환율 적용이 맞나요?', snippet:'외화예금과 외화매출채권 환산 시점을 결산일 매매기준율로 잡는 게 맞는지 확인 부탁드립니다.', tags:['외화환산','결산'] },
-    { cat:'경영', official:true,  ans:1, views:'420', mins:1440, author:'정이사 · CFO', title:'런웨이 12개월 남은 시점, 재무팀이 먼저 손대야 할 항목의 우선순위는?', snippet:'비용 구조를 다시 짜야 하는데 어디부터 손대는 게 효과적이었는지 경험 나눠주세요.', tags:['런웨이','비용관리'] },
-    { cat:'회계', official:false, ans:1, views:'62',  mins:120,  author:'한사원', title:'개발비 자산화 요건, 내부 프로젝트에서 어디까지 인정받으셨나요?', snippet:'무형자산 인식 기준 중 기술적 실현가능성을 어떤 문서로 입증해 남기시는지 궁금합니다.', tags:['개발비','무형자산'] },
-    { cat:'법령', official:true,  ans:1, views:'140', mins:1440, author:'익명 · 노무', title:'주 52시간 유연근무 도입, 급여 설계에서 놓치기 쉬운 지점은?', snippet:'선택근로제 정산기간 설정과 연장수당 계산에서 실수했던 사례 공유 부탁드립니다.', tags:['주52시간','급여'] }
-  ];
   var FILTERS = ['전체','세무','회계','법령','실무','경영'];
   var sort = 'hot', filter = '전체', ccat = '세무';
 
-  function timeLabel(m) {
+  // 게시 시점(ts)에서 매번 다시 계산 — 시간이 흐르면 라벨도 함께 갱신된다.
+  function timeLabel(ts) {
+    var t = Date.parse(ts); if (isNaN(t)) return '';
+    var m = Math.max(0, (Date.now() - t) / 60000);
     if (m < 1) return '방금 전';
     if (m < 60) return Math.round(m) + '분 전';
     if (m < 1440) return Math.round(m / 60) + '시간 전';
@@ -132,36 +122,46 @@
   }
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) { return { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]; }); }
 
-  // 실제 기입된 문답(시트) + 샘플. 실데이터가 최신이므로 앞에 옵니다.
-  var feed = DATA.slice();
+  // 피드는 서버(/api/qna) 실데이터만 사용 — 게시 일자·답변 수가 항상 실제와 일치한다.
+  var feed = [];
+  var loaded = false;
 
-  // 인기 점수: 답변 수 우선 + 조회 수
-  function popScore(q) { var v = parseInt(String(q.views || '0').replace(/[^0-9]/g, ''), 10) || 0; return (q.ans || 0) * 100 + v; }
+  // 인기 점수: 답변 수 우선 + 감정표현 수
+  function popScore(q) {
+    var rx = q.reactions ? ((q.reactions.heart || 0) + (q.reactions.like || 0)) : 0;
+    return (q.ans || 0) * 100 + rx;
+  }
 
   function renderFeed() {
+    if (!loaded) {
+      document.getElementById('count').textContent = '';
+      document.getElementById('feed').innerHTML = '<div class="mono" style="color:#7E868F;padding:40px 0;">불러오는 중…</div>';
+      return;
+    }
     var list;
     if (sort === 'new') {
-      // 새 기록: 새로 쓴 글이 위. 실제 기입글(최신) → 샘플 순, 각각 최신순.
-      var reals = feed.filter(function (q) { return q._real; }).sort(function (a, b) { return a.mins - b.mins; });
-      var samples = feed.filter(function (q) { return !q._real; }).sort(function (a, b) { return a.mins - b.mins; });
-      list = reals.concat(samples);
+      list = feed.slice().sort(function (a, b) { return Date.parse(b.ts || 0) - Date.parse(a.ts || 0); });
     } else {
-      // 요즘 뜨는: 답변·조회 많은 글이 위. 새 글(0답변·0조회)은 자연히 하단.
+      // 요즘 뜨는: 답변·감정표현 많은 글이 위. 새 글(0답변)은 자연히 하단.
       list = feed.slice().sort(function (a, b) { return popScore(b) - popScore(a); });
     }
     if (filter !== '전체') list = list.filter(function (q) { return q.cat === filter; });
     document.getElementById('count').textContent = list.length + '건';
+    if (!list.length) {
+      document.getElementById('feed').innerHTML = '<div style="padding:56px 0;text-align:center;"><div class="bt" style="font-size:19px;font-weight:700;">아직 기입된 문답이 없어요</div><p style="font-size:14px;color:var(--ink-3);margin:8px 0 0;">첫 질문을 남겨 주세요. 실무자와 크레디뷰가 답을 채웁니다.</p></div>';
+      return;
+    }
     document.getElementById('feed').innerHTML = list.map(function (q) {
       var ansCol = q.official ? '#2348D6' : (q.ans > 0 ? '#181B1E' : '#C2C9D0');
       var badge = q.official ? '<span class="mono" style="font-size:9.5px;font-weight:600;color:#2348D6;background:#EDF0FD;border-radius:3px;padding:2px 7px;">크레디뷰 답변</span>' : '';
       var tags = q.tags.map(function (t) { return '<span class="mono" style="font-size:10px;color:#49505A;background:#EEF0F2;padding:3px 8px;border-radius:3px;">#' + esc(t) + '</span>'; }).join('');
-      var href = q.id ? '/community/qna?id=' + encodeURIComponent(q.id) : '/community/qna';
+      var href = '/community/qna?id=' + encodeURIComponent(q.id);
       return '<a class="q-row" href="' + href + '">' +
         '<div style="width:60px;flex-shrink:0;text-align:center;padding-top:2px;"><div class="mono" style="font-size:23px;font-weight:600;line-height:1;color:' + ansCol + ';">' + q.ans + '</div><div class="mono" style="font-size:10px;color:#7E868F;margin-top:3px;">답변</div></div>' +
-        '<div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:10px;"><span class="mono" style="font-size:10px;letter-spacing:.05em;color:' + (COL[q.cat] || '#181B1E') + ';">' + esc(q.cat) + '</span>' + badge + '<span class="mono" style="font-size:10px;color:#9BA3AB;margin-left:auto;">' + timeLabel(q.mins) + '</span></div>' +
+        '<div style="min-width:0;flex:1;"><div style="display:flex;align-items:center;gap:10px;"><span class="mono" style="font-size:10px;letter-spacing:.05em;color:' + (COL[q.cat] || '#181B1E') + ';">' + esc(q.cat) + '</span>' + badge + '<span class="mono" style="font-size:10px;color:#9BA3AB;margin-left:auto;">' + timeLabel(q.ts) + '</span></div>' +
         '<h3 class="bt" style="font-size:19px;line-height:1.45;font-weight:700;margin:8px 0 0;">' + esc(q.title) + '</h3>' +
         '<p style="font-size:14.5px;color:#6A7079;line-height:1.6;margin:7px 0 0;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;">' + esc(q.snippet) + '</p>' +
-        '<div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;"><span class="mono" style="font-size:10.5px;color:#7E868F;">' + esc(q.author) + '</span><span style="color:#D8DCE0;">·</span><span class="mono" style="font-size:10.5px;color:#7E868F;">조회 ' + q.views + '</span>' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;"><span class="mono" style="font-size:10.5px;color:#7E868F;">' + esc(q.author) + '</span>' +
         '<span class="rx">&#10084;&#65039; ' + ((q.reactions && q.reactions.heart) || 0) + '</span><span class="rx">&#128077; ' + ((q.reactions && q.reactions.like) || 0) + '</span><div style="display:flex;gap:6px;margin-left:6px;">' + tags + '</div></div></div></a>';
     }).join('');
   }
@@ -227,24 +227,23 @@
 
   renderFilters(); renderFeed(); renderCcats();
 
-  // 실제 기입된 문답 불러오기 → 피드 최상단에 병합(최신순). 캐시 무시로 방금 글도 즉시 반영.
+  // 기입된 문답 전체를 서버에서 불러온다. 캐시 무시로 방금 글도 즉시 반영.
   fetch('/api/qna?_=' + new Date().getTime(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
-    if (!d || !d.items || !d.items.length) return;
-    var now = Date.now();
-    var real = d.items.map(function (it) {
-      var t = Date.parse(it.ts); var mins = isNaN(t) ? 0 : Math.max(0, (now - t) / 60000);
+    loaded = true;
+    feed = ((d && d.items) || []).map(function (it) {
       return {
-        id: it.id,
-        cat: it.category || '실무', official: !!it.official, ans: it.ans || 0, views: '0', mins: mins,
+        id: it.id, ts: it.ts,
+        cat: it.category || '실무', official: !!it.official, ans: it.ans || 0,
         author: it.anonymous ? '익명' : '회원',
         title: it.title, snippet: it.content, reactions: it.reactions,
-        tags: it.tags ? it.tags.split(/[\s,]+/).map(function (t) { return t.replace(/^#/, ''); }).filter(Boolean).slice(0, 3) : [],
-        _real: true
+        tags: it.tags ? it.tags.split(/[\s,]+/).map(function (t) { return t.replace(/^#/, ''); }).filter(Boolean).slice(0, 3) : []
       };
     });
-    feed = real.concat(DATA);   // 실데이터가 최신 → 앞에
     renderFeed();
-  }).catch(function () {});
+  }).catch(function () { loaded = true; renderFeed(); });
+
+  // 페이지를 열어 둔 동안에도 '몇 분 전' 라벨이 흐른 시간에 맞게 갱신되도록 주기 재렌더
+  setInterval(function () { if (loaded) renderFeed(); }, 60000);
 })();
 </script>
 <script src="/assets/subscribe.js"></script>

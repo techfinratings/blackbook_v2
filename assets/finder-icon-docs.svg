@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#EFF3FC"/><stop offset="1" stop-color="#D8E0F6"/>
+    </linearGradient>
+    <linearGradient id="cardFront" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#FDFDFF"/><stop offset="1" stop-color="#E9EEFB"/>
+    </linearGradient>
+    <linearGradient id="bar" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7E96F0"/><stop offset="1" stop-color="#5570DF"/>
+    </linearGradient>
+  </defs>
+  <!-- 뒤 왼쪽 문서 -->
+  <g transform="rotate(-14 30 52)">
+    <rect x="13" y="30" width="32" height="44" rx="6" fill="url(#card)"/>
+    <rect x="19" y="37" width="10" height="10" rx="2.5" fill="url(#bar)"/>
+    <rect x="19" y="53" width="20" height="3.6" rx="1.8" fill="url(#bar)"/>
+    <rect x="19" y="60" width="20" height="3.6" rx="1.8" fill="url(#bar)"/>
+    <rect x="19" y="67" width="14" height="3.6" rx="1.8" fill="url(#bar)"/>
+  </g>
+  <!-- 뒤 오른쪽 문서 -->
+  <g transform="rotate(12 68 50)">
+    <rect x="52" y="27" width="32" height="44" rx="6" fill="url(#card)"/>
+    <rect x="58" y="37" width="20" height="3.6" rx="1.8" fill="url(#bar)"/>
+    <rect x="58" y="45" width="20" height="3.6" rx="1.8" fill="url(#bar)"/>
+    <rect x="58" y="53" width="14" height="3.6" rx="1.8" fill="url(#bar)"/>
+  </g>
+  <!-- 앞 가운데 문서 -->
+  <rect x="29" y="20" width="38" height="52" rx="6" fill="url(#cardFront)"/>
+  <rect x="36" y="28" width="12" height="12" rx="3" fill="url(#bar)"/>
+  <rect x="36" y="47" width="24" height="4" rx="2" fill="url(#bar)"/>
+  <rect x="36" y="55" width="24" height="4" rx="2" fill="url(#bar)"/>
+  <rect x="36" y="63" width="17" height="4" rx="2" fill="url(#bar)"/>
+  <!-- 접힌 모서리 -->
+  <path d="M67 58v8a6 6 0 0 1-6 6h-8z" fill="#C3D0F7"/>
+  <path d="M53 72l14-14v3l-11 11z" fill="#AEBFF3" opacity=".7"/>
+</svg>

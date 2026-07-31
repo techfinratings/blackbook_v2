@@ -125,8 +125,7 @@ function renderHub(base) {
 
   return head('실무백과', desc, canonical, ld) + `
   <div class="wrap" style="max-width:960px;padding-top:44px;">
-    <div class="eyebrow">INDEX 06 — 실무백과</div>
-    <h1 class="page-title" style="font-size:38px;margin-top:12px;">찾아보는 실무백과</h1>
+    <h1 class="page-title" style="font-size:38px;">찾아보는 실무백과</h1>
     <p class="page-intro" style="max-width:620px;margin:10px 0 0;">세무 신고처럼 주기가 있는 일부터 실무에서 자주 막히는 지점까지, 카테고리별로 정리했습니다. 신고가 있는 주제에는 <b>실제 기한</b>을 함께 담았습니다.</p>
     ${sections}
     <div style="margin:20px 0 0;"></div>
