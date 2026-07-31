@@ -52,15 +52,6 @@
   var qid = new URLSearchParams(location.search).get('id');
   var thread = document.getElementById('thread');
 
-  // 샘플(id 없이 접근 시 폴백)
-  var SAMPLE = {
-    question: { id:'', category:'세무', title:'관계회사 대여금, 업무무관 가지급금으로 보는 기준이 어디까지인가요?', ts:new Date(Date.now()-15*60000).toISOString(), content:'거래처가 아닌 관계회사(지분 40%)에 운영자금을 대여했습니다. 이자율은 가중평균차입이자율로 받고 있는데, 세무조사에서 업무무관 가지급금으로 볼 여지가 있는지 궁금합니다.\n\n인정이자 계산이나 지급이자 손금불산입까지 걸리는 기준선이 실무적으로 어디쯤인지, 소명 자료는 어디까지 준비해 두시는지 경험 있으신 분들 의견 부탁드립니다.', tags:['가지급금','특수관계자'], anonymous:true },
-    answers: [
-      { official:true, author:'크레디뷰 리서치', ts:new Date(Date.now()-12*60000).toISOString(), helpful:42, content:'업무무관 가지급금 판단의 핵심은 ‘대여의 업무 관련성’입니다. 관계회사라는 사실만으로 곧바로 업무무관이 되지는 않지만, ① 대여의 사업상 필요성, ② 적정 이자의 수취, ③ 회수 계획의 구체성이 소명되지 않으면 세무상 업무무관으로 재구성될 수 있습니다.\n\n가중평균차입이자율 이상으로 이자를 받고 계신다면 인정이자 이슈는 크지 않습니다. 다만 대여 규모가 자기자본 대비 과도하거나 회수가 장기 지연되면 지급이자 손금불산입 대상이 될 수 있으니, 이사회 결의서·금전소비대차 약정서·회수 이력을 함께 갖춰 두시길 권합니다.' },
-      { official:false, author:'이세무', ts:new Date(Date.now()-8*60000).toISOString(), helpful:9, content:'실무에서는 ‘왜 이 시점에, 왜 이 회사에 빌려줬는가’에 대한 사업상 이유를 문서로 남기는 게 가장 중요합니다. 이자율만 맞춰 두고 근거 서류가 없으면 조사에서 방어가 어렵습니다.' }
-    ]
-  };
-
   function renderQuestion(q) {
     var col = COL[q.category] || '#181B1E';
     var tags = (q.tags || []).map(function (t) { return '<span class="mono" style="font-size:10.5px;color:#49505A;background:#EEF0F2;padding:5px 10px;border-radius:3px;">#' + esc(t) + '</span>'; }).join('');
@@ -158,7 +149,7 @@
     });
   }
 
-  if (!qid) { render(SAMPLE.question, SAMPLE.answers); return; }
+  if (!qid) { location.replace('/community/talk'); return; }
 
   Promise.all([
     fetch('/api/qna?_=' + Date.now(), { cache:'no-store' }).then(function (r) { return r.ok ? r.json() : { items: [] }; }),
@@ -168,7 +159,9 @@
     if (!q) { thread.innerHTML = '<div style="padding:60px 0;text-align:center;"><div class="bt" style="font-size:22px;font-weight:700;">삭제되었거나 찾을 수 없는 글이에요</div><p style="color:var(--ink-3);margin-top:10px;"><a href="/community/talk" style="color:var(--blue);">QnA</a>으로 돌아가기</p></div>'; return; }
     var question = { id:q.id, category:q.category, title:q.title, ts:q.ts, content:q.content, reactions:q.reactions, tags:(q.tags ? String(q.tags).split(/[\s,]+/).map(function(t){return t.replace(/^#/,'');}).filter(Boolean) : []), anonymous:q.anonymous };
     render(question, rs[1].items || []);
-  }).catch(function () { render(SAMPLE.question, SAMPLE.answers); });
+  }).catch(function () {
+    thread.innerHTML = '<div style="padding:60px 0;text-align:center;"><div class="bt" style="font-size:22px;font-weight:700;">글을 불러오지 못했어요</div><p style="color:var(--ink-3);margin-top:10px;">잠시 후 다시 시도하거나 <a href="/community/talk" style="color:var(--blue);">QnA</a>으로 돌아가 주세요.</p></div>';
+  });
 })();
 </script>
 <script src="/assets/subscribe.js"></script>

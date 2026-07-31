@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
+  <defs>
+    <linearGradient id="body" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8FA6F3"/><stop offset="1" stop-color="#4A67D9"/>
+    </linearGradient>
+    <linearGradient id="bell" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7E96F0"/><stop offset="1" stop-color="#5570DF"/>
+    </linearGradient>
+    <radialGradient id="face" cx=".38" cy=".3" r=".95">
+      <stop offset="0" stop-color="#FBFCFF"/><stop offset="1" stop-color="#E0E7F8"/>
+    </radialGradient>
+  </defs>
+  <!-- 다리 -->
+  <rect x="19" y="74" width="9" height="16" rx="4.5" fill="url(#bell)" transform="rotate(28 23.5 82)"/>
+  <rect x="68" y="74" width="9" height="16" rx="4.5" fill="url(#bell)" transform="rotate(-28 72.5 82)"/>
+  <!-- 종 -->
+  <g transform="rotate(-32 25 21)">
+    <path d="M11 24a14 10.5 0 0 1 28 0z" fill="url(#bell)"/>
+    <rect x="8" y="21" width="34" height="6" rx="3" fill="#E7ECFB"/>
+  </g>
+  <g transform="rotate(32 71 21)">
+    <path d="M57 24a14 10.5 0 0 1 28 0z" fill="url(#bell)"/>
+    <rect x="54" y="21" width="34" height="6" rx="3" fill="#E7ECFB"/>
+  </g>
+  <!-- 꼭지 -->
+  <rect x="45" y="10" width="6" height="8" fill="#6480E7"/>
+  <rect x="41" y="5" width="14" height="8" rx="3.5" fill="#E7ECFB"/>
+  <!-- 몸통 · 문자판 -->
+  <circle cx="48" cy="52" r="31" fill="url(#body)"/>
+  <circle cx="48" cy="52" r="23.5" fill="url(#face)"/>
+  <!-- 눈금 -->
+  <g fill="#5F7BE4">
+    <rect x="46.4" y="32.5" width="3.2" height="6.5" rx="1.6"/>
+    <rect x="46.4" y="65" width="3.2" height="6.5" rx="1.6"/>
+    <rect x="65" y="50.4" width="6.5" height="3.2" rx="1.6"/>
+    <rect x="24.5" y="50.4" width="6.5" height="3.2" rx="1.6"/>
+  </g>
+  <g fill="#FFFFFF" opacity=".9">
+    <circle cx="61" cy="39" r="2"/><circle cx="61" cy="65" r="2"/>
+    <circle cx="35" cy="39" r="2"/><circle cx="35" cy="65" r="2"/>
+  </g>
+  <!-- 바늘 -->
+  <path d="M48 52 39.5 44.5" stroke="#4E69D6" stroke-width="5" stroke-linecap="round"/>
+  <path d="M48 52 59.5 42.5" stroke="#4E69D6" stroke-width="5" stroke-linecap="round"/>
+  <circle cx="48" cy="52" r="3.6" fill="#3D57C4"/>
+</svg>
