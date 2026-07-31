@@ -125,6 +125,7 @@
   // 피드는 서버(/api/qna) 실데이터만 사용 — 게시 일자·답변 수가 항상 실제와 일치한다.
   var feed = [];
   var loaded = false;
+  var loadError = false;
 
   // 인기 점수: 답변 수 우선 + 감정표현 수
   function popScore(q) {
@@ -148,7 +149,9 @@
     if (filter !== '전체') list = list.filter(function (q) { return q.cat === filter; });
     document.getElementById('count').textContent = list.length + '건';
     if (!list.length) {
-      document.getElementById('feed').innerHTML = '<div style="padding:56px 0;text-align:center;"><div class="bt" style="font-size:19px;font-weight:700;">아직 기입된 문답이 없어요</div><p style="font-size:14px;color:var(--ink-3);margin:8px 0 0;">첫 질문을 남겨 주세요. 실무자와 크레디뷰가 답을 채웁니다.</p></div>';
+      document.getElementById('feed').innerHTML = loadError
+        ? '<div style="padding:56px 0;text-align:center;"><div class="bt" style="font-size:19px;font-weight:700;">문답을 불러오지 못했어요</div><p style="font-size:14px;color:var(--ink-3);margin:8px 0 0;">잠시 후 새로고침해 주세요.</p></div>'
+        : '<div style="padding:56px 0;text-align:center;"><div class="bt" style="font-size:19px;font-weight:700;">아직 기입된 문답이 없어요</div><p style="font-size:14px;color:var(--ink-3);margin:8px 0 0;">첫 질문을 남겨 주세요. 실무자와 크레디뷰가 답을 채웁니다.</p></div>';
       return;
     }
     document.getElementById('feed').innerHTML = list.map(function (q) {
@@ -230,6 +233,7 @@
   // 기입된 문답 전체를 서버에서 불러온다. 캐시 무시로 방금 글도 즉시 반영.
   fetch('/api/qna?_=' + new Date().getTime(), { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
     loaded = true;
+    loadError = !d;
     feed = ((d && d.items) || []).map(function (it) {
       return {
         id: it.id, ts: it.ts,
@@ -240,7 +244,7 @@
       };
     });
     renderFeed();
-  }).catch(function () { loaded = true; renderFeed(); });
+  }).catch(function () { loaded = true; loadError = true; renderFeed(); });
 
   // 페이지를 열어 둔 동안에도 '몇 분 전' 라벨이 흐른 시간에 맞게 갱신되도록 주기 재렌더
   setInterval(function () { if (loaded) renderFeed(); }, 60000);

@@ -29,6 +29,9 @@ module.exports = async (req, res) => {
 
   if (req.method === 'GET') {
     res.setHeader('Cache-Control', 's-maxage=15, stale-while-revalidate=60');
+    // ?debug=1 — 데이터가 안 보일 때 원인(supabase 연결/시드 적재)을 확인하는 진단 필드 포함
+    const debug = !!(req.query && req.query.debug);
+    const dbg = { sbReady: sb.ready() };
     if (sb.ready()) {
       try {
         const [qs, ans, reacts] = await Promise.all([
@@ -49,17 +52,21 @@ module.exports = async (req, res) => {
         const items = (qs || []).filter(q => q.title).map(q => {
           const key = q.legacy_ts || String(q.id);
           const s = stat[key] || { count: 0, official: false };
+          // ts는 항상 날짜로 — 이관 글은 legacy_ts(원 작성일)를 쓰되,
+          // 'seed-q01'처럼 날짜가 아닌 ID면 created_at을 쓴다
+          const legacyDate = q.legacy_ts && !isNaN(Date.parse(q.legacy_ts)) ? q.legacy_ts : '';
           return {
-            id: key, ts: q.legacy_ts || q.created_at,
+            id: key, ts: legacyDate || q.created_at,
             category: q.category || '', title: q.title, content: q.content || '',
             tags: q.tags || '', anonymous: !!q.anonymous,
             ans: s.count, official: s.official,
             reactions: rstat[key] || { heart: 0, like: 0 },
           };
         });
-        return res.status(200).json({ items });
+        return res.status(200).json(debug ? { items, source: 'supabase', debug: dbg } : { items });
       } catch (e) {
         console.error('qna supabase read error, falling back to sheet:', e.message);
+        dbg.supabaseError = e.message;
         // 테이블 미생성 등 → 아래 시트 경로로 폴백
       }
     }
@@ -79,10 +86,11 @@ module.exports = async (req, res) => {
         })
         .filter(x => x.title && !x.hidden)
         .reverse();                                // 최신순
-      return res.status(200).json({ items });
+      return res.status(200).json(debug ? { items, source: 'sheet', debug: dbg } : { items });
     } catch (e) {
       console.error('qna read error:', e.message);
-      return res.status(200).json({ items: [] });
+      dbg.sheetError = e.message;
+      return res.status(200).json(debug ? { items: [], source: 'none', debug: dbg } : { items: [] });
     }
   }
 
